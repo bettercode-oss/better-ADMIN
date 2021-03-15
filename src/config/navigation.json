@@ -1,0 +1,82 @@
+{
+  "items": [
+    {
+      "title": "GNB1-22",
+      "icon": "AndroidOutlined",
+      "items": [
+        {
+          "title": "SNB1",
+          "icon": "AppleOutlined",
+          "items": [
+            {
+              "title": "Sub1",
+              "icon": "WindowsOutlined",
+              "link": "/sub1"
+            },
+            {
+              "title": "Sub2",
+              "icon": "IeOutlined",
+              "link": "/sub2"
+            }
+          ]
+        },
+        {
+          "title": "SNB2",
+          "icon": "ChromeOutlined",
+          "link": "/snb2"
+        }
+      ]
+    },
+    {
+      "title": "GNB2",
+      "icon": "GithubOutlined",
+      "items": [
+        {
+          "title": "SNB3",
+          "icon": "AliwangwangOutlined",
+          "items": [
+            {
+              "title": "Sub5",
+              "icon": "Html5Outlined",
+              "link": "/sub5"
+            },
+            {
+              "title": "Sub6",
+              "icon": "GoogleOutlined",
+              "link": "/sub6"
+            }
+          ]
+        },
+        {
+          "title": "SNB4",
+          "icon": "LinkedinOutlined",
+          "items": [
+            {
+              "title": "Sub7",
+              "icon": "InstagramOutlined",
+              "link": "/sub7"
+            },
+            {
+              "title": "Sub8",
+              "icon": "YoutubeOutlined",
+              "link": "/sub8"
+            }
+          ]
+        },
+        {
+          "title": "SNB5",
+          "icon": "SlackOutlined",
+          "link": "/sample"
+        }
+      ]
+    },
+    {
+      "title": "GNB3",
+      "icon": "MediumOutlined"
+    },
+    {
+      "title": "GNB4",
+      "icon": "FacebookOutlined"
+    }
+  ]
+}
