@@ -238,7 +238,7 @@ const AppLayout = (props) => {
             <Breadcrumb>
               {breadcrumbItems.map((item, index) => (
                 <Breadcrumb.Item key={index}>
-                  <a href>{item}</a>
+                  {item}
                 </Breadcrumb.Item>
               ))}
             </Breadcrumb>

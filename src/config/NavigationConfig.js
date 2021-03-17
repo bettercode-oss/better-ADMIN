@@ -1,21 +1,61 @@
 import navigationInfo from "./navigation.json";
+import {config} from "./config";
 
 export default class NavigationConfig {
 
   static getItems = () => {
-    return navigationInfo.items;
+    if(navigationInfo.permissionUsed) {
+      const userPermissions = new Set(config.userPermissions());
+      const accessibleGnbItems = [];
+      if(navigationInfo.items) {
+        const gnbItems = navigationInfo.items;
+        gnbItems.forEach(gnbItem => {
+          // GNB
+          if(!gnbItem.accessPermission || userPermissions.has(gnbItem.accessPermission)) {
+            if(gnbItem.items) {
+              // SNB
+              const accessibleSnbItems = [];
+              const snbItems = gnbItem.items
+              snbItems.forEach(snbItem => {
+                if(!snbItem.accessPermission || userPermissions.has(snbItem.accessPermission)) {
+                  if(snbItem.items) {
+                    // Sub
+                    const accessibleSubItems = [];
+                    const subItems = snbItem.items
+                    subItems.forEach(subItem => {
+                      if(!snbItem.accessPermission || userPermissions.has(subItem.accessPermission)) {
+                        accessibleSubItems.push(subItem);
+                      }
+                    });
+                    snbItem.items = accessibleSubItems;
+                  }
+
+                  accessibleSnbItems.push(snbItem);
+                }
+              });
+              gnbItem.items = accessibleSnbItems;
+            }
+            accessibleGnbItems.push(gnbItem);
+          }
+        });
+      }
+      return accessibleGnbItems;
+    } else {
+      return navigationInfo.items;
+    }
   }
 
   static getItemsByLink = (pathName) => {
-    let result = {
+    const navigationItems = this.getItems()
+    const result = {
       gnbItem: null,
       snbItem: null,
       subItem: null
     }
 
-    if(navigationInfo.items) {
-      for (let i = 0; i < navigationInfo.items.length; i++) {
-        const gnbItem = navigationInfo.items[i];
+    if(navigationItems) {
+      for (let i = 0; i < navigationItems.length; i++) {
+        const gnbItem = navigationItems[i];
 
         const currentGnbItem = {
           title: gnbItem.title,
