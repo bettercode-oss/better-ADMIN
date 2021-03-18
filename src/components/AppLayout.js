@@ -54,12 +54,12 @@ const AppLayout = (props) => {
     defaultNavigationItem.subItem,
   ]);
 
-  const handleGnbMenuClick = ({ item, key, keyPath, domEvent }) => {
+  const handleGnbMenuClick = ({key}) => {
     const gnbIndex = key;
     setGnbItem(NavigationConfig.getItems()[gnbIndex]);
   };
 
-  const handleSnbMenuClick = ({ item, key, keyPath, domEvent }) => {
+  const handleSnbMenuClick = ({key}) => {
     const selectedMenuIndices = key.split("-");
     if (selectedMenuIndices && gnbItem) {
       const breadcrumbNavigationItems = [];
