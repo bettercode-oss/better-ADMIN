@@ -1,18 +1,20 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Breadcrumb, Layout, Menu, Space } from "antd";
+import React, {useEffect, useMemo, useState} from "react";
+import {Breadcrumb, Layout, Menu, Space, Spin} from "antd";
 import "./AppLayout.css";
 import PageRouting from "./PageRouting";
-import { config } from "../config/config";
+import {config} from "../config/config";
 import * as AllIcons from "@ant-design/icons";
 import LoginInfo from "./LoginInfo";
-import { Link } from "react-router-dom";
-import NavigationConfig from "../config/NavigationConfig";
+import {Link} from "react-router-dom";
+import NavigationConfig from "../config/navigation.config";
+import {EventBroadcaster} from "../event/event.broadcaster";
 
 const AppLayout = (props) => {
   const [collapsed, setCollapsed] = useState(false);
   const [gnbItem, setGnbItem] = useState(null);
   const [breadcrumbItems, setBreadcrumbItems] = useState([]);
   const [defaultNavigationItem, setDefaultNavigationItem] = useState({});
+  const [loading, setLoading] = useState(false);
 
   useMemo(() => {
     // componentWillMount events
@@ -41,6 +43,11 @@ const AppLayout = (props) => {
 
       setBreadcrumbItems(breadcrumbNavigationItems);
     }
+
+    const unsubscribe = EventBroadcaster.on("SHOW_LOADING", data => {
+      setLoading(data.show);
+    })
+    return unsubscribe;
   }, [
     defaultNavigationItem.gnbItem,
     defaultNavigationItem.snbItem,
@@ -249,7 +256,9 @@ const AppLayout = (props) => {
             </div>
           </div>
           <div className="site-layout-background" style={{ padding: 24 }}>
-            <PageRouting />
+            <Spin spinning={loading}>
+              <PageRouting />
+            </Spin>
           </div>
         </Layout.Content>
         <Layout.Footer style={{ textAlign: "center" }}>
