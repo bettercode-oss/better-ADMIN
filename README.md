@@ -39,6 +39,7 @@ $ yarn start
 
 ### Back-end Service
 ```
+docker pull bettercode2016/better-admin-backend-service
 docker run -d -p 2016:2016 bettercode2016/better-admin-backend-service
 ```
 
