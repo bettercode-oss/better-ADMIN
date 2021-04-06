@@ -24,6 +24,7 @@ Admin 화면을 만들면 매번 아래와 같은 기능을 구현한다.
 
 ## 시작하기
 
+### Front-end Service
 ```bash
 $ npm install
 $ npm start
@@ -32,8 +33,13 @@ $ npm start
 혹은
 
 ```bash
-$ yarn
+$ yarn install
 $ yarn start
+```
+
+### Back-end Service
+```
+docker run -d -p 2016:2016 bettercode2016/better-admin-backend-service
 ```
 
 ![image](https://user-images.githubusercontent.com/16472109/112544591-86edbd80-8dfa-11eb-9656-e633e4d86434.png)
