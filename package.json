@@ -8,12 +8,14 @@
     "@testing-library/react": "^11.0.0",
     "@testing-library/user-event": "^11.1.0",
     "antd": "^4.5.2",
+    "axios": "^0.21.1",
     "caniuse-lite": "^1.0.30001198",
     "craco-less": "^1.17.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
+    "universal-cookie": "^4.0.3",
     "uuid": "^8.3.2"
   },
   "scripts": {

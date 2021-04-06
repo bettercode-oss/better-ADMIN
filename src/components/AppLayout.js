@@ -139,7 +139,7 @@ const AppLayout = (props) => {
             alt="logo"
             src={config.logo}
             width="30px"
-            style={{ borderRadius: "50%", marginLeft: "20px" }}
+            style={{ borderRadius: "20%", marginLeft: "20px" }}
           />
           {collapsed === false && <strong>&nbsp; {config.siteName}</strong>}
         </div>
