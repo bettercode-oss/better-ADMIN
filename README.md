@@ -20,7 +20,7 @@ Admin 화면을 만들면 매번 아래와 같은 기능을 구현한다.
 ## 지원하는 기능
 * Ant Design을 기반으로 하는 Layout을 자동 생성
 * Config 파일을 통한 메뉴 생성
-...
+* 로그인 
 
 ## 시작하기
 
@@ -42,4 +42,9 @@ $ yarn start
 docker run -d -p 2016:2016 bettercode2016/better-admin-backend-service
 ```
 
-![image](https://user-images.githubusercontent.com/16472109/112544591-86edbd80-8dfa-11eb-9656-e633e4d86434.png)
+![image](https://user-images.githubusercontent.com/16472109/113784746-e6d85280-9770-11eb-9728-601032c7bf09.png)
+
+![image](https://user-images.githubusercontent.com/16472109/113784793-f9eb2280-9770-11eb-8d78-deea642fa855.png)
+
+
+
