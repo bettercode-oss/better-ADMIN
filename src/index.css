@@ -1,3 +1,7 @@
-html, body, #root, .App {
+html,
+body,
+#root,
+.App {
   height: 100%;
+  font-size: 10px;
 }
