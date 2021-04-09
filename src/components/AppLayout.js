@@ -1,13 +1,13 @@
-import React, {useEffect, useMemo, useState} from "react";
-import {Breadcrumb, Layout, Menu, Space, Spin} from "antd";
+import React, { useEffect, useMemo, useState } from "react";
+import { Breadcrumb, Layout, Menu, Space, Spin } from "antd";
 import "./AppLayout.css";
 import PageRouting from "./PageRouting";
-import {config} from "../config/config";
+import { config } from "../config/config";
 import * as AllIcons from "@ant-design/icons";
 import LoginInfo from "./LoginInfo";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import NavigationConfig from "../config/navigation.config";
-import {EventBroadcaster} from "../event/event.broadcaster";
+import { EventBroadcaster } from "../event/event.broadcaster";
 
 const AppLayout = (props) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -24,29 +24,31 @@ const AppLayout = (props) => {
   }, [props.location.pathname]);
 
   useEffect(() => {
-    if (defaultNavigationItem.gnbItem) {
-      const gnbNavigationItem = NavigationConfig.getItems()[
-        defaultNavigationItem.gnbItem.index
-      ];
-      setGnbItem(gnbNavigationItem);
+    if (props.location.pathname !== "/") {
+      if (defaultNavigationItem.gnbItem) {
+        const gnbNavigationItem = NavigationConfig.getItems()[
+          defaultNavigationItem.gnbItem.index
+        ];
+        setGnbItem(gnbNavigationItem);
 
-      const breadcrumbNavigationItems = [];
-      breadcrumbNavigationItems.push(defaultNavigationItem.gnbItem.title);
+        const breadcrumbNavigationItems = [];
+        breadcrumbNavigationItems.push(defaultNavigationItem.gnbItem.title);
 
-      if (defaultNavigationItem.snbItem) {
-        breadcrumbNavigationItems.push(defaultNavigationItem.snbItem.title);
+        if (defaultNavigationItem.snbItem) {
+          breadcrumbNavigationItems.push(defaultNavigationItem.snbItem.title);
+        }
+
+        if (defaultNavigationItem.subItem) {
+          breadcrumbNavigationItems.push(defaultNavigationItem.subItem.title);
+        }
+
+        setBreadcrumbItems(breadcrumbNavigationItems);
       }
-
-      if (defaultNavigationItem.subItem) {
-        breadcrumbNavigationItems.push(defaultNavigationItem.subItem.title);
-      }
-
-      setBreadcrumbItems(breadcrumbNavigationItems);
     }
 
-    const unsubscribe = EventBroadcaster.on("SHOW_LOADING", data => {
+    const unsubscribe = EventBroadcaster.on("SHOW_LOADING", (data) => {
       setLoading(data.show);
-    })
+    });
     return unsubscribe;
   }, [
     defaultNavigationItem.gnbItem,
@@ -54,12 +56,12 @@ const AppLayout = (props) => {
     defaultNavigationItem.subItem,
   ]);
 
-  const handleGnbMenuClick = ({key}) => {
+  const handleGnbMenuClick = ({ key }) => {
     const gnbIndex = key;
     setGnbItem(NavigationConfig.getItems()[gnbIndex]);
   };
 
-  const handleSnbMenuClick = ({key}) => {
+  const handleSnbMenuClick = ({ key }) => {
     const selectedMenuIndices = key.split("-");
     if (selectedMenuIndices && gnbItem) {
       const breadcrumbNavigationItems = [];
@@ -75,7 +77,6 @@ const AppLayout = (props) => {
           breadcrumbNavigationItems.push(selectedSubItem.title);
         }
       });
-
       setBreadcrumbItems(breadcrumbNavigationItems);
     }
   };
@@ -126,23 +127,26 @@ const AppLayout = (props) => {
         collapsible
         collapsed={collapsed}
       >
-        <div
-          style={{
-            color: "white",
-            margin: "5px",
-            marginLeft: "5px",
-            marginTop: "20px",
-            marginBottom: "20px",
-          }}
-        >
-          <img
-            alt="logo"
-            src={config.logo}
-            width="30px"
-            style={{ borderRadius: "20%", marginLeft: "20px" }}
-          />
-          {collapsed === false && <strong>&nbsp; {config.siteName}</strong>}
-        </div>
+        <Link to="/">
+          <div
+            style={{
+              color: "white",
+              margin: "5px",
+              marginLeft: "5px",
+              marginTop: "20px",
+              marginBottom: "20px",
+              fontSize: "1.5rem",
+            }}
+          >
+            <img
+              alt="logo"
+              src={config.logo}
+              width="30px"
+              style={{ borderRadius: "20%", marginLeft: "20px" }}
+            />
+            {collapsed === false && <strong>&nbsp; {config.siteName}</strong>}
+          </div>
+        </Link>
         <Menu
           theme="dark"
           mode="inline"
@@ -230,7 +234,9 @@ const AppLayout = (props) => {
               })}
             </Menu>
           </Space>
-          <div style={{ float: "right", marginRight: "10px" }}>
+          <div
+            style={{ fontSize: "1.5rem", float: "right", marginRight: "20px" }}
+          >
             <LoginInfo />
           </div>
         </Layout.Header>
@@ -241,20 +247,20 @@ const AppLayout = (props) => {
             padding: 24,
           }}
         >
-          <div style={{ backgroundColor: "white", padding: "15px" }}>
-            <Breadcrumb>
-              {breadcrumbItems.map((item, index) => (
-                <Breadcrumb.Item key={index}>
-                  {item}
-                </Breadcrumb.Item>
-              ))}
-            </Breadcrumb>
-            <div className="page-title" style={{ padding: 0 }}>
-              {breadcrumbItems &&
-                breadcrumbItems.length > 0 &&
-                breadcrumbItems[breadcrumbItems.length - 1]}
+          {props.location.pathname !== "/" && (
+            <div style={{ backgroundColor: "white", padding: "15px" }}>
+              <Breadcrumb>
+                {breadcrumbItems.map((item, index) => (
+                  <Breadcrumb.Item key={index}>{item}</Breadcrumb.Item>
+                ))}
+              </Breadcrumb>
+              <div className="page-title" style={{ padding: 0 }}>
+                {breadcrumbItems &&
+                  breadcrumbItems.length > 0 &&
+                  breadcrumbItems[breadcrumbItems.length - 1]}
+              </div>
             </div>
-          </div>
+          )}
           <div className="site-layout-background" style={{ padding: 24 }}>
             <Spin spinning={loading}>
               <PageRouting />
@@ -262,7 +268,6 @@ const AppLayout = (props) => {
           </div>
         </Layout.Content>
         <Layout.Footer style={{ textAlign: "center" }}>
-          {" "}
           better ADMIN ©2021 Created by bettercode
         </Layout.Footer>
       </Layout>
