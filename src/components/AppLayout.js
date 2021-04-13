@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Breadcrumb, Layout, Menu, Space, Spin } from "antd";
 import "./AppLayout.css";
 import PageRouting from "./PageRouting";
-import { config } from "../config/config";
+import {adminConfig} from "../config/admin.config";
 import * as AllIcons from "@ant-design/icons";
 import LoginInfo from "./LoginInfo";
 import { Link } from "react-router-dom";
@@ -140,11 +140,11 @@ const AppLayout = (props) => {
           >
             <img
               alt="logo"
-              src={config.logo}
+              src={adminConfig.logo}
               width="30px"
               style={{ borderRadius: "20%", marginLeft: "20px" }}
             />
-            {collapsed === false && <strong>&nbsp; {config.siteName}</strong>}
+            {collapsed === false && <strong>&nbsp; {adminConfig.siteName}</strong>}
           </div>
         </Link>
         <Menu

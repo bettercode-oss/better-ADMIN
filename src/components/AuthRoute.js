@@ -1,20 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import {Route, useHistory} from 'react-router-dom';
-import Cookies from "universal-cookie";
-const cookies = new Cookies();
+import AuthService from "../auth/auth.service";
+import {adminConfig} from "../config/admin.config";
 
 export default function AuthRoute({path, exact = false, component}) {
   const [authenticated, setAuthenticated] = useState(false);
   const history = useHistory();
 
   const checkAuth = () => {
-    const token = cookies.get('token') || {};
-    const logged = token.jwtToken;
-    if (logged) {
+    AuthService.checkAuth().then(() => {
       setAuthenticated(true);
-    } else {
-      history.replace('/login');
-    }
+    }).catch(() => {
+      history.replace(adminConfig.authentication.loginUrl);
+    })
   };
 
   useEffect(() => {

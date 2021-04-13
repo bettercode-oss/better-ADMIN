@@ -7,10 +7,11 @@ const BetterAdminConfig = {
   },
   authentication: {
     used: true,
+    loginUrl: "/login",
     authAPI: () => {
       return "http://localhost:2016/api"
     }
   }
 }
 
-export const config = BetterAdminConfig;
+export const adminConfig = BetterAdminConfig;
