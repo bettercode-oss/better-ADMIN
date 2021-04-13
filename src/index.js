@@ -3,9 +3,15 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import {adminConfig} from "./config/admin.config";
+import {initAxios} from "./config/axios.config";
+
+if (adminConfig.authentication.used) {
+  initAxios();
+}
 
 ReactDOM.render(
-  <App />,
+  <App/>,
   document.getElementById('root')
 );
 

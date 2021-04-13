@@ -3,12 +3,9 @@ import {Button, Checkbox, Form, Input, message} from 'antd';
 import {LockOutlined, UserOutlined} from '@ant-design/icons';
 import "./Login.css";
 import Title from "antd/es/typography/Title";
-import {config} from "../config/config";
-import Cookies from "universal-cookie";
+import {adminConfig} from "../config/admin.config";
 import AuthService from "../auth/auth.service";
 import {useHistory} from "react-router-dom";
-
-const cookies = new Cookies();
 
 const Login = () => {
   const history = useHistory();
@@ -17,8 +14,7 @@ const Login = () => {
     const signId = values.id;
     const password = values.password;
 
-    AuthService.login(signId, password).then(response => {
-      cookies.set('token', JSON.stringify(response.data), {domain: "localhost", path: '/', maxAge: 86400});
+    AuthService.login(signId, password).then(() => {
       history.replace('/');
     }).catch(error => {
       if (error.response && error.response.status === 400) {
@@ -30,8 +26,8 @@ const Login = () => {
   return (
     <div className="login">
       <Title level={2}>
-        <img className="logo" src={config.logo} alt="logo"/>
-        {config.siteName}
+        <img className="logo" src={adminConfig.logo} alt="logo"/>
+        {adminConfig.siteName}
       </Title>
       <Form
         name="normal_login"

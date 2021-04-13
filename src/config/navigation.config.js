@@ -1,11 +1,11 @@
 import navigationInfo from "./navigation.json";
-import {config} from "./config";
+import {adminConfig} from "./admin.config";
 
 export default class NavigationConfig {
 
   static getItems = () => {
     if(navigationInfo.permissionUsed) {
-      const userPermissions = new Set(config.userPermissions());
+      const userPermissions = new Set(adminConfig.userPermissions());
       const accessibleGnbItems = [];
       if(navigationInfo.items) {
         const gnbItems = navigationInfo.items;
