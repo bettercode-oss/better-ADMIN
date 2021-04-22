@@ -1,13 +1,15 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Breadcrumb, Layout, Menu, Space, Spin } from "antd";
+import React, {useEffect, useMemo, useState} from "react";
+import {Breadcrumb, Button, Layout, Menu, Space, Spin} from "antd";
 import "./AppLayout.css";
 import PageRouting from "./PageRouting";
 import {adminConfig} from "../config/admin.config";
 import * as AllIcons from "@ant-design/icons";
+import {SettingOutlined} from "@ant-design/icons";
 import LoginInfo from "./LoginInfo";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import NavigationConfig from "../config/navigation.config";
-import { EventBroadcaster } from "../event/event.broadcaster";
+import {EventBroadcaster} from "../event/event.broadcaster";
+import {AppSettings} from "./AppSettings";
 
 const AppLayout = (props) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -15,6 +17,7 @@ const AppLayout = (props) => {
   const [breadcrumbItems, setBreadcrumbItems] = useState([]);
   const [defaultNavigationItem, setDefaultNavigationItem] = useState({});
   const [loading, setLoading] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   useMemo(() => {
     // componentWillMount events
@@ -28,7 +31,7 @@ const AppLayout = (props) => {
       if (defaultNavigationItem.gnbItem) {
         const gnbNavigationItem = NavigationConfig.getItems()[
           defaultNavigationItem.gnbItem.index
-        ];
+          ];
         setGnbItem(gnbNavigationItem);
 
         const breadcrumbNavigationItems = [];
@@ -51,17 +54,18 @@ const AppLayout = (props) => {
     });
     return unsubscribe;
   }, [
+    props.location.pathname,
     defaultNavigationItem.gnbItem,
     defaultNavigationItem.snbItem,
-    defaultNavigationItem.subItem,
+    defaultNavigationItem.subItem
   ]);
 
-  const handleGnbMenuClick = ({ key }) => {
+  const handleGnbMenuClick = ({key}) => {
     const gnbIndex = key;
     setGnbItem(NavigationConfig.getItems()[gnbIndex]);
   };
 
-  const handleSnbMenuClick = ({ key }) => {
+  const handleSnbMenuClick = ({key}) => {
     const selectedMenuIndices = key.split("-");
     if (selectedMenuIndices && gnbItem) {
       const breadcrumbNavigationItems = [];
@@ -95,10 +99,10 @@ const AppLayout = (props) => {
     if (defaultNavigationItem.subItem) {
       return defaultNavigationItem.snbItem
         ? [
-            defaultNavigationItem.snbItem.index +
-              "-" +
-              defaultNavigationItem.subItem.index,
-          ]
+          defaultNavigationItem.snbItem.index +
+          "-" +
+          defaultNavigationItem.subItem.index,
+        ]
         : [""];
     } else {
       return defaultNavigationItem.snbItem
@@ -122,7 +126,7 @@ const AppLayout = (props) => {
     >
       <Layout.Sider
         width={200}
-        style={{ background: "#041527" }}
+        style={{background: "#041527"}}
         trigger={null}
         collapsible
         collapsed={collapsed}
@@ -142,7 +146,7 @@ const AppLayout = (props) => {
               alt="logo"
               src={adminConfig.logo}
               width="30px"
-              style={{ borderRadius: "20%", marginLeft: "20px" }}
+              style={{borderRadius: "20%", marginLeft: "20px"}}
             />
             {collapsed === false && <strong>&nbsp; {adminConfig.siteName}</strong>}
           </div>
@@ -155,59 +159,59 @@ const AppLayout = (props) => {
           onClick={handleSnbMenuClick}
         >
           {gnbItem &&
-            gnbItem.items &&
-            gnbItem.items.map((item, index) => {
-              const SnbIcon = AllIcons[item.icon];
-              if (item.items && item.items.length > 0) {
-                return (
-                  <Menu.SubMenu
-                    key={index}
-                    title={item.title}
-                    icon={<SnbIcon />}
-                  >
-                    {item.items.map((subItem, subItemIndex) => {
-                      const SubItemIcon = AllIcons[subItem.icon];
-                      return subItem.link ? (
-                        <Menu.Item
-                          key={index + "-" + subItemIndex}
-                          icon={<SubItemIcon />}
-                          title={subItem.title}
-                        >
-                          <Link to={subItem.link}>
-                            <span>{subItem.title}</span>
-                          </Link>
-                        </Menu.Item>
-                      ) : (
-                        <Menu.Item
-                          key={index + "-" + subItemIndex}
-                          icon={<SubItemIcon />}
-                        >
-                          {subItem.title}
-                        </Menu.Item>
-                      );
-                    })}
-                  </Menu.SubMenu>
-                );
-              } else {
-                return (
-                  <Menu.Item key={index} icon={<SnbIcon />} title={item.title}>
-                    {item.link ? (
-                      <Link to={item.link}>
-                        <span>{item.title}</span>
-                      </Link>
+          gnbItem.items &&
+          gnbItem.items.map((item, index) => {
+            const SnbIcon = AllIcons[item.icon];
+            if (item.items && item.items.length > 0) {
+              return (
+                <Menu.SubMenu
+                  key={index}
+                  title={item.title}
+                  icon={<SnbIcon/>}
+                >
+                  {item.items.map((subItem, subItemIndex) => {
+                    const SubItemIcon = AllIcons[subItem.icon];
+                    return subItem.link ? (
+                      <Menu.Item
+                        key={index + "-" + subItemIndex}
+                        icon={<SubItemIcon/>}
+                        title={subItem.title}
+                      >
+                        <Link to={subItem.link}>
+                          <span>{subItem.title}</span>
+                        </Link>
+                      </Menu.Item>
                     ) : (
+                      <Menu.Item
+                        key={index + "-" + subItemIndex}
+                        icon={<SubItemIcon/>}
+                      >
+                        {subItem.title}
+                      </Menu.Item>
+                    );
+                  })}
+                </Menu.SubMenu>
+              );
+            } else {
+              return (
+                <Menu.Item key={index} icon={<SnbIcon/>} title={item.title}>
+                  {item.link ? (
+                    <Link to={item.link}>
                       <span>{item.title}</span>
-                    )}
-                  </Menu.Item>
-                );
-              }
-            })}
+                    </Link>
+                  ) : (
+                    <span>{item.title}</span>
+                  )}
+                </Menu.Item>
+              );
+            }
+          })}
         </Menu>
       </Layout.Sider>
       <Layout className="site-layout">
         <Layout.Header
           className="site-layout-background"
-          style={{ padding: 0 }}
+          style={{padding: 0}}
         >
           <Space>
             {React.createElement(
@@ -227,7 +231,7 @@ const AppLayout = (props) => {
               {NavigationConfig.getItems().map((item, idx) => {
                 const GnbIcon = AllIcons[item.icon];
                 return (
-                  <Menu.Item key={idx} icon={<GnbIcon />}>
+                  <Menu.Item key={idx} icon={<GnbIcon/>}>
                     {item.title}
                   </Menu.Item>
                 );
@@ -235,9 +239,12 @@ const AppLayout = (props) => {
             </Menu>
           </Space>
           <div
-            style={{ fontSize: "1.5rem", float: "right", marginRight: "20px" }}
+            style={{fontSize: "1.5rem", float: "right", marginRight: "20px"}}
           >
-            <LoginInfo />
+            <LoginInfo/>
+            <Button shape="circle" icon={<SettingOutlined/>} style={{marginLeft: "10px"}} onClick={() => {
+              setShowSettings(true);
+            }}/>
           </div>
         </Layout.Header>
         <Layout.Content
@@ -248,29 +255,33 @@ const AppLayout = (props) => {
           }}
         >
           {props.location.pathname !== "/" && (
-            <div style={{ backgroundColor: "white", padding: "15px" }}>
+            <div style={{backgroundColor: "white", padding: "15px"}}>
               <Breadcrumb>
                 {breadcrumbItems.map((item, index) => (
                   <Breadcrumb.Item key={index}>{item}</Breadcrumb.Item>
                 ))}
               </Breadcrumb>
-              <div className="page-title" style={{ padding: 0 }}>
+              <div className="page-title" style={{padding: 0}}>
                 {breadcrumbItems &&
-                  breadcrumbItems.length > 0 &&
-                  breadcrumbItems[breadcrumbItems.length - 1]}
+                breadcrumbItems.length > 0 &&
+                breadcrumbItems[breadcrumbItems.length - 1]}
               </div>
             </div>
           )}
-          <div className="site-layout-background" style={{ padding: 24 }}>
+          <div className="site-layout-background" style={{padding: 24}}>
             <Spin spinning={loading}>
-              <PageRouting />
+              <PageRouting/>
             </Spin>
           </div>
         </Layout.Content>
-        <Layout.Footer style={{ textAlign: "center" }}>
+        <Layout.Footer style={{textAlign: "center"}}>
           better ADMIN ©2021 Created by bettercode
         </Layout.Footer>
       </Layout>
+      {showSettings &&
+      <AppSettings onClose={() => {
+        setShowSettings(false);
+      }}/>}
     </Layout>
   );
 };

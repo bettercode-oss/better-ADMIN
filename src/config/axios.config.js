@@ -1,6 +1,6 @@
 import axios from "axios";
 import {adminConfig} from "./admin.config";
-import AuthService from "../auth/auth.service";
+import {AuthService} from "../auth/auth.service";
 
 export const initAxios = () => {
   axios.defaults.withCredentials = true;
