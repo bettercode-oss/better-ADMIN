@@ -6,7 +6,7 @@ const BetterAdminConfig = {
     return ["USER_MANAGED", "SITE_MANAGED", "USER_MANAGED-A", "USER_MANAGED-C"]
   },
   authentication: {
-    used: true,
+    used: false,
     loginUrl: "/login",
     authAPI: () => {
       return "http://localhost:2016/api"

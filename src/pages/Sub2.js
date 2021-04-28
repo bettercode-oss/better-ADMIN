@@ -7,7 +7,7 @@ const Sub2 = () => {
 
   return (
     <>
-      <div>
+      <div style={{height: "1000px"}}>
         <h1>Sub2 Page 로딩 화면 테스트</h1>
         <Button onClick={() => {
           showLoading();
