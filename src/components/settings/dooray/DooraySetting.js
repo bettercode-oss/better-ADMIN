@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
-import {Button, Form, Input, message, Radio} from "antd";
-import SiteService from "./site.service";
+import {Button, Form, Input, message, PageHeader, Radio} from "antd";
+import SiteService from "../site.service";
 
 const formItemLayout = {
   labelCol: {
@@ -70,49 +70,54 @@ const DooraySetting = () => {
 
   return (
     <>
-      {setting &&
-      <Form {...formItemLayout} form={form} onFinish={saveSetting}>
-        <Form.Item colon={false} label="Dooray 로그인" name="used">
-          <Radio.Group onChange={handleChangeUsed}>
-            <Radio value={true}>사용함</Radio>
-            <Radio value={false}>사용 안 함</Radio>
-          </Radio.Group>
-        </Form.Item>
-        {setting.used &&
-        <>
-          <Form.Item
-            colon={false}
-            name="domain"
-            label="Dooray 도메인"
-            rules={[
-              {
-                required: true,
-                message: '두레이 도메인을 입력해 주세요.',
-              },
-            ]}
-          >
-            <Input/>
+      <PageHeader
+        title="두레이(Dooray) 로그인"
+        subTitle="두레이 아이디/비밀번호로 사이트에 로그인할 수 있도록 설정합니다."
+      >
+        {setting &&
+        <Form {...formItemLayout} form={form} onFinish={saveSetting}>
+          <Form.Item colon={false} label="Dooray 로그인" name="used">
+            <Radio.Group onChange={handleChangeUsed}>
+              <Radio value={true}>사용함</Radio>
+              <Radio value={false}>사용 안 함</Radio>
+            </Radio.Group>
           </Form.Item>
-          <Form.Item
-            colon={false}
-            name="authorizationToken"
-            label="Dooray API 인증 토큰"
-            rules={[
-              {
-                required: true,
-                message: '두레이 API 토큰을 입력해 주세요.',
-              },
-            ]}
-          >
-            <Input/>
+          {setting.used &&
+          <>
+            <Form.Item
+              colon={false}
+              name="domain"
+              label="Dooray 도메인"
+              rules={[
+                {
+                  required: true,
+                  message: '두레이 도메인을 입력해 주세요.',
+                },
+              ]}
+            >
+              <Input/>
+            </Form.Item>
+            <Form.Item
+              colon={false}
+              name="authorizationToken"
+              label="Dooray API 인증 토큰"
+              rules={[
+                {
+                  required: true,
+                  message: '두레이 API 토큰을 입력해 주세요.',
+                },
+              ]}
+            >
+              <Input/>
+            </Form.Item>
+          </>}
+          <Form.Item {...tailFormItemLayout}>
+            <Button type="primary" loading={loading} htmlType="submit">
+              저장
+            </Button>
           </Form.Item>
-        </>}
-        <Form.Item {...tailFormItemLayout}>
-          <Button type="primary" loading={loading} htmlType="submit">
-            저장
-          </Button>
-        </Form.Item>
-      </Form>}
+        </Form>}
+      </PageHeader>
     </>
   )
 };

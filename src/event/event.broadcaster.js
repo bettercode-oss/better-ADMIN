@@ -1,6 +1,10 @@
 import {v4 as uuidv4} from 'uuid';
 
 const topics = {}
+
+export const SHOW_LOADING_EVENT_TOPIC = "SHOW_LOADING";
+export const CHANGE_MEMBER_CONTEXT_EVENT_TOPIC = "CHANGE_MEMBER_CONTEXT";
+
 export class EventBroadcaster {
   static broadcast = (topic, args) => {
     if (!topics[topic]) return;
