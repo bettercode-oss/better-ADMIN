@@ -121,7 +121,6 @@ const AppLayout = (props) => {
     <Layout
       style={{
         height: "100%",
-        overflow: "hidden",
       }}
     >
       <Layout.Sider
@@ -252,6 +251,7 @@ const AppLayout = (props) => {
           style={{
             margin: "24px 16px",
             padding: 24,
+            minHeight: 'initial',
           }}
         >
           {props.location.pathname !== "/" && (
