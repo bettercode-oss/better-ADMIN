@@ -11,6 +11,7 @@
 .logo {
     border-radius: 20%;
     margin-right: 10px;
+    width: 30px;
 }
 
 .login-form {

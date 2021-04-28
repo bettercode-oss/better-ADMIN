@@ -10,14 +10,38 @@
     color: #1890ff;
 }
 
-.logo {
-    height: 32px;
-    margin: 16px;
-    background: rgba(255, 255, 255, 0.3);
+.site-logo {
+    color: white;
+    margin: 20px 5px;
+    font-size: 1.5rem
 }
 
-.site-layout .site-layout-background {
+.logo-image {
+    border-radius: 20%;
+    margin-left: 20px;
+    width: 30px;
+}
+
+.site-layout .site-layout-header {
     background: #fff;
+    padding: 0px;
+}
+
+.site-layout .site-layout-content {
+    background: #fff;
+    margin: 24px 16px;
+    padding: 24px;
+}
+
+.site-layout .site-layout-page {
+    background: #fff;
+    padding: 24px;
+}
+
+.login-info {
+    font-size: 1.5rem;
+    float: right;
+    margin-right: 20px;
 }
 
 .page-title {

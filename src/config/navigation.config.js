@@ -1,29 +1,29 @@
 import navigationInfo from "./navigation.json";
-import {adminConfig} from "./admin.config";
+import {MemberContext} from "../auth/member.context";
 
 export default class NavigationConfig {
 
   static getItems = () => {
     if(navigationInfo.permissionUsed) {
-      const userPermissions = new Set(adminConfig.userPermissions());
+      const memberPermissions = new Set(MemberContext.memberInformation.permissions ? MemberContext.memberInformation.permissions : []);
       const accessibleGnbItems = [];
       if(navigationInfo.items) {
         const gnbItems = navigationInfo.items;
         gnbItems.forEach(gnbItem => {
           // GNB
-          if(!gnbItem.accessPermission || userPermissions.has(gnbItem.accessPermission)) {
+          if(!gnbItem.accessPermission || memberPermissions.has(gnbItem.accessPermission)) {
             if(gnbItem.items) {
               // SNB
               const accessibleSnbItems = [];
               const snbItems = gnbItem.items
               snbItems.forEach(snbItem => {
-                if(!snbItem.accessPermission || userPermissions.has(snbItem.accessPermission)) {
+                if(!snbItem.accessPermission || memberPermissions.has(snbItem.accessPermission)) {
                   if(snbItem.items) {
                     // Sub
                     const accessibleSubItems = [];
                     const subItems = snbItem.items
                     subItems.forEach(subItem => {
-                      if(!snbItem.accessPermission || userPermissions.has(subItem.accessPermission)) {
+                      if(!snbItem.accessPermission || memberPermissions.has(subItem.accessPermission)) {
                         accessibleSubItems.push(subItem);
                       }
                     });
@@ -45,8 +45,7 @@ export default class NavigationConfig {
     }
   }
 
-  static getItemsByLink = (pathName) => {
-    const navigationItems = this.getItems()
+  static getItemsByLink = (pathName, navigationItems) => {
     const result = {
       gnbItem: null,
       snbItem: null,

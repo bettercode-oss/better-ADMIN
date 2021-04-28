@@ -4,24 +4,21 @@
     {
       "title": "GNB1-22",
       "icon": "AndroidOutlined",
-      "accessPermission": "USER_MANAGED",
+      "accessPermission": "MANAGE_MEMBERS",
       "items": [
         {
           "title": "SNB1",
           "icon": "AppleOutlined",
-          "accessPermission": "USER_MANAGED-A",
           "items": [
             {
               "title": "Sub1",
               "icon": "WindowsOutlined",
-              "link": "/sub1",
-              "accessPermission": "USER_MANAGED-B"
+              "link": "/sub1"
             },
             {
               "title": "Sub2",
               "icon": "IeOutlined",
-              "link": "/sub2",
-              "accessPermission": "USER_MANAGED-C"
+              "link": "/sub2"
             }
           ]
         },
@@ -35,7 +32,6 @@
     {
       "title": "GNB2",
       "icon": "GithubOutlined",
-      "accessPermission": "SITE_MANAGED",
       "items": [
         {
           "title": "SNB3",
@@ -75,15 +71,7 @@
           "link": "/sample"
         }
       ]
-    },
-    {
-      "title": "GNB3",
-      "accessPermission": "CATEGORY_MANAGED",
-      "icon": "MediumOutlined"
-    },
-    {
-      "title": "GNB4",
-      "icon": "FacebookOutlined"
     }
   ]
 }
+

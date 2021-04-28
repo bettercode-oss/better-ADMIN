@@ -1,68 +1,99 @@
-import React, {useEffect, useMemo, useState} from "react";
-import {Breadcrumb, Button, Layout, Menu, Space, Spin} from "antd";
+import React, {useEffect, useState} from "react";
+import {Breadcrumb, Layout, Menu, Space, Spin} from "antd";
 import "./AppLayout.css";
 import PageRouting from "./PageRouting";
 import {adminConfig} from "../config/admin.config";
 import * as AllIcons from "@ant-design/icons";
-import {SettingOutlined} from "@ant-design/icons";
 import LoginInfo from "./LoginInfo";
 import {Link} from "react-router-dom";
 import NavigationConfig from "../config/navigation.config";
-import {EventBroadcaster} from "../event/event.broadcaster";
-import {AppSettings} from "./AppSettings";
+import {
+  CHANGE_MEMBER_CONTEXT_EVENT_TOPIC,
+  EventBroadcaster,
+  SHOW_LOADING_EVENT_TOPIC
+} from "../event/event.broadcaster";
+
+const OPEN_KEY_NONE_CHAR = "!";
 
 const AppLayout = (props) => {
   const [collapsed, setCollapsed] = useState(false);
+  const [allGnbItems, setAllGnbItems] = useState(NavigationConfig.getItems());
   const [gnbItem, setGnbItem] = useState(null);
   const [breadcrumbItems, setBreadcrumbItems] = useState([]);
-  const [defaultNavigationItem, setDefaultNavigationItem] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
 
-  useMemo(() => {
-    // componentWillMount events
-    setDefaultNavigationItem(
-      NavigationConfig.getItemsByLink(props.location.pathname)
-    );
-  }, [props.location.pathname]);
+  const [navigationState, setNavigationState] = useState({
+    gnbMenuSelectedKeys: [""],
+    snbMenuSelectedKeys: [""],
+    snbMenuOpenKeys: [""]
+  });
+
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    const currentNavigationItem = NavigationConfig.getItemsByLink(props.location.pathname, allGnbItems);
     if (props.location.pathname !== "/") {
-      if (defaultNavigationItem.gnbItem) {
-        const gnbNavigationItem = NavigationConfig.getItems()[
-          defaultNavigationItem.gnbItem.index
-          ];
+      if (currentNavigationItem.gnbItem) {
+        const gnbNavigationItem = allGnbItems[currentNavigationItem.gnbItem.index];
         setGnbItem(gnbNavigationItem);
 
         const breadcrumbNavigationItems = [];
-        breadcrumbNavigationItems.push(defaultNavigationItem.gnbItem.title);
+        breadcrumbNavigationItems.push(currentNavigationItem.gnbItem.title);
 
-        if (defaultNavigationItem.snbItem) {
-          breadcrumbNavigationItems.push(defaultNavigationItem.snbItem.title);
+        if (currentNavigationItem.snbItem) {
+          breadcrumbNavigationItems.push(currentNavigationItem.snbItem.title);
         }
 
-        if (defaultNavigationItem.subItem) {
-          breadcrumbNavigationItems.push(defaultNavigationItem.subItem.title);
+        if (currentNavigationItem.subItem) {
+          breadcrumbNavigationItems.push(currentNavigationItem.subItem.title);
         }
 
         setBreadcrumbItems(breadcrumbNavigationItems);
       }
     }
 
-    const unsubscribe = EventBroadcaster.on("SHOW_LOADING", (data) => {
+    updateNavigationStatus(currentNavigationItem);
+
+    EventBroadcaster.on(CHANGE_MEMBER_CONTEXT_EVENT_TOPIC, () => {
+      setAllGnbItems(NavigationConfig.getItems());
+    });
+
+    EventBroadcaster.on(SHOW_LOADING_EVENT_TOPIC, (data) => {
       setLoading(data.show);
     });
-    return unsubscribe;
   }, [
     props.location.pathname,
-    defaultNavigationItem.gnbItem,
-    defaultNavigationItem.snbItem,
-    defaultNavigationItem.subItem
+    allGnbItems,
   ]);
+
+  const updateNavigationStatus = (navigationItem) => {
+    const gnbMenuSelectedKeys = navigationItem.gnbItem ? [navigationItem.gnbItem.index] : [""];
+    let snbMenuSelectedKeys = navigationItem.snbItem ? [navigationItem.snbItem.index] : [""];
+    if (navigationItem.subItem) {
+      snbMenuSelectedKeys = navigationItem.snbItem
+        ? [
+          navigationItem.snbItem.index +
+          "-" +
+          navigationItem.subItem.index,
+        ]
+        : [""];
+    }
+    const snbMenuOpenKeys = navigationItem.snbItem ? [navigationItem.snbItem.index] : [""];
+
+    setNavigationState({
+      gnbMenuSelectedKeys: gnbMenuSelectedKeys,
+      snbMenuSelectedKeys: snbMenuSelectedKeys,
+      snbMenuOpenKeys: snbMenuOpenKeys
+    });
+  }
 
   const handleGnbMenuClick = ({key}) => {
     const gnbIndex = key;
-    setGnbItem(NavigationConfig.getItems()[gnbIndex]);
+    setGnbItem(allGnbItems[gnbIndex]);
+    setNavigationState({
+      gnbMenuSelectedKeys: [gnbIndex],
+      snbMenuSelectedKeys: [""],
+      snbMenuOpenKeys: [""]
+    });
   };
 
   const handleSnbMenuClick = ({key}) => {
@@ -83,38 +114,25 @@ const AppLayout = (props) => {
       });
       setBreadcrumbItems(breadcrumbNavigationItems);
     }
+    setNavigationState({
+      ...navigationState,
+      snbMenuSelectedKeys: [key],
+    });
   };
 
   const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
-  };
-
-  const getSnbMenuDefaultOpenKeys = () => {
-    return defaultNavigationItem.snbItem
-      ? [defaultNavigationItem.snbItem.index]
-      : [""];
-  };
-
-  const getSnbMenuDefaultSelectedKeys = () => {
-    if (defaultNavigationItem.subItem) {
-      return defaultNavigationItem.snbItem
-        ? [
-          defaultNavigationItem.snbItem.index +
-          "-" +
-          defaultNavigationItem.subItem.index,
-        ]
-        : [""];
+    if (!collapsed) {
+      setNavigationState({
+        ...navigationState,
+        snbMenuOpenKeys: navigationState.snbMenuOpenKeys.map(key => OPEN_KEY_NONE_CHAR + key),
+      });
     } else {
-      return defaultNavigationItem.snbItem
-        ? [defaultNavigationItem.snbItem.index]
-        : [""];
+      setNavigationState({
+        ...navigationState,
+        snbMenuOpenKeys: navigationState.snbMenuOpenKeys.map(key => key.startsWith(OPEN_KEY_NONE_CHAR) ? key.split(OPEN_KEY_NONE_CHAR)[1] : key),
+      });
     }
-  };
-
-  const getGnbMenuDefaultSelectedKeys = () => {
-    return defaultNavigationItem.gnbItem
-      ? [defaultNavigationItem.gnbItem.index]
-      : [""];
+    setCollapsed(!collapsed);
   };
 
   return (
@@ -124,49 +142,32 @@ const AppLayout = (props) => {
       }}
     >
       <Layout.Sider
-        width={200}
-        style={{background: "#041527"}}
         trigger={null}
         collapsible
         collapsed={collapsed}
       >
         <Link to="/">
-          <div
-            style={{
-              color: "white",
-              margin: "5px",
-              marginLeft: "5px",
-              marginTop: "20px",
-              marginBottom: "20px",
-              fontSize: "1.5rem",
-            }}
-          >
-            <img
-              alt="logo"
-              src={adminConfig.logo}
-              width="30px"
-              style={{borderRadius: "20%", marginLeft: "20px"}}
-            />
+          <div className="site-logo">
+            <img className="logo-image" alt="logo" src={adminConfig.logo}/>
             {collapsed === false && <strong>&nbsp; {adminConfig.siteName}</strong>}
           </div>
         </Link>
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultOpenKeys={getSnbMenuDefaultOpenKeys()}
-          defaultSelectedKeys={getSnbMenuDefaultSelectedKeys()}
-          onClick={handleSnbMenuClick}
+        <Menu theme="dark" mode="inline" openKeys={navigationState.snbMenuOpenKeys}
+              selectedKeys={navigationState.snbMenuSelectedKeys}
+              onClick={handleSnbMenuClick}
         >
-          {gnbItem &&
-          gnbItem.items &&
+          {gnbItem && gnbItem.items &&
           gnbItem.items.map((item, index) => {
             const SnbIcon = AllIcons[item.icon];
             if (item.items && item.items.length > 0) {
               return (
-                <Menu.SubMenu
-                  key={index}
-                  title={item.title}
-                  icon={<SnbIcon/>}
+                <Menu.SubMenu key={index} title={item.title} icon={<SnbIcon/>}
+                              onTitleClick={(event) => {
+                                setNavigationState({
+                                  ...navigationState,
+                                  snbMenuOpenKeys: [event.key],
+                                });
+                              }}
                 >
                   {item.items.map((subItem, subItemIndex) => {
                     const SubItemIcon = AllIcons[subItem.icon];
@@ -208,10 +209,7 @@ const AppLayout = (props) => {
         </Menu>
       </Layout.Sider>
       <Layout className="site-layout">
-        <Layout.Header
-          className="site-layout-background"
-          style={{padding: 0}}
-        >
+        <Layout.Header className="site-layout-header">
           <Space>
             {React.createElement(
               collapsed
@@ -222,12 +220,13 @@ const AppLayout = (props) => {
                 onClick: toggleCollapsed,
               }
             )}
+            {allGnbItems &&
             <Menu
               mode="horizontal"
-              defaultSelectedKeys={getGnbMenuDefaultSelectedKeys()}
+              selectedKeys={navigationState.gnbMenuSelectedKeys}
               onClick={handleGnbMenuClick}
             >
-              {NavigationConfig.getItems().map((item, idx) => {
+              {allGnbItems.map((item, idx) => {
                 const GnbIcon = AllIcons[item.icon];
                 return (
                   <Menu.Item key={idx} icon={<GnbIcon/>}>
@@ -235,25 +234,13 @@ const AppLayout = (props) => {
                   </Menu.Item>
                 );
               })}
-            </Menu>
+            </Menu>}
           </Space>
-          <div
-            style={{fontSize: "1.5rem", float: "right", marginRight: "20px"}}
-          >
+          <div className="login-info">
             <LoginInfo/>
-            <Button shape="circle" icon={<SettingOutlined/>} style={{marginLeft: "10px"}} onClick={() => {
-              setShowSettings(true);
-            }}/>
           </div>
         </Layout.Header>
-        <Layout.Content
-          className="site-layout-background"
-          style={{
-            margin: "24px 16px",
-            padding: 24,
-            minHeight: 'initial',
-          }}
-        >
+        <Layout.Content className="site-layout-content">
           {props.location.pathname !== "/" && (
             <div style={{backgroundColor: "white", padding: "15px"}}>
               <Breadcrumb>
@@ -261,14 +248,14 @@ const AppLayout = (props) => {
                   <Breadcrumb.Item key={index}>{item}</Breadcrumb.Item>
                 ))}
               </Breadcrumb>
-              <div className="page-title" style={{padding: 0}}>
+              <div className="page-title">
                 {breadcrumbItems &&
                 breadcrumbItems.length > 0 &&
                 breadcrumbItems[breadcrumbItems.length - 1]}
               </div>
             </div>
           )}
-          <div className="site-layout-background" style={{padding: 24}}>
+          <div className="site-layout-page">
             <Spin spinning={loading}>
               <PageRouting/>
             </Spin>
@@ -278,10 +265,6 @@ const AppLayout = (props) => {
           better ADMIN ©2021 Created by bettercode
         </Layout.Footer>
       </Layout>
-      {showSettings &&
-      <AppSettings onClose={() => {
-        setShowSettings(false);
-      }}/>}
     </Layout>
   );
 };
