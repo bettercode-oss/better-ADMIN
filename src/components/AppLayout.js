@@ -120,7 +120,7 @@ const AppLayout = (props) => {
   return (
     <Layout
       style={{
-        height: "100%",
+        minHeight: "100%"
       }}
     >
       <Layout.Sider
