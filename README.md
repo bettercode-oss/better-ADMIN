@@ -21,6 +21,7 @@ Admin 사이트를 만들다 보면 정작 중요한 업무 페이지를 만드�
   * 리프래시 토큰(Refresh Token): 리프래시 토큰은 일반적으로 7일 정도로 설정하며 액세스 토큰보다 유효기간이 더 깁니다. 이 토큰은 새로운 액세스를 생성하고 액세스 토큰을 다시 발급받는데 사용합니다. 액세스 토큰이 만료되는 경우 리프래시 토큰을 보내서 새로운 액세스 및 리프래시 토큰을 생성합니다.
 * RefreshToken을 secure httpOnly 쿠키로, AccessToken은 JSON payload로 받아와서 웹 어플리케이션 내 로컬 변수로 이용
   * CSRF 취약점 공격 방어하고, XSS 취약점 공격으로 저장된 유저 정보 읽기는 막을 수 있다.
+* Silent Refresh 지원
 
 ![image](https://user-images.githubusercontent.com/16472109/117815252-3d6d0b00-b2a0-11eb-991a-729f5fda8895.png)
 그림 출처 : https://bit.ly/3o5MdbT
