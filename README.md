@@ -64,3 +64,5 @@ $ yarn start
 docker pull bettercode2016/better-admin-backend-service
 docker run -d -p 2016:2016 bettercode2016/better-admin-backend-service
 ```
+
+혹은 https://github.com/bettercode-oss/better-ADMIN-backend-service 코드를 체크아웃 받아 실행
