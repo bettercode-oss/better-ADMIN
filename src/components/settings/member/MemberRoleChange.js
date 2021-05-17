@@ -51,9 +51,6 @@ const MemberRoleChange = ({member, onBack}) => {
     setLoading(true);
     MemberService.assignRoles(member.id, assignRoles).then(() => {
       message.success("저장 되었습니다.");
-    }).catch(err => {
-      console.log(err);
-      message.error("오류가 발생했습니다. 잠시 후 다시 시도해 주세요.");
     }).finally(() => {
       setLoading(false);
     });

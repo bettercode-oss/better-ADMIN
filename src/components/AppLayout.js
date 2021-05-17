@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Breadcrumb, Layout, Menu, Space, Spin} from "antd";
+import {Breadcrumb, Button, Layout, Menu, Modal, Result, Space, Spin} from "antd";
 import "./AppLayout.css";
 import PageRouting from "./PageRouting";
 import {adminConfig} from "../config/admin.config";
@@ -10,6 +10,7 @@ import NavigationConfig from "../config/navigation.config";
 import {
   CHANGE_MEMBER_CONTEXT_EVENT_TOPIC,
   EventBroadcaster,
+  SHOW_ERROR_MESSAGE_EVENT_TOPIC,
   SHOW_LOADING_EVENT_TOPIC
 } from "../event/event.broadcaster";
 
@@ -20,6 +21,10 @@ const AppLayout = (props) => {
   const [allGnbItems, setAllGnbItems] = useState(NavigationConfig.getItems());
   const [gnbItem, setGnbItem] = useState(null);
   const [breadcrumbItems, setBreadcrumbItems] = useState([]);
+  const [errorModal, setErrorModal] = useState({
+    show: false,
+    message: '',
+  });
 
   const [navigationState, setNavigationState] = useState({
     gnbMenuSelectedKeys: [""],
@@ -52,7 +57,12 @@ const AppLayout = (props) => {
     }
 
     updateNavigationStatus(currentNavigationItem);
+  }, [
+    props.location.pathname,
+    allGnbItems,
+  ]);
 
+  useEffect(() => {
     EventBroadcaster.on(CHANGE_MEMBER_CONTEXT_EVENT_TOPIC, () => {
       setAllGnbItems(NavigationConfig.getItems());
     });
@@ -60,10 +70,11 @@ const AppLayout = (props) => {
     EventBroadcaster.on(SHOW_LOADING_EVENT_TOPIC, (data) => {
       setLoading(data.show);
     });
-  }, [
-    props.location.pathname,
-    allGnbItems,
-  ]);
+
+    EventBroadcaster.on(SHOW_ERROR_MESSAGE_EVENT_TOPIC, (message) => {
+      setErrorModal({show:true, message: message});
+    })
+  }, []);
 
   const updateNavigationStatus = (navigationItem) => {
     const gnbMenuSelectedKeys = navigationItem.gnbItem ? [navigationItem.gnbItem.index] : [""];
@@ -265,6 +276,19 @@ const AppLayout = (props) => {
           better ADMIN ©2021 Created by bettercode
         </Layout.Footer>
       </Layout>
+      <Modal visible={errorModal.show}
+             onCancel={()=> {setErrorModal({show: false, message: ''})}}
+             footer={null} bodyStyle={{margin: 0, padding: 0}}>
+        <Result
+          status="warning"
+          title={errorModal.message}
+          extra={
+            <Button type="primary" key="console" onClick={()=> {setErrorModal({show: false, message: ''})}}>
+              닫기
+            </Button>
+          }
+        />
+      </Modal>
     </Layout>
   );
 };

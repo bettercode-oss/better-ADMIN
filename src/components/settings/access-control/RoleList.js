@@ -28,8 +28,6 @@ const RoleList = ({onCreate, onEdit}) => {
     AccessControlService.getRoles(params).then(response => {
       setRoles(response.data.result);
       setRoleTotalCount(response.data.totalCount);
-    }).catch(error => {
-      message.error("조회 오류 입니다. 잠시 후 다시 시도해 주세요.");
     });
   }
 
@@ -56,8 +54,6 @@ const RoleList = ({onCreate, onEdit}) => {
       loadRoles({
         page: 1
       });
-    }).catch(error => {
-      message.error("오류 입니다. 잠시 후 다시 시도해 주세요.");
     });
   }
 
