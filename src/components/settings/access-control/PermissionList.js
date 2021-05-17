@@ -20,8 +20,6 @@ const PermissionList = ({onCreate, onEdit}) => {
     AccessControlService.getPermissions(params).then(response => {
       setPermissions(response.data.result);
       setPermissionTotalCount(response.data.totalCount);
-    }).catch(error => {
-      message.error("조회 오류 입니다. 잠시 후 다시 시도해 주세요.");
     });
   }
 
@@ -38,8 +36,6 @@ const PermissionList = ({onCreate, onEdit}) => {
       loadPermissions({
         page: 1
       });
-    }).catch(error => {
-      message.error("오류 입니다. 잠시 후 다시 시도해 주세요.");
     });
   }
 

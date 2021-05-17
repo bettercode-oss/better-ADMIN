@@ -4,10 +4,14 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import {adminConfig} from "./config/admin.config";
-import {initAxios} from "./config/axios.config";
+import {AxiosConfigur} from "./config/axios.configur";
 
 if (adminConfig.authentication.used) {
-  initAxios();
+  AxiosConfigur.configAuthInterceptor();
+}
+
+if (adminConfig.serverInternalErrorHandler.used) {
+  AxiosConfigur.configServerInternalErrorInterceptor()
 }
 
 ReactDOM.render(

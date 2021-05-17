@@ -4,6 +4,7 @@ const topics = {}
 
 export const SHOW_LOADING_EVENT_TOPIC = "SHOW_LOADING";
 export const CHANGE_MEMBER_CONTEXT_EVENT_TOPIC = "CHANGE_MEMBER_CONTEXT";
+export const SHOW_ERROR_MESSAGE_EVENT_TOPIC = "SHOW_ERROR_MESSAGE";
 
 export class EventBroadcaster {
   static broadcast = (topic, args) => {

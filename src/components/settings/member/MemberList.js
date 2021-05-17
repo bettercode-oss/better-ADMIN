@@ -19,8 +19,6 @@ const MemberList = ({onRoleChange}) => {
     MemberService.getMembers(params).then(response => {
       setMembers(response.data.result);
       setMemberTotalCount(response.data.totalCount);
-    }).catch(error => {
-      message.error("조회 오류 입니다. 잠시 후 다시 시도해 주세요.");
     });
   }
 

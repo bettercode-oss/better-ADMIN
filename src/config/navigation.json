@@ -1,10 +1,8 @@
 {
-  "permissionUsed": true,
   "items": [
     {
       "title": "GNB1-22",
       "icon": "AndroidOutlined",
-      "accessPermission": "MANAGE_MEMBERS",
       "items": [
         {
           "title": "SNB1",
@@ -32,6 +30,7 @@
     {
       "title": "GNB2",
       "icon": "GithubOutlined",
+      "accessPermission": "MANAGE_MEMBERS",
       "items": [
         {
           "title": "SNB3",

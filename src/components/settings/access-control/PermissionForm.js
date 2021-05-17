@@ -67,8 +67,6 @@ const PermissionForm = ({mode, selectedPermission, onBack}) => {
   const handleFailure = (err) => {
     if (err.response.status === 400 && err.response.data && err.response.data.message && err.response.data.message === "duplicated") {
       message.warn("이미 존재하는 권한입니다.");
-    } else {
-      message.error("오류가 발생했습니다. 잠시 후 다시 시도해 주세요.");
     }
   }
 

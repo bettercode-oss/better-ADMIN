@@ -42,8 +42,6 @@ const DooraySetting = () => {
         domain: response.data.domain,
         authorizationToken: response.data.authorizationToken,
       });
-    }).catch(error => {
-      message.error("조회 오류 입니다. 잠시 후 다시 시도해 주세요.");
     });
   }, [form]);
 
@@ -57,8 +55,6 @@ const DooraySetting = () => {
     setLoading(true);
     SiteService.saveSetting(SETTING_KEY, newSetting).then(() => {
       message.success("저장 되었습니다.");
-    }).catch(() => {
-      message.error("저장 오류 입니다. 잠시 후 다시 시도해 주세요.");
     }).finally(() => {
       setLoading(false);
     });
