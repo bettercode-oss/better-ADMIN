@@ -43,6 +43,13 @@ Admin 사이트를 만들다 보면 정작 중요한 업무 페이지를 만드�
 
 ![image](https://user-images.githubusercontent.com/16472109/117816154-2e3a8d00-b2a1-11eb-93f2-f4b7c971c7bf.png)
 
+**5. API 공통 에러 처리 지원**
+
+HTTP Status Code 500(ServerInternalError)인 경우 공통 에러 메시지 제공
+
+![image](https://user-images.githubusercontent.com/16472109/118567236-60bc1c80-b7b0-11eb-86fc-0dc43112c6a9.png)
+
+
 
 ## 시작하기
 
