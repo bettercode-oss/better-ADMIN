@@ -26,7 +26,7 @@ Admin 사이트를 만들다 보면 정작 중요한 업무 페이지를 만드�
 ![image](https://user-images.githubusercontent.com/16472109/117815252-3d6d0b00-b2a0-11eb-991a-729f5fda8895.png)
 그림 출처 : https://bit.ly/3o5MdbT
 
-**3. 역할 기반 접근 제어([Role-based access control](https://en.wikipedia.org/wiki/Role-based_access_control))**
+**3. 역할 기반 접근 제어([Role-Based Access Control](https://en.wikipedia.org/wiki/Role-based_access_control))**
 * 권한(Permission)을 직접 만들 수 있으며 여러 역할(Role)에 할당 할 수 있다.
 * 또한 사용자에게 여러 역할을 할당할 수 있다.
 * 권한에 따라 접근할 수 있는 화면 메뉴를 제어할 수 있다.
