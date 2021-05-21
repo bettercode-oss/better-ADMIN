@@ -49,7 +49,9 @@ HTTP Status Code 500(ServerInternalError)인 경우 공통 에러 메시지 제�
 
 ![image](https://user-images.githubusercontent.com/16472109/118567236-60bc1c80-b7b0-11eb-86fc-0dc43112c6a9.png)
 
+**6. 페이지 로딩 상단바 지원**
 
+![better-admin-page-top-loading-bar](https://user-images.githubusercontent.com/16472109/119144372-8f254a80-ba83-11eb-9ac0-24c14e4040e6.gif)
 
 ## 시작하기
 
