@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Route, useHistory} from 'react-router-dom';
-import {adminConfig} from "../config/admin.config";
-import {AuthService} from "../auth/auth.service";
+import {adminConfig} from "../../config/admin.config";
+import {AuthService} from "../../auth/auth.service";
 
 export default function AuthRoute({path, exact = false, component}) {
   const [authenticated, setAuthenticated] = useState(false);

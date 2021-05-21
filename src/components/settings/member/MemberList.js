@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Dropdown, Menu, message, PageHeader, Table, Tag} from 'antd';
+import {Button, Dropdown, Menu, PageHeader, Table, Tag} from 'antd';
 import {MemberService} from "./member.service";
 import {DownOutlined, SettingOutlined} from "@ant-design/icons";
 
