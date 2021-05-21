@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Dropdown, Menu, message, Modal, PageHeader, Table, Tag} from 'antd';
+import {Button, Dropdown, Menu, Modal, PageHeader, Table, Tag} from 'antd';
 import {
   DeleteOutlined,
   DownOutlined,

@@ -3,7 +3,7 @@ import {HashRouter, Route, Switch} from "react-router-dom";
 import './App.less';
 import AppLayout from "./components/AppLayout";
 import Login from "./components/Login";
-import AuthRoute from "./components/AuthRoute";
+import AuthRoute from "./components/router/AuthRoute";
 import {adminConfig} from "./config/admin.config";
 import {AuthService} from "./auth/auth.service";
 
