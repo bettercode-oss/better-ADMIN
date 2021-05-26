@@ -6,6 +6,9 @@ import Login from "./components/Login";
 import AuthRoute from "./components/router/AuthRoute";
 import {adminConfig} from "./config/admin.config";
 import {AuthService} from "./auth/auth.service";
+import {Modal} from "antd";
+import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "./event/event.broadcaster";
+import {ExclamationCircleOutlined} from "@ant-design/icons";
 
 const App = () => {
   useEffect(() => {
@@ -14,6 +17,16 @@ const App = () => {
         window.location.hash = adminConfig.authentication.loginUrl;
       });
     }
+
+    EventBroadcaster.on(SHOW_ERROR_MESSAGE_EVENT_TOPIC, (msg) => {
+      Modal.confirm({
+        icon: <ExclamationCircleOutlined/>,
+        content: msg,
+        okText: '확인',
+        cancelText: null,
+        cancelButtonProps: {style: {display: 'none'}},
+      });
+    });
   }, []);
 
   return (<>
