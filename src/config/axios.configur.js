@@ -3,7 +3,6 @@ import {adminConfig} from "./admin.config";
 import {AuthService} from "../auth/auth.service";
 import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "../event/event.broadcaster";
 
-const DEFAULT_SERVER_INTERNAL_ERROR_MESSAGE = "오류가 발생 했습니다. 잠시 후 다시 시도해 주세요.";
 const DEFAULT_PERMISSION_DENIED_ERROR_MESSAGE = "권한이 없습니다. 관리자에게 문의하세요.";
 
 export class AxiosConfigur {
@@ -16,7 +15,7 @@ export class AxiosConfigur {
       return response;
     }, function (error) {
       // Any status codes that falls outside the range of 2xx cause this function to trigger
-      if (error.response.status === 401) {
+      if (error.response && error.response.status === 401) {
         if (error.response.data && error.response.data.message
           && error.response.data.message === "access token expired") {
           // access token expired
@@ -43,7 +42,7 @@ export class AxiosConfigur {
             window.location.hash = adminConfig.authentication.loginUrl;
           });
         }
-      } else if (error.response.status === 403) {
+      } else if (error.response && error.response.status === 403) {
         EventBroadcaster.broadcast(SHOW_ERROR_MESSAGE_EVENT_TOPIC,
           adminConfig.authentication.errorMessagePermissionDenied
             ? adminConfig.authentication.errorMessagePermissionDenied
@@ -61,11 +60,19 @@ export class AxiosConfigur {
       return response;
     }, function (error) {
       // Any status codes that falls outside the range of 2xx cause this function to trigger
-      if (error.response.status === 500) {
-        EventBroadcaster.broadcast(SHOW_ERROR_MESSAGE_EVENT_TOPIC,
-          adminConfig.serverInternalErrorHandler.errorMessage
-            ? adminConfig.serverInternalErrorHandler.errorMessage
-            : DEFAULT_SERVER_INTERNAL_ERROR_MESSAGE);
+      if (error.response && error.response.status && error.response.status === 500) {
+        EventBroadcaster.broadcast(SHOW_ERROR_MESSAGE_EVENT_TOPIC, adminConfig.errorMessage.serverInternalError);
+      }
+      return Promise.reject(error);
+    });
+  }
+
+  static configServerNetworkErrorInterceptor() {
+    axios.interceptors.response.use(function (response) {
+      return response;
+    }, function (error) {
+      if (!error.response) {
+        EventBroadcaster.broadcast(SHOW_ERROR_MESSAGE_EVENT_TOPIC, adminConfig.errorMessage.networkError);
       }
       return Promise.reject(error);
     });

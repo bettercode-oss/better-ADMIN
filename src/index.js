@@ -10,9 +10,8 @@ if (adminConfig.authentication.used) {
   AxiosConfigur.configAuthInterceptor();
 }
 
-if (adminConfig.serverInternalErrorHandler.used) {
-  AxiosConfigur.configServerInternalErrorInterceptor()
-}
+AxiosConfigur.configServerNetworkErrorInterceptor();
+AxiosConfigur.configServerInternalErrorInterceptor();
 
 ReactDOM.render(
   <App/>,
