@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from "react";
-import {Button, Dropdown, Menu, PageHeader, Table, Tag} from 'antd';
+import {Button, Collapse, Dropdown, Menu, PageHeader, Table, Tag} from 'antd';
 import {MemberService} from "./member.service";
 import {DownOutlined, SettingOutlined} from "@ant-design/icons";
 
+const { Panel } = Collapse;
 const PAGE_SIZE = 5;
 const MemberList = ({onRoleChange}) => {
   const [members, setMembers] = useState([]);
@@ -46,7 +47,7 @@ const MemberList = ({onRoleChange}) => {
       <Tag color={record.type === 'site' ? 'magenta' : 'blue'}>{text}</Tag>
     )
   }, {
-    title: '역할',
+    title: '멤버 역할',
     width: "200px",
     dataIndex: 'roles',
     key: 'roles',
@@ -58,6 +59,20 @@ const MemberList = ({onRoleChange}) => {
       </div>
     }
   }, {
+    title: '소속 조직',
+    render: (text, record) => {
+      if(record.organizations) {
+        return <Collapse ghost>
+          {record.organizations.map((organization) => {
+            return <Panel header={organization.name} key={organization.id}>
+              {organization.roles && organization.roles.map(role =>
+                (<Tag key={role.id} color="orange">{role.name}</Tag>))}
+            </Panel>
+            })
+          }</Collapse>
+      }
+    }
+  }, {
     title: '',
     align: 'right',
     render: (text, record) => {
@@ -65,7 +80,7 @@ const MemberList = ({onRoleChange}) => {
         <Dropdown overlay={
           <Menu>
             <Menu.Item key="0">
-              <Button type="text" onClick={() => {onRoleChange(record)}}>역할 변경</Button>
+              <Button type="text" onClick={() => {onRoleChange(record)}}>멤버 역할 변경</Button>
             </Menu.Item>
           </Menu>} trigger={['click']}>
           <Button style={{borderRadius: '5px'}} icon={<SettingOutlined/>}>
