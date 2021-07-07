@@ -44,7 +44,7 @@ export const AppSettings = ({onClose}) => {
   return (
     <>
       <Modal title={[<div key={1}><SettingOutlined/> 사이트 설정</div>]} visible={true}
-             onCancel={onClose} footer={null} width={1000} bodyStyle={{margin: 0, padding: 0}}>
+             onCancel={onClose} footer={null} width={1200} bodyStyle={{margin: 0, padding: 0}}>
         <Layout>
           <Sider className="settings-sider">
             <Menu mode="inline" onClick={handleMenuClick} defaultSelectedKeys={[selectedKey]} defaultOpenKeys={[DEFAULT_OPEN_KEY]}>

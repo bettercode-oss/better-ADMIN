@@ -46,11 +46,11 @@ const LoginInfo = () => {
       <Dropdown overlay={() =>
         <Menu>
           {isSettingsAble() &&
-          <Menu.Item onClick={showSiteSettings}>
-            <SettingOutlined/>사이트 설정
+          <Menu.Item key="0" onClick={showSiteSettings}>
+            <SettingOutlined/>&nbsp;사이트 설정
           </Menu.Item>}
           {isSettingsAble() && <Menu.Divider/>}
-          <Menu.Item onClick={logout}><LogoutOutlined/>로그아웃</Menu.Item>
+          <Menu.Item key="1" onClick={logout}><LogoutOutlined/>&nbsp;로그아웃</Menu.Item>
         </Menu>}>
       <span style={{paddingBottom: "20px", cursor: "pointer"}}>
         <Avatar icon={<UserOutlined/>}/>

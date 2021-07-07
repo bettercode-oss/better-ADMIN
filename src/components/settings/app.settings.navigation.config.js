@@ -4,15 +4,20 @@ import RoleSetting from "./access-control/RoleSetting";
 import PermissionSetting from "./access-control/PermissionSetting";
 import DooraySetting from "./dooray/DooraySetting";
 import {MemberContext} from "../../auth/member.context";
+import OrganizationSetting from "./organization/OrganizationSetting";
 
 const settingsSideMenuItems = [
   {
-    title: "사용자",
+    title: "사용자 / 조직도",
     accessPermission: "MANAGE_MEMBERS",
     items: [
       {
         title: "멤버",
         component: <MemberSetting/>,
+      },
+      {
+        title: "조직도",
+        component: <OrganizationSetting/>,
       }
     ]
   }, {
