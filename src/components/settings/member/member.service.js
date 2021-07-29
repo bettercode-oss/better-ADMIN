@@ -20,6 +20,14 @@ class MemberService {
   getMember(memberId) {
     return axios.get(API_URL + `/members/${memberId}`);
   }
+
+  signUpMember(signUp) {
+    return axios.post(API_URL + `/members`, signUp);
+  }
+
+  approveMember(memberId) {
+    return axios.put(API_URL + `/members/${memberId}/approved`);
+  }
 }
 
 const instance = new MemberService()
