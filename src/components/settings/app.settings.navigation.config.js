@@ -5,6 +5,7 @@ import PermissionSetting from "./access-control/PermissionSetting";
 import DooraySetting from "./dooray/DooraySetting";
 import {MemberContext} from "../../auth/member.context";
 import OrganizationSetting from "./organization/OrganizationSetting";
+import MemberApproval from "./member/MemberApproval";
 
 const settingsSideMenuItems = [
   {
@@ -18,6 +19,10 @@ const settingsSideMenuItems = [
       {
         title: "조직도",
         component: <OrganizationSetting/>,
+      },
+      {
+        title: "멤버 승인",
+        component: <MemberApproval/>,
       }
     ]
   }, {

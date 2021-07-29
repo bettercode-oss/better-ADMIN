@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from "react";
-import {Button, Collapse, Dropdown, Menu, PageHeader, Table, Tag} from 'antd';
+import {Button, Dropdown, Menu, message, PageHeader, Popconfirm, Table} from 'antd';
 import {MemberService} from "./member.service";
 import {DownOutlined, SettingOutlined} from "@ant-design/icons";
 
-const { Panel } = Collapse;
 const PAGE_SIZE = 5;
-const MemberList = ({onRoleChange}) => {
+const MemberApproval = ({onRoleChange}) => {
   const [members, setMembers] = useState([]);
   const [memberTotalCount, setMemberTotalCount] = useState(0);
 
@@ -17,7 +16,7 @@ const MemberList = ({onRoleChange}) => {
 
   const loadMembers = (params) => {
     params.pageSize = PAGE_SIZE;
-    params.status = 'approved';
+    params.status = 'applied';
     MemberService.getMembers(params).then(response => {
       setMembers(response.data.result);
       setMemberTotalCount(response.data.totalCount);
@@ -32,47 +31,23 @@ const MemberList = ({onRoleChange}) => {
     loadMembers(params);
   }
 
+  const approveMember =(memberId) => {
+    MemberService.approveMember(memberId).then(response => {
+      message.success("승인 되었습니다.");
+      loadMembers({
+        page: 1
+      });
+    });
+  }
+
   const columns = [{
-    title: '아이디',
-    dataIndex: 'id',
-    key: 'id',
+    title: '사용자 아이디',
+    dataIndex: 'signId',
+    key: 'signId',
   }, {
     title: '이름',
     dataIndex: 'name',
     key: 'name',
-  }, {
-    title: '로그인 유형',
-    dataIndex: 'typeName',
-    key: 'typeName',
-    render: (text, record) => (
-      <Tag color={record.type === 'site' ? 'magenta' : 'blue'}>{text}</Tag>
-    )
-  }, {
-    title: '멤버 역할',
-    width: "200px",
-    dataIndex: 'roles',
-    key: 'roles',
-    render: (text, record) => {
-      return <div>
-        {record.roles.map(role => (
-          <Tag key={role.id} color="orange">{role.name}</Tag>
-        ))}
-      </div>
-    }
-  }, {
-    title: '소속 조직',
-    render: (text, record) => {
-      if(record.organizations) {
-        return <Collapse ghost>
-          {record.organizations.map((organization) => {
-            return <Panel header={organization.name} key={organization.id}>
-              {organization.roles && organization.roles.map(role =>
-                (<Tag key={role.id} color="orange">{role.name}</Tag>))}
-            </Panel>
-            })
-          }</Collapse>
-      }
-    }
   }, {
     title: '',
     align: 'right',
@@ -81,7 +56,16 @@ const MemberList = ({onRoleChange}) => {
         <Dropdown overlay={
           <Menu>
             <Menu.Item key="0">
-              <Button type="text" onClick={() => {onRoleChange(record)}}>멤버 역할 변경</Button>
+              <Popconfirm
+                title="선택한 사용자를 승인 하시겠습니까?"
+                onConfirm={() => {
+                  approveMember(record.id);
+                }}
+                okText="예"
+                cancelText="아니오"
+              >
+                <Button type="text">멤버 승인</Button>
+              </Popconfirm>
             </Menu.Item>
           </Menu>} trigger={['click']}>
           <Button style={{borderRadius: '5px'}} icon={<SettingOutlined/>}>
@@ -94,8 +78,8 @@ const MemberList = ({onRoleChange}) => {
   return (
     <>
       <PageHeader
-        title="멤버"
-        subTitle="멤버에 역할을 할당하거나 삭제합니다."
+        title="멤버 승인"
+        subTitle="신청한 멤버를 승인 합니다."
       >
         <Table rowKey="id" dataSource={members} columns={columns} locale={{emptyText: "데이터 없음"}}
                pagination={{pageSize: PAGE_SIZE, total: memberTotalCount}}
@@ -104,4 +88,4 @@ const MemberList = ({onRoleChange}) => {
     </>
   )
 };
-export default MemberList;
+export default MemberApproval;
