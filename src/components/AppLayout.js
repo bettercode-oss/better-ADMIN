@@ -17,7 +17,7 @@ const OPEN_KEY_NONE_CHAR = "!";
 
 const AppLayout = (props) => {
   const [collapsed, setCollapsed] = useState(false);
-  const [allGnbItems, setAllGnbItems] = useState(NavigationConfig.getItems());
+  const [allGnbItems, setAllGnbItems] = useState([]);
   const [gnbItem, setGnbItem] = useState(null);
   const [breadcrumbItems, setBreadcrumbItems] = useState([]);
   const [navigationState, setNavigationState] = useState({
