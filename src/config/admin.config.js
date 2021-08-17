@@ -1,6 +1,7 @@
 const BetterAdminConfig = {
   siteName: "better ADMIN",
   logo: "/better-admin.png",
+  homePage: "/",
   authentication: {
     used: true,
     loginUrl: "/login",

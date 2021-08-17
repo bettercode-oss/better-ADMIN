@@ -2,6 +2,7 @@ import axios from "axios";
 import {adminConfig} from "./admin.config";
 import {AuthService} from "../auth/auth.service";
 import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "../event/event.broadcaster";
+import {hideLoading, showLoading} from "../helper/loading.helper";
 
 const DEFAULT_PERMISSION_DENIED_ERROR_MESSAGE = "권한이 없습니다. 관리자에게 문의하세요.";
 
@@ -76,5 +77,36 @@ export class AxiosConfigur {
       }
       return Promise.reject(error);
     });
+  }
+
+  static configLoadingInterceptor() {
+    axios.interceptors.request.use(
+      function (config) {
+        if (config.loading) {
+          showLoading();
+        }
+        return config;
+      },
+      function (error) {
+        // 오류 요청을 보내기전 수행할 일
+        return Promise.reject(error);
+      });
+
+    axios.interceptors.response.use(
+      function (response) {
+        // 응답 데이터를 가공
+        if (response.config.loading) {
+          hideLoading();
+        }
+
+        return response;
+      },
+      function (error) {
+        // 오류 응답을 처리
+        if (error.config.loading) {
+          hideLoading();
+        }
+        return Promise.reject(error);
+      });
   }
 }
