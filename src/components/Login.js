@@ -4,14 +4,12 @@ import {LockOutlined, UserOutlined} from '@ant-design/icons';
 import "./Login.css";
 import Title from "antd/es/typography/Title";
 import {adminConfig} from "../config/admin.config";
-import {useHistory} from "react-router-dom";
 import SiteService from "./settings/site.service";
 import DoorayLogin from "./DoorayLogin";
 import {AuthService} from "../auth/auth.service";
 import MemberSignUp from "./MemberSignUp";
 
 const Login = () => {
-  const history = useHistory();
   const [siteSettings, setSiteSettings] = useState({});
   const [showDoorayLogin, setShowDoorayLogin] = useState(false);
   const [showMemberSignUp, setShowMemberSignUp] = useState(false);
@@ -32,7 +30,7 @@ const Login = () => {
     setLoading(true);
     AuthService.login(signId, password).then(() => {
       setLoading(false);
-      history.replace('/');
+      goToHomePage();
     }).catch(error => {
       setLoading(false);
       if (error.response && error.response.status === 400) {
@@ -44,7 +42,11 @@ const Login = () => {
   };
 
   const handleDoorayLoginSuccess = () => {
-    history.replace('/');
+    goToHomePage();
+  }
+
+  const goToHomePage = () => {
+    window.location = adminConfig.homePage;
   }
 
   return (
