@@ -1,7 +1,7 @@
 import React, {useEffect, useReducer} from "react";
 import {Breadcrumb, Layout, Menu, Space, Spin} from "antd";
 import "./AppLayout.css";
-import PageRouting from "./PageRouting";
+import PageRouter from "../pages/router/PageRouter";
 import {adminConfig} from "../config/admin.config";
 import * as AllIcons from "@ant-design/icons";
 import LoginInfo from "./LoginInfo";
@@ -329,7 +329,7 @@ const AppLayout = (props) => {
           )}
           <div className="site-layout-page">
             <Spin spinning={loading}>
-              <PageRouting/>
+              <PageRouter/>
             </Spin>
           </div>
         </Layout.Content>

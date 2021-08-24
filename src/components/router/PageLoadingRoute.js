@@ -3,7 +3,7 @@ import {Route} from 'react-router-dom';
 import nprogress from 'nprogress';
 import 'nprogress/nprogress.css';
 
-const PageRoute = props => {
+const PageLoadingRoute = props => {
   useMemo(() => {
     nprogress.start();
   }, []);
@@ -15,4 +15,4 @@ const PageRoute = props => {
   return <Route {...props} />;
 };
 
-export default PageRoute;
+export default PageLoadingRoute;
