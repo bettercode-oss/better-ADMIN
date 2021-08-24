@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useReducer} from "react";
 import {Breadcrumb, Layout, Menu, Space, Spin} from "antd";
 import "./AppLayout.css";
 import PageRouting from "./PageRouting";
@@ -15,42 +15,161 @@ import {
 
 const OPEN_KEY_NONE_CHAR = "!";
 
-const AppLayout = (props) => {
-  const [collapsed, setCollapsed] = useState(false);
-  const [allGnbItems, setAllGnbItems] = useState([]);
-  const [gnbItem, setGnbItem] = useState(null);
-  const [breadcrumbItems, setBreadcrumbItems] = useState([]);
-  const [navigationState, setNavigationState] = useState({
+const initialState = {
+  collapsed: false,
+  allGnbItems: [],
+  gnbItem: null,
+  breadcrumbItems: [],
+  navigationState: {
     gnbMenuSelectedKeys: [""],
     snbMenuSelectedKeys: [""],
     snbMenuOpenKeys: [""]
-  });
+  },
+  loading: false
+};
 
-  const [loading, setLoading] = useState(false);
+function reducer(state, action) {
+  switch (action.type) {
+    case 'INIT_NAVIGATION':
+      const currentNavigationItem = NavigationConfig.getItemsByLink(action.pathname, state.allGnbItems);
+      if (action.pathname !== "/") {
+        if (currentNavigationItem.gnbItem) {
+          const gnbNavigationItem = state.allGnbItems[currentNavigationItem.gnbItem.index];
+          const breadcrumbNavigationItems = [];
+          breadcrumbNavigationItems.push(currentNavigationItem.gnbItem.title);
+
+          if (currentNavigationItem.snbItem) {
+            breadcrumbNavigationItems.push(currentNavigationItem.snbItem.title);
+          }
+
+          if (currentNavigationItem.subItem) {
+            breadcrumbNavigationItems.push(currentNavigationItem.subItem.title);
+          }
+
+          state = {
+            ...state,
+            gnbItem: gnbNavigationItem,
+            breadcrumbItems: breadcrumbNavigationItems,
+          };
+        }
+      }
+      const gnbMenuSelectedKeys = currentNavigationItem.gnbItem ? [currentNavigationItem.gnbItem.index] : [""];
+      let snbMenuSelectedKeys = currentNavigationItem.snbItem ? [currentNavigationItem.snbItem.index] : [""];
+      if (currentNavigationItem.subItem) {
+        snbMenuSelectedKeys = currentNavigationItem.snbItem
+          ? [
+            currentNavigationItem.snbItem.index +
+            "-" +
+            currentNavigationItem.subItem.index,
+          ]
+          : [""];
+      }
+      const snbMenuOpenKeys = currentNavigationItem.snbItem ? [currentNavigationItem.snbItem.index] : [""];
+
+      return {
+        ...state,
+        navigationState: {
+          gnbMenuSelectedKeys: gnbMenuSelectedKeys,
+          snbMenuSelectedKeys: snbMenuSelectedKeys,
+          snbMenuOpenKeys: snbMenuOpenKeys
+        },
+      };
+    case 'CLICK_GNB_MENU':
+      const gnbIndex = action.key;
+      return {
+        ...state,
+        gnbItem: state.allGnbItems[gnbIndex],
+        navigationState: {
+          gnbMenuSelectedKeys: [gnbIndex],
+          snbMenuSelectedKeys: [""],
+          snbMenuOpenKeys: [""]
+        },
+      };
+    case 'CLICK_SNB_MENU':
+      const selectedMenuIndices = action.key.split("-");
+      if (selectedMenuIndices && state.gnbItem) {
+        const breadcrumbNavigationItems = [];
+        breadcrumbNavigationItems.push(state.gnbItem.title);
+        let selectedSnbItem = {};
+
+        selectedMenuIndices.forEach((menuIndex, arrayIndex) => {
+          if (arrayIndex === 0) {
+            selectedSnbItem = state.gnbItem.items[menuIndex];
+            breadcrumbNavigationItems.push(selectedSnbItem.title);
+          } else if (arrayIndex === 1) {
+            const selectedSubItem = selectedSnbItem.items[menuIndex];
+            breadcrumbNavigationItems.push(selectedSubItem.title);
+          }
+        });
+        return {
+          ...state,
+          breadcrumbNavigationItems: breadcrumbNavigationItems,
+          navigationState: {
+            ...state.navigationState,
+            snbMenuSelectedKeys: [action.key],
+          }
+        };
+      } else {
+        return {
+          ...state,
+          navigationState: {
+            ...state.navigationState,
+            snbMenuSelectedKeys: [action.key],
+          }
+        };
+      }
+    case 'CLICK_SUB_MENU':
+      return {
+        ...state,
+        navigationState: {
+          ...state.navigationState,
+          snbMenuOpenKeys: [action.key],
+        }
+      };
+    case 'REFRESH_ALL_GNB_ITEMS':
+      return {
+        ...state,
+        allGnbItems: NavigationConfig.getItems(),
+      };
+    case 'SHOW_LOADING':
+      return {
+        ...state,
+        loading: action.loading,
+      };
+    case 'TOGGLE_COLLAPSED':
+      if (action.collapsed) {
+        return {
+          ...state,
+          navigationState: {
+            ...state.navigationState,
+            snbMenuOpenKeys: state.navigationState.snbMenuOpenKeys.map(key => OPEN_KEY_NONE_CHAR + key),
+          },
+          collapsed: !action.collapsed
+        }
+      } else {
+        return {
+          ...state,
+          navigationState: {
+            ...state.navigationState,
+            snbMenuOpenKeys: state.navigationState.snbMenuOpenKeys.map(key => key.startsWith(OPEN_KEY_NONE_CHAR) ? key.split(OPEN_KEY_NONE_CHAR)[1] : key),
+          },
+          collapsed: !action.collapsed
+        }
+      }
+    default:
+      return state;
+  }
+}
+
+const AppLayout = (props) => {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const {collapsed, allGnbItems, gnbItem, breadcrumbItems, navigationState, loading} = state;
 
   useEffect(() => {
-    const currentNavigationItem = NavigationConfig.getItemsByLink(props.location.pathname, allGnbItems);
-    if (props.location.pathname !== "/") {
-      if (currentNavigationItem.gnbItem) {
-        const gnbNavigationItem = allGnbItems[currentNavigationItem.gnbItem.index];
-        setGnbItem(gnbNavigationItem);
-
-        const breadcrumbNavigationItems = [];
-        breadcrumbNavigationItems.push(currentNavigationItem.gnbItem.title);
-
-        if (currentNavigationItem.snbItem) {
-          breadcrumbNavigationItems.push(currentNavigationItem.snbItem.title);
-        }
-
-        if (currentNavigationItem.subItem) {
-          breadcrumbNavigationItems.push(currentNavigationItem.subItem.title);
-        }
-
-        setBreadcrumbItems(breadcrumbNavigationItems);
-      }
-    }
-
-    updateNavigationStatus(currentNavigationItem);
+    const pathname = props.location.pathname;
+    dispatch({
+      type: 'INIT_NAVIGATION', pathname
+    });
   }, [
     props.location.pathname,
     allGnbItems,
@@ -58,83 +177,42 @@ const AppLayout = (props) => {
 
   useEffect(() => {
     EventBroadcaster.on(CHANGE_MEMBER_CONTEXT_EVENT_TOPIC, () => {
-      setAllGnbItems(NavigationConfig.getItems());
+      dispatch({
+        type: 'REFRESH_ALL_GNB_ITEMS'
+      });
     });
 
     EventBroadcaster.on(SHOW_LOADING_EVENT_TOPIC, (data) => {
-      setLoading(data.show);
+      const show = data.show;
+      dispatch({
+        type: 'SHOW_LOADING', show
+      });
     });
   }, []);
 
-  const updateNavigationStatus = (navigationItem) => {
-    const gnbMenuSelectedKeys = navigationItem.gnbItem ? [navigationItem.gnbItem.index] : [""];
-    let snbMenuSelectedKeys = navigationItem.snbItem ? [navigationItem.snbItem.index] : [""];
-    if (navigationItem.subItem) {
-      snbMenuSelectedKeys = navigationItem.snbItem
-        ? [
-          navigationItem.snbItem.index +
-          "-" +
-          navigationItem.subItem.index,
-        ]
-        : [""];
-    }
-    const snbMenuOpenKeys = navigationItem.snbItem ? [navigationItem.snbItem.index] : [""];
-
-    setNavigationState({
-      gnbMenuSelectedKeys: gnbMenuSelectedKeys,
-      snbMenuSelectedKeys: snbMenuSelectedKeys,
-      snbMenuOpenKeys: snbMenuOpenKeys
-    });
-  }
-
   const handleGnbMenuClick = ({key}) => {
-    const gnbIndex = key;
-    setGnbItem(allGnbItems[gnbIndex]);
-    setNavigationState({
-      gnbMenuSelectedKeys: [gnbIndex],
-      snbMenuSelectedKeys: [""],
-      snbMenuOpenKeys: [""]
+    dispatch({
+      type: 'CLICK_GNB_MENU', key
     });
   };
 
   const handleSnbMenuClick = ({key}) => {
-    const selectedMenuIndices = key.split("-");
-    if (selectedMenuIndices && gnbItem) {
-      const breadcrumbNavigationItems = [];
-      breadcrumbNavigationItems.push(gnbItem.title);
-      let selectedSnbItem = {};
-
-      selectedMenuIndices.forEach((menuIndex, arrayIndex) => {
-        if (arrayIndex === 0) {
-          selectedSnbItem = gnbItem.items[menuIndex];
-          breadcrumbNavigationItems.push(selectedSnbItem.title);
-        } else if (arrayIndex === 1) {
-          const selectedSubItem = selectedSnbItem.items[menuIndex];
-          breadcrumbNavigationItems.push(selectedSubItem.title);
-        }
-      });
-      setBreadcrumbItems(breadcrumbNavigationItems);
-    }
-    setNavigationState({
-      ...navigationState,
-      snbMenuSelectedKeys: [key],
+    dispatch({
+      type: 'CLICK_SNB_MENU', key
     });
   };
 
   const toggleCollapsed = () => {
-    if (!collapsed) {
-      setNavigationState({
-        ...navigationState,
-        snbMenuOpenKeys: navigationState.snbMenuOpenKeys.map(key => OPEN_KEY_NONE_CHAR + key),
-      });
-    } else {
-      setNavigationState({
-        ...navigationState,
-        snbMenuOpenKeys: navigationState.snbMenuOpenKeys.map(key => key.startsWith(OPEN_KEY_NONE_CHAR) ? key.split(OPEN_KEY_NONE_CHAR)[1] : key),
-      });
-    }
-    setCollapsed(!collapsed);
+    dispatch({
+      type: 'TOGGLE_COLLAPSED', collapsed
+    });
   };
+
+  const handleSubMenuClick = ({key}) => {
+    dispatch({
+      type: 'CLICK_SUB_MENU', key
+    });
+  }
 
   return (
     <Layout
@@ -162,14 +240,7 @@ const AppLayout = (props) => {
             const SnbIcon = AllIcons[item.icon];
             if (item.items && item.items.length > 0) {
               return (
-                <Menu.SubMenu key={index} title={item.title} icon={<SnbIcon/>}
-                              onTitleClick={(event) => {
-                                setNavigationState({
-                                  ...navigationState,
-                                  snbMenuOpenKeys: [event.key],
-                                });
-                              }}
-                >
+                <Menu.SubMenu key={index} title={item.title} icon={<SnbIcon/>} onTitleClick={handleSubMenuClick}>
                   {item.items.map((subItem, subItemIndex) => {
                     const SubItemIcon = AllIcons[subItem.icon];
                     return subItem.link ? (
