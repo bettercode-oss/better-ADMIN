@@ -1,5 +1,5 @@
 import React, {useEffect, useReducer} from "react";
-import {Breadcrumb, Layout, Menu, Space, Spin} from "antd";
+import {Breadcrumb, Layout, Menu, Spin} from "antd";
 import "./AppLayout.css";
 import PageRouter from "../pages/router/PageRouter";
 import {adminConfig} from "../config/admin.config";
@@ -221,9 +221,9 @@ const AppLayout = (props) => {
       }}
     >
       <Layout.Sider
-        trigger={null}
         collapsible
         collapsed={collapsed}
+        onCollapse={toggleCollapsed}
       >
         <Link to="/">
           <div className="site-logo">
@@ -282,35 +282,24 @@ const AppLayout = (props) => {
       </Layout.Sider>
       <Layout className="site-layout">
         <Layout.Header className="site-layout-header">
-          <Space>
-            {React.createElement(
-              collapsed
-                ? AllIcons.MenuUnfoldOutlined
-                : AllIcons.MenuFoldOutlined,
-              {
-                className: "trigger",
-                onClick: toggleCollapsed,
-              }
-            )}
-            {allGnbItems &&
-            <Menu
-              mode="horizontal"
-              selectedKeys={navigationState.gnbMenuSelectedKeys}
-              onClick={handleGnbMenuClick}
-            >
-              {allGnbItems.map((item, idx) => {
-                const GnbIcon = AllIcons[item.icon];
-                return (
-                  <Menu.Item key={idx} icon={<GnbIcon/>}>
-                    {item.title}
-                  </Menu.Item>
-                );
-              })}
-            </Menu>}
-          </Space>
           <div className="login-info">
             <LoginInfo/>
           </div>
+          {allGnbItems &&
+          <Menu
+            mode="horizontal"
+            selectedKeys={navigationState.gnbMenuSelectedKeys}
+            onClick={handleGnbMenuClick}
+          >
+            {allGnbItems.map((item, idx) => {
+              const GnbIcon = AllIcons[item.icon];
+              return (
+                <Menu.Item key={idx} icon={<GnbIcon/>}>
+                  {item.title}
+                </Menu.Item>
+              );
+            })}
+          </Menu>}
         </Layout.Header>
         <Layout.Content className="site-layout-content">
           {props.location.pathname !== "/" && (
