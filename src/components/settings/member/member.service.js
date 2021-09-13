@@ -4,13 +4,14 @@ import {adminConfig} from "../../../config/admin.config";
 const API_URL = adminConfig.authentication.authAPI();
 
 class MemberService {
-  getMembers(params) {
-    let apiPath = `${API_URL}/members?`;
-    apiPath += Object.keys(params).map(key => {
-      return key + "=" + params[key]
-    }).join("&")
+  getMembersApproved(params) {
+    params["status"] = "approved";
+    return axios.get(`${API_URL}/members`, { params: params });
+  }
 
-    return axios.get(apiPath);
+  getMembersApplied(params) {
+    params["status"] = "applied";
+    return axios.get(`${API_URL}/members`, { params: params });
   }
 
   assignRoles(memberId, assignRoles) {

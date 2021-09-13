@@ -5,12 +5,7 @@ const API_URL = adminConfig.authentication.authAPI();
 
 class AccessControlService {
   getPermissions(params) {
-    let apiPath = `${API_URL}/access-control/permissions?`;
-    apiPath += Object.keys(params).map(key => {
-      return key + "=" + params[key]
-    }).join("&")
-
-    return axios.get(apiPath);
+    return axios.get(`${API_URL}/access-control/permissions`, { params: params });
   }
 
   createPermission(permission) {
@@ -30,12 +25,7 @@ class AccessControlService {
   }
 
   getRoles(params) {
-    let apiPath = `${API_URL}/access-control/roles?`;
-    apiPath += Object.keys(params).map(key => {
-      return key + "=" + params[key]
-    }).join("&")
-
-    return axios.get(apiPath);
+    return axios.get(`${API_URL}/access-control/roles`, { params: params });
   }
 
   deleteRole(roleId) {

@@ -34,7 +34,7 @@ const OrganizationMemberChange = ({organization, onBack}) => {
   const [allMembers, setAllMembers] = useState([]);
 
   useEffect(() => {
-    MemberService.getMembers({page: 0}).then((response) => {
+    MemberService.getMembersApproved({page: 0}).then((response) => {
       setAllMembers(response.data.result);
       form.setFieldsValue({
         assignMembers: organization.members ? organization.members.map(member => member.id) : []

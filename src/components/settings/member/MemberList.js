@@ -17,8 +17,7 @@ const MemberList = ({onRoleChange}) => {
 
   const loadMembers = (params) => {
     params.pageSize = PAGE_SIZE;
-    params.status = 'approved';
-    MemberService.getMembers(params).then(response => {
+    MemberService.getMembersApproved(params).then(response => {
       setMembers(response.data.result);
       setMemberTotalCount(response.data.totalCount);
     });
