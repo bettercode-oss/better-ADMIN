@@ -10,6 +10,21 @@ export class AxiosConfigur {
   static configAuthInterceptor() {
     axios.defaults.withCredentials = true;
 
+    axios.interceptors.request.use(
+      function (config) {
+        if (config.url.startsWith(adminConfig.authentication.authAPI())) {
+          config.withCredentials = true;
+        } else {
+          config.withCredentials = false;
+        }
+
+        return config;
+      },
+      function (error) {
+        // 오류 요청을 보내기전 수행할 일
+        return Promise.reject(error);
+      });
+
     // Add a response interceptor
     axios.interceptors.response.use(function (response) {
       // Any status code that lie within the range of 2xx cause this function to trigger
