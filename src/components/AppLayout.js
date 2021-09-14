@@ -13,8 +13,6 @@ import {
   SHOW_LOADING_EVENT_TOPIC
 } from "../event/event.broadcaster";
 
-const OPEN_KEY_NONE_CHAR = "!";
-
 const initialState = {
   collapsed: false,
   allGnbItems: [],
@@ -142,7 +140,6 @@ function reducer(state, action) {
           ...state,
           navigationState: {
             ...state.navigationState,
-            snbMenuOpenKeys: state.navigationState.snbMenuOpenKeys.map(key => OPEN_KEY_NONE_CHAR + key),
           },
           collapsed: !action.collapsed
         }
@@ -151,7 +148,6 @@ function reducer(state, action) {
           ...state,
           navigationState: {
             ...state.navigationState,
-            snbMenuOpenKeys: state.navigationState.snbMenuOpenKeys.map(key => key.startsWith(OPEN_KEY_NONE_CHAR) ? key.split(OPEN_KEY_NONE_CHAR)[1] : key),
           },
           collapsed: !action.collapsed
         }
@@ -231,7 +227,8 @@ const AppLayout = (props) => {
             {collapsed === false && <strong>&nbsp; {adminConfig.siteName}</strong>}
           </div>
         </Link>
-        <Menu theme="dark" mode="inline" openKeys={navigationState.snbMenuOpenKeys}
+        <Menu theme="dark" mode="inline"
+              openKeys={collapsed ? undefined : navigationState.snbMenuOpenKeys}
               selectedKeys={navigationState.snbMenuSelectedKeys}
               onClick={handleSnbMenuClick}
         >
