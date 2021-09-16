@@ -11,7 +11,7 @@ export default function AuthRoute({path, exact = false, component}) {
     AuthService.checkAuth().then(() => {
       setAuthenticated(true);
     }).catch(() => {
-      history.replace(adminConfig.authentication.loginUrl);
+      history.replace(adminConfig.authentication.loginUrl + "?returnUrl=" + encodeURIComponent(window.location.href));
     })
   };
 
