@@ -14,7 +14,12 @@ const App = () => {
   useEffect(() => {
     if (adminConfig.authentication.used) {
       AuthService.silentRefresh().then().catch(() => {
-        window.location.hash = adminConfig.authentication.loginUrl;
+        const queryString = getQueryStringInUrl(window.location.href)
+        if (queryString) {
+          window.location.hash = adminConfig.authentication.loginUrl + "?" + queryString;
+        } else {
+          window.location.hash = adminConfig.authentication.loginUrl;
+        }
       });
     }
 
@@ -27,7 +32,19 @@ const App = () => {
         cancelButtonProps: {style: {display: 'none'}},
       });
     });
-  }, []);
+  }, );
+
+  const existQueryStringInUrl = (url) => {
+    return url.split("?")[1] ? true : false;
+  }
+
+  const getQueryStringInUrl = (url) => {
+    if (existQueryStringInUrl(url)) {
+     return url.split("?")[1];
+    } else {
+      return null;
+    }
+  }
 
   return (<>
     <HashRouter>

@@ -8,8 +8,9 @@ import SiteService from "./settings/site.service";
 import DoorayLogin from "./DoorayLogin";
 import {AuthService} from "../auth/auth.service";
 import MemberSignUp from "./MemberSignUp";
+import * as queryString from "query-string";
 
-const Login = () => {
+const Login = (props) => {
   const [siteSettings, setSiteSettings] = useState({});
   const [showDoorayLogin, setShowDoorayLogin] = useState(false);
   const [showMemberSignUp, setShowMemberSignUp] = useState(false);
@@ -30,7 +31,7 @@ const Login = () => {
     setLoading(true);
     AuthService.login(signId, password).then(() => {
       setLoading(false);
-      goToHomePage();
+      goToNextPage();
     }).catch(error => {
       setLoading(false);
       if (error.response && error.response.status === 400) {
@@ -42,11 +43,17 @@ const Login = () => {
   };
 
   const handleDoorayLoginSuccess = () => {
-    goToHomePage();
+    goToNextPage();
   }
 
-  const goToHomePage = () => {
-    window.location = adminConfig.homePage;
+  const goToNextPage = () => {
+    const query = queryString.parse(props.location.search);
+    if(query.returnUrl) {
+      window.location.href = query.returnUrl;
+      window.location.reload();
+    } else {
+      window.location = adminConfig.homePage;
+    }
   }
 
   return (
