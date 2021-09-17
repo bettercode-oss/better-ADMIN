@@ -193,14 +193,25 @@ function reducer(state, action) {
       }
     case 'REMOVE_TAB_PAGE':
       const newHistories = state.pageHistory.histories.filter(history => history.pathname !== action.pathname);
-      const lastPage = newHistories.slice(-1)[0];
-      return {
-        ...state,
-        pageHistory: {
-          current: lastPage,
-          histories: newHistories,
-        },
+      if(action.currentPage) {
+        return {
+          ...state,
+          pageHistory: {
+            current: action.currentPage,
+            histories: newHistories,
+          },
+        }
+      } else {
+        return {
+          ...state,
+          pageHistory: {
+            ...state.pageHistory,
+            histories: newHistories,
+          },
+        }
       }
+
+
     default:
       return state;
   }
@@ -289,14 +300,19 @@ const AppLayout = (props) => {
 
   const handlePageHistoryTabEdit = (key, action) => {
     if (action === "remove" && pageHistory.histories.length > 1) {
-      // TODO 중복 제거
       const pathname = key;
-      const newHistories = pageHistory.histories.filter(history => history.pathname !== pathname);
-      const lastPage = newHistories.slice(-1)[0];
-      history.push(lastPage.pathname);
-      dispatch({
-        type: 'REMOVE_TAB_PAGE', pathname
-      });
+      if(props.location.pathname === pathname) {
+        const newHistories = pageHistory.histories.filter(history => history.pathname !== pathname);
+        const currentPage = newHistories.slice(-1)[0];
+        history.push(currentPage.pathname);
+        dispatch({
+          type: 'REMOVE_TAB_PAGE', pathname, currentPage
+        });
+      } else {
+        dispatch({
+          type: 'REMOVE_TAB_PAGE', pathname
+        });
+      }
     }
   }
 
