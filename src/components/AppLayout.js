@@ -1,17 +1,19 @@
 import React, {useEffect, useReducer} from "react";
-import {Breadcrumb, Layout, Menu, Spin} from "antd";
+import {Breadcrumb, Layout, Menu, Spin, Tabs} from "antd";
 import "./AppLayout.css";
 import PageRouter from "../pages/router/PageRouter";
 import {adminConfig} from "../config/admin.config";
 import * as AllIcons from "@ant-design/icons";
 import LoginInfo from "./LoginInfo";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import NavigationConfig from "../config/navigation.config";
 import {
   CHANGE_MEMBER_CONTEXT_EVENT_TOPIC,
   EventBroadcaster,
   SHOW_LOADING_EVENT_TOPIC
 } from "../event/event.broadcaster";
+
+const {TabPane} = Tabs;
 
 const initialState = {
   collapsed: false,
@@ -22,6 +24,10 @@ const initialState = {
     gnbMenuSelectedKeys: [""],
     snbMenuSelectedKeys: [""],
     snbMenuOpenKeys: [""]
+  },
+  pageHistory: {
+    current: "",
+    histories: [],
   },
   loading: false
 };
@@ -152,23 +158,88 @@ function reducer(state, action) {
           collapsed: !action.collapsed
         }
       }
+    case 'ADD_TAB_PAGE':
+      const currentItem = NavigationConfig.getItemsByLink(action.pathname, NavigationConfig.getItems());
+      let title = "";
+      if (currentItem.snbItem) {
+        title = currentItem.snbItem.title;
+      }
+
+      if (currentItem.subItem) {
+        title = currentItem.subItem.title;
+      }
+
+      const page = {
+        pathname: action.pathname,
+        title: title,
+      }
+
+      if (state.pageHistory.histories.filter(page => page.pathname === action.pathname).length === 0) {
+        return {
+          ...state,
+          pageHistory: {
+            current: page,
+            histories: state.pageHistory.histories.concat(page)
+          },
+        }
+      } else {
+        return {
+          ...state,
+          pageHistory: {
+            ...state.pageHistory,
+            current: page,
+          },
+        };
+      }
+    case 'REMOVE_TAB_PAGE':
+      const newHistories = state.pageHistory.histories.filter(history => history.pathname !== action.pathname);
+      const lastPage = newHistories.slice(-1)[0];
+      return {
+        ...state,
+        pageHistory: {
+          current: lastPage,
+          histories: newHistories,
+        },
+      }
     default:
       return state;
   }
 }
 
 const AppLayout = (props) => {
+  const history = useHistory();
   const [state, dispatch] = useReducer(reducer, initialState);
-  const {collapsed, allGnbItems, gnbItem, breadcrumbItems, navigationState, loading} = state;
+  const {
+    collapsed,
+    allGnbItems,
+    gnbItem,
+    breadcrumbItems,
+    navigationState,
+    pageHistory,
+    loading
+  } = state;
 
   useEffect(() => {
     const pathname = props.location.pathname;
     dispatch({
       type: 'INIT_NAVIGATION', pathname
     });
+
+    dispatch({
+      type: 'ADD_TAB_PAGE', pathname
+    });
+
+    const unlisten = history.listen((location) => {
+      const pathname = location.pathname;
+      dispatch({
+        type: 'ADD_TAB_PAGE', pathname
+      });
+    });
+    return unlisten;
   }, [
     props.location.pathname,
     allGnbItems,
+    history,
   ]);
 
   useEffect(() => {
@@ -208,6 +279,25 @@ const AppLayout = (props) => {
     dispatch({
       type: 'CLICK_SUB_MENU', key
     });
+  }
+
+  const handlePageHistoryTabClick = (pathname) => {
+    if (pathname !== pageHistory.current.pathname) {
+      history.push(pathname);
+    }
+  }
+
+  const handlePageHistoryTabEdit = (key, action) => {
+    if (action === "remove" && pageHistory.histories.length > 1) {
+      // TODO 중복 제거
+      const pathname = key;
+      const newHistories = pageHistory.histories.filter(history => history.pathname !== pathname);
+      const lastPage = newHistories.slice(-1)[0];
+      history.push(lastPage.pathname);
+      dispatch({
+        type: 'REMOVE_TAB_PAGE', pathname
+      });
+    }
   }
 
   return (
@@ -299,25 +389,32 @@ const AppLayout = (props) => {
           </Menu>}
         </Layout.Header>
         <Layout.Content className="site-layout-content">
-          {props.location.pathname !== "/" && (
-            <div style={{backgroundColor: "white", padding: "15px"}}>
-              <Breadcrumb>
-                {breadcrumbItems.map((item, index) => (
-                  <Breadcrumb.Item key={index}>{item}</Breadcrumb.Item>
-                ))}
-              </Breadcrumb>
-              <div className="page-title">
-                {breadcrumbItems &&
-                breadcrumbItems.length > 0 &&
-                breadcrumbItems[breadcrumbItems.length - 1]}
-              </div>
-            </div>
-          )}
-          <div className="site-layout-page">
-            <Spin spinning={loading}>
-              <PageRouter/>
-            </Spin>
-          </div>
+          <Tabs hideAdd type="editable-card" activeKey={pageHistory.current.pathname}
+                onTabClick={handlePageHistoryTabClick} onEdit={handlePageHistoryTabEdit}>
+            {pageHistory.histories && pageHistory.histories.map(page =>
+              <TabPane tab={page.title} key={page.pathname}>
+                {props.location.pathname !== "/" && (
+                  <div style={{backgroundColor: "white", padding: "15px"}}>
+                    <Breadcrumb>
+                      {breadcrumbItems.map((item, index) => (
+                        <Breadcrumb.Item key={index}>{item}</Breadcrumb.Item>
+                      ))}
+                    </Breadcrumb>
+                    <div className="page-title">
+                      {breadcrumbItems &&
+                      breadcrumbItems.length > 0 &&
+                      breadcrumbItems[breadcrumbItems.length - 1]}
+                    </div>
+                  </div>
+                )}
+                <div className="site-layout-page">
+                  <Spin spinning={loading}>
+                    <PageRouter/>
+                  </Spin>
+                </div>
+              </TabPane>
+            )}
+          </Tabs>
         </Layout.Content>
         <Layout.Footer style={{textAlign: "center"}}>
           better ADMIN ©2021 Created by bettercode
