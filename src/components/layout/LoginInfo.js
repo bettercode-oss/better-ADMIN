@@ -2,11 +2,11 @@ import React, {useState} from "react";
 import {Avatar, Dropdown, Menu} from "antd";
 import {LogoutOutlined, SettingOutlined, UserOutlined} from "@ant-design/icons";
 import {useHistory} from "react-router-dom";
-import {adminConfig} from "../config/admin.config";
-import {MemberContext} from "../auth/member.context";
-import {AuthService} from "../auth/auth.service";
-import {AppSettings} from "./settings/AppSettings";
-import {AppSettingsNavigation} from "./settings/app.settings.navigation.config";
+import {adminConfig} from "../../config/admin.config";
+import {MemberContext} from "../../auth/member.context";
+import {AuthService} from "../../auth/auth.service";
+import {AppSettings} from "../settings/AppSettings";
+import {AppSettingsNavigation} from "../settings/app.settings.navigation.config";
 
 const LoginInfo = () => {
   const [showSettings, setShowSettings] = useState(false);

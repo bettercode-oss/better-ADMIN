@@ -2,7 +2,7 @@ import navigationInfo from "./navigation.json";
 import {MemberContext} from "../auth/member.context";
 
 export default class NavigationConfig {
-  static getItems = () => {
+  static getItemsByMemberPermission = () => {
     const memberPermissions = new Set(MemberContext.memberInformation.permissions ? MemberContext.memberInformation.permissions : []);
     const accessibleGnbItems = [];
     if (navigationInfo.items) {
@@ -35,6 +35,37 @@ export default class NavigationConfig {
           }
           accessibleGnbItems.push(gnbItem);
         }
+      });
+    }
+    return accessibleGnbItems;
+  }
+
+  static getItemsWithoutMemberPermission = () => {
+    const accessibleGnbItems = [];
+    if (navigationInfo.items) {
+      const gnbItems = navigationInfo.items;
+      gnbItems.forEach(gnbItem => {
+        // GNB
+        if (gnbItem.items) {
+          // SNB
+          const accessibleSnbItems = [];
+          const snbItems = gnbItem.items
+          snbItems.forEach(snbItem => {
+            if (snbItem.items) {
+              // Sub
+              const accessibleSubItems = [];
+              const subItems = snbItem.items
+              subItems.forEach(subItem => {
+                accessibleSubItems.push(subItem);
+              });
+              snbItem.items = accessibleSubItems;
+            }
+
+            accessibleSnbItems.push(snbItem);
+          });
+          gnbItem.items = accessibleSnbItems;
+        }
+        accessibleGnbItems.push(gnbItem);
       });
     }
     return accessibleGnbItems;

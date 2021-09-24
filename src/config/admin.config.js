@@ -5,7 +5,7 @@ const BetterAdminConfig = {
   authentication: {
     used: true,
     loginUrl: "/login",
-    googleOAuthRedirectLoginUrl: "/google-oauth-login",
+    oauthLoginResultUrl: "/oauth-login-result",
     authAPI: () => {
       return "http://localhost:2016/api"
     },

@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {Button, Form, Input, message, Modal} from "antd";
 import {LockOutlined, UserOutlined} from "@ant-design/icons";
-import {AuthService} from "../auth/auth.service";
+import {AuthService} from "../../auth/auth.service";
 
 const DoorayLogin = ({show, onLoginSuccess, onClose}) => {
   const [loading, setLoading] = useState(false);

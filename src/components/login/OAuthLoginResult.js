@@ -2,10 +2,10 @@ import React from "react";
 import * as queryString from "query-string";
 import axios from "axios";
 import {Redirect} from 'react-router'
-import {adminConfig} from "../config/admin.config";
+import {adminConfig} from "../../config/admin.config";
 import {message} from "antd";
 
-const GoogleOAuthRedirect = (props) => {
+const OAuthLoginResult = (props) => {
   const query = queryString.parse(props.location.search);
   if(query.error) {
     if(query.error === "server-internal-error") {
@@ -21,4 +21,4 @@ const GoogleOAuthRedirect = (props) => {
   }
 };
 
-export default GoogleOAuthRedirect;
+export default OAuthLoginResult;
