@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {Button, Form, Input, Modal, message} from "antd";
 import {LockOutlined, UserOutlined, FormOutlined} from "@ant-design/icons";
-import {MemberService} from "./settings/member/member.service";
+import {MemberService} from "../settings/member/member.service";
 
 const MemberSignUp = ({show, onClose}) => {
   const [loading, setLoading] = useState(false);

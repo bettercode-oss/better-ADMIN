@@ -3,10 +3,10 @@ import {Button, Form, Input, message} from 'antd';
 import {LockOutlined, UserOutlined} from '@ant-design/icons';
 import "./Login.css";
 import Title from "antd/es/typography/Title";
-import {adminConfig} from "../config/admin.config";
-import SiteService from "./settings/site.service";
+import {adminConfig} from "../../config/admin.config";
+import SiteService from "../settings/site.service";
 import DoorayLogin from "./DoorayLogin";
-import {AuthService} from "../auth/auth.service";
+import {AuthService} from "../../auth/auth.service";
 import MemberSignUp from "./MemberSignUp";
 import * as queryString from "query-string";
 
