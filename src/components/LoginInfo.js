@@ -53,7 +53,7 @@ const LoginInfo = () => {
           <Menu.Item key="1" onClick={logout}><LogoutOutlined/>&nbsp;로그아웃</Menu.Item>
         </Menu>}>
       <span style={{paddingBottom: "20px", cursor: "pointer"}}>
-        <Avatar icon={<UserOutlined/>}/>
+        <Avatar icon={<UserOutlined/>} src={MemberContext.memberInformation.picture}/>
         <span
           style={{marginLeft: "5px"}}>{MemberContext.memberInformation && MemberContext.memberInformation.name}</span>
       </span>

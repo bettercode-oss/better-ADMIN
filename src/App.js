@@ -9,6 +9,7 @@ import {AuthService} from "./auth/auth.service";
 import {Modal} from "antd";
 import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "./event/event.broadcaster";
 import {ExclamationCircleOutlined} from "@ant-design/icons";
+import GoogleOAuthRedirect from "./components/GoogleOAuthRedirect";
 
 const App = () => {
   useEffect(() => {
@@ -50,6 +51,7 @@ const App = () => {
     <HashRouter>
       <Switch>
         <Route path={adminConfig.authentication.loginUrl} component={Login}/>
+        <Route path={adminConfig.authentication.googleOAuthRedirectLoginUrl} component={GoogleOAuthRedirect}/>
         {adminConfig.authentication.used ? (
           <AuthRoute path={'/'} component={AppLayout}/>
         ) : (
