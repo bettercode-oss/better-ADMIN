@@ -48,12 +48,23 @@ const Login = (props) => {
 
   const goToNextPage = () => {
     const query = queryString.parse(props.location.search);
-    if(query.returnUrl) {
+    if (query.returnUrl) {
       window.location.href = query.returnUrl;
       window.location.reload();
     } else {
       window.location = adminConfig.homePage;
     }
+  }
+
+  const handleGoogleLoginClick = () => {
+    let returnUrl = adminConfig.homePage;
+    const query = queryString.parse(props.location.search);
+    if (query.returnUrl) {
+      returnUrl = query.returnUrl.split("#")[1];
+    }
+
+    const googleOAuthRedirectLoginUrl = window.location.origin + "/#" + adminConfig.authentication.googleOAuthRedirectLoginUrl + "?returnUrl=" + returnUrl
+    window.location.href = siteSettings.googleWorkspaceOAuthUri + "&state=" + encodeURIComponent(googleOAuthRedirectLoginUrl)
   }
 
   return (
@@ -106,18 +117,32 @@ const Login = (props) => {
           <Button type="primary" htmlType="submit" className="login-form-button" loading={loading}>
             로그인
           </Button>
-          아직 계정이 없으신가요? <Button type="link" onClick={() => {setShowMemberSignUp(true)}}>신청하기</Button>
+          아직 계정이 없으신가요? <Button type="link" onClick={() => {
+          setShowMemberSignUp(true)
+        }}>신청하기</Button>
         </Form.Item>
       </Form>
-      {siteSettings.doorayLoginUsed &&
+      {(siteSettings.doorayLoginUsed || siteSettings.googleWorkspaceLoginUsed) &&
       <div style={{padding: "15px", border: "1px solid #bcbcbc", borderRadius: "5px"}}>
         <Title level={5}>다른 수단으로 로그인하기</Title>
+        {siteSettings.doorayLoginUsed &&
         <img src="/dooray-logo.svg" alt="dooray logo" width={100}
-             style={{padding: "10px", border: "1px solid #bcbcbc", borderRadius: "5px", cursor: "pointer"}}
-             onClick={() => {setShowDoorayLogin(true)}}/>
-      </div>}
-      <DoorayLogin show={showDoorayLogin} onLoginSuccess={handleDoorayLoginSuccess} onClose={() => {setShowDoorayLogin(false)}}/>
-      <MemberSignUp show={showMemberSignUp} onClose={() => {setShowMemberSignUp(false)}}/>
+             style={{padding: "10px", borderRadius: "2px", cursor: "pointer", boxShadow: "1px 1px 1px 2px #E1E1E1"}}
+             onClick={() => {
+               setShowDoorayLogin(true)
+             }}/>}
+        {siteSettings.googleWorkspaceLoginUsed &&
+        <img src="/google-workspace-logo.png" alt="google logo" width={150}
+             style={{marginLeft: "10px", padding: "10px", borderRadius: "2px", cursor: "pointer", boxShadow: "1px 1px 1px 2px #E1E1E1"}}
+             onClick={handleGoogleLoginClick}/>}
+      </div>
+      }
+      <DoorayLogin show={showDoorayLogin} onLoginSuccess={handleDoorayLoginSuccess} onClose={() => {
+        setShowDoorayLogin(false)
+      }}/>
+      <MemberSignUp show={showMemberSignUp} onClose={() => {
+        setShowMemberSignUp(false)
+      }}/>
     </div>
   );
 };

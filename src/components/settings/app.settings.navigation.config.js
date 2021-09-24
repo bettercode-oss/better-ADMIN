@@ -6,6 +6,7 @@ import DooraySetting from "./dooray/DooraySetting";
 import {MemberContext} from "../../auth/member.context";
 import OrganizationSetting from "./organization/OrganizationSetting";
 import MemberApproval from "./member/MemberApproval";
+import GoogleWorkspaceSetting from "./google-workspace/GoogleWorkspaceSetting";
 
 const settingsSideMenuItems = [
   {
@@ -39,9 +40,18 @@ const settingsSideMenuItems = [
       }
     ]
   }, {
-    title: "두레이 로그인",
+    title: "외부 로그인",
     accessPermission: "MANAGE_SYSTEM_SETTINGS",
-    component: <DooraySetting/>,
+    items: [
+      {
+        title: "두레이 로그인",
+        component: <DooraySetting/>,
+      },
+      {
+        title: "구글 로그인",
+        component: <GoogleWorkspaceSetting/>,
+      }
+    ]
   }
 ];
 
