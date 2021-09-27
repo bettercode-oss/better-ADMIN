@@ -41,11 +41,13 @@ Admin 사이트를 만들다 보면 정작 중요한 업무 페이지를 만드�
 ![image](https://user-images.githubusercontent.com/16472109/126848318-7774f1f6-7dc0-41d3-9ab8-5033eb5d7a94.png)
 
 
-**4. 두레이 인증 지원**
+**4. 두레이 / 구글 워크스페이스 인증 지원**
 
 ![image](https://user-images.githubusercontent.com/16472109/117816485-84a7cb80-b2a1-11eb-91e3-67815d3fe500.png)
 
 ![image](https://user-images.githubusercontent.com/16472109/117816154-2e3a8d00-b2a1-11eb-93f2-f4b7c971c7bf.png)
+
+![구글로그인](https://user-images.githubusercontent.com/16472109/134839534-444b1a1d-d80d-4a31-89ea-5c90e932685f.gif)
 
 **5. 공통 에러 처리 지원**
 
