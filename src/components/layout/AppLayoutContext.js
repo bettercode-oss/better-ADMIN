@@ -1,18 +1,26 @@
 import React, {createContext, useContext, useReducer} from 'react';
 
 import NavigationConfig from "../../config/navigation.config";
+import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "../../event/event.broadcaster";
+import {adminConfig} from "../../config/admin.config";
 
+let pageTabId = 0;
 const initialState = {
   allGnbItems: [],
   gnbItem: null,
   breadcrumbItems: [],
   navigationState: {
-    gnbMenuSelectedKeys: [""],
-    snbMenuSelectedKeys: [""],
-    snbMenuOpenKeys: [""]
+    gnbMenuSelectedKeys: [''],
+    snbMenuSelectedKeys: [''],
+    snbMenuOpenKeys: ['']
   },
-  pageHistory: {
-    current: "",
+  pageTab: {
+    current: {
+      id: '',
+      title: '',
+      navigationPathName: '',
+      link: '',
+    },
     histories: [],
   },
   loading: false
@@ -21,8 +29,15 @@ const initialState = {
 function layoutReducer(state, action) {
   switch (action.type) {
     case 'INIT_NAVIGATION':
-      const currentNavigationItem = NavigationConfig.getItemsByLink(action.pathname, state.allGnbItems);
-      if (action.pathname !== "/") {
+      let currentNavigationItem = NavigationConfig.getItemsByLink(action.pathname, state.allGnbItems);
+      if (!currentNavigationItem.gnbItem) {
+        const foundTab = state.pageTab.histories.filter(page => page.link === action.pathname);
+        if (foundTab.length > 0) {
+          currentNavigationItem = NavigationConfig.getItemsByLink(foundTab[0].navigationPathName, state.allGnbItems);
+        }
+      }
+
+      if (action.pathname !== '/') {
         if (currentNavigationItem.gnbItem) {
           const gnbNavigationItem = state.allGnbItems[currentNavigationItem.gnbItem.index];
           const breadcrumbNavigationItems = [];
@@ -43,18 +58,18 @@ function layoutReducer(state, action) {
           };
         }
       }
-      const gnbMenuSelectedKeys = currentNavigationItem.gnbItem ? [currentNavigationItem.gnbItem.index] : [""];
-      let snbMenuSelectedKeys = currentNavigationItem.snbItem ? [currentNavigationItem.snbItem.index] : [""];
+      const gnbMenuSelectedKeys = currentNavigationItem.gnbItem ? [currentNavigationItem.gnbItem.index] : [''];
+      let snbMenuSelectedKeys = currentNavigationItem.snbItem ? [currentNavigationItem.snbItem.index] : [''];
       if (currentNavigationItem.subItem) {
         snbMenuSelectedKeys = currentNavigationItem.snbItem
           ? [
             currentNavigationItem.snbItem.index +
-            "-" +
+            '-' +
             currentNavigationItem.subItem.index,
           ]
-          : [""];
+          : [''];
       }
-      const snbMenuOpenKeys = currentNavigationItem.snbItem ? [currentNavigationItem.snbItem.index] : [""];
+      const snbMenuOpenKeys = currentNavigationItem.snbItem ? [currentNavigationItem.snbItem.index] : [''];
       return {
         ...state,
         navigationState: {
@@ -70,12 +85,12 @@ function layoutReducer(state, action) {
         gnbItem: state.allGnbItems[gnbIndex],
         navigationState: {
           gnbMenuSelectedKeys: [gnbIndex],
-          snbMenuSelectedKeys: [""],
-          snbMenuOpenKeys: [""]
+          snbMenuSelectedKeys: [''],
+          snbMenuOpenKeys: ['']
         },
       };
     case 'CLICK_SNB_MENU':
-      const selectedMenuIndices = action.key.split("-");
+      const selectedMenuIndices = action.key.split('-');
       if (selectedMenuIndices && state.gnbItem) {
         const breadcrumbNavigationItems = [];
         breadcrumbNavigationItems.push(state.gnbItem.title);
@@ -127,43 +142,95 @@ function layoutReducer(state, action) {
       };
     case 'ADD_TAB_PAGE':
       const currentItem = NavigationConfig.getItemsByLink(action.pathname, NavigationConfig.getItemsWithoutMemberPermission());
-      let title = "";
-      if (currentItem.snbItem) {
-        title = currentItem.snbItem.title;
+      if (!currentItem.gnbItem) {
+        if (state.pageTab.histories.length === 0) {
+          if (adminConfig.homePage !== action.pathname) {
+            EventBroadcaster.broadcast(SHOW_ERROR_MESSAGE_EVENT_TOPIC, adminConfig.errorMessage.badAccessPathError);
+            return state;
+          } else {
+            const homePage = {
+              id: String(++pageTabId),
+              navigationPathName: action.pathname,
+              title: 'HOME',
+              link: action.pathname,
+            }
+            return {
+              ...state,
+              pageTab: {
+                current: homePage,
+                histories: state.pageTab.histories.concat(homePage)
+              },
+            };
+          }
+        }
+
+        const foundTab = state.pageTab.histories.filter(page => page.link === action.pathname);
+        if (foundTab.length > 0) {
+          return {
+            ...state,
+            pageTab: {
+              ...state.pageTab,
+              current: foundTab[0],
+            },
+          };
+        } else {
+          return {
+            ...state,
+            pageTab: {
+              histories: state.pageTab.histories.map(history =>
+                history.id === state.pageTab.current.id ? {...history, link: action.pathname} : history
+              ),
+              current: {
+                ...state.pageTab.current,
+                link: action.pathname,
+              },
+            },
+          };
+        }
       }
 
-      if (currentItem.subItem) {
-        title = currentItem.subItem.title;
-      }
+      const foundTab = state.pageTab.histories.filter(page => page.navigationPathName === action.pathname);
+      if (foundTab.length === 0) {
+        // 새로운 탭 추가
+        let title = '';
+        if (currentItem.snbItem) {
+          title = currentItem.snbItem.title;
+        }
 
-      const page = {
-        pathname: action.pathname,
-        title: title,
-      }
+        if (currentItem.subItem) {
+          title = currentItem.subItem.title;
+        }
 
-      if (state.pageHistory.histories.filter(page => page.pathname === action.pathname).length === 0) {
+        const page = {
+          id: String(++pageTabId),
+          navigationPathName: action.pathname,
+          title: title,
+          link: action.pathname,
+        }
+
         return {
           ...state,
-          pageHistory: {
+          pageTab: {
             current: page,
-            histories: state.pageHistory.histories.concat(page)
+            histories: state.pageTab.histories.concat(page)
           },
         }
       } else {
+        // 기존 탭 전환
         return {
           ...state,
-          pageHistory: {
-            ...state.pageHistory,
-            current: page,
+          pageTab: {
+            ...state.pageTab,
+            current: foundTab[0],
           },
-        };
+        }
       }
     case 'REMOVE_TAB_PAGE':
-      const newHistories = state.pageHistory.histories.filter(history => history.pathname !== action.pathname);
+      const newHistories = state.pageTab.histories.filter(history => history.id !== action.id);
       if (action.currentPage) {
         return {
           ...state,
-          pageHistory: {
+          pageTab: {
             current: action.currentPage,
             histories: newHistories,
           },
@@ -171,8 +238,8 @@ function layoutReducer(state, action) {
       } else {
         return {
           ...state,
-          pageHistory: {
-            ...state.pageHistory,
+          pageTab: {
+            ...state.pageTab,
             histories: newHistories,
           },
         }

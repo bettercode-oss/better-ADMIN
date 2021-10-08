@@ -24,6 +24,11 @@
           "title": "SNB2",
           "icon": "ChromeOutlined",
           "link": "/snb2"
+        },
+        {
+          "title": "Sample",
+          "icon": "ChromeOutlined",
+          "link": "/sample-list"
         }
       ]
     },

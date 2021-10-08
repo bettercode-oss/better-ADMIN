@@ -30,25 +30,30 @@ function Content({props}) {
     history,
   ]);
 
-  const handlePageHistoryTabClick = (pathname) => {
-    if (pathname !== layoutState.pageHistory.current.pathname) {
-      history.push(pathname);
+  const handlePageHistoryTabClick = (pageTabId) => {
+    if (pageTabId !== layoutState.pageTab.current.id) {
+      const find = layoutState.pageTab.histories.filter(history => history.id === pageTabId);
+      if (find.length === 1) {
+        history.push(find[0].link);
+      }
     }
   }
 
-  const handlePageHistoryTabEdit = (key, action) => {
-    if (action === "remove" && layoutState.pageHistory.histories.length > 1) {
-      const pathname = key;
-      if(props.location.pathname === pathname) {
-        const newHistories = layoutState.pageHistory.histories.filter(history => history.pathname !== pathname);
+  const handlePageHistoryTabEdit = (pageTabId, action) => {
+    if (action === "remove" && layoutState.pageTab.histories.length > 1) {
+      const id = pageTabId;
+      if (layoutState.pageTab.current.id === id) {
+        // 현재 페이지를 삭제할 때
+        const newHistories = layoutState.pageTab.histories.filter(history => history.id !== id);
         const currentPage = newHistories.slice(-1)[0];
-        history.push(currentPage.pathname);
+        history.push(currentPage.link);
         layoutDispatch({
-          type: 'REMOVE_TAB_PAGE', pathname, currentPage
+          type: 'REMOVE_TAB_PAGE', id, currentPage
         });
       } else {
+        // 다른 페이지를 삭제할 때
         layoutDispatch({
-          type: 'REMOVE_TAB_PAGE', pathname
+          type: 'REMOVE_TAB_PAGE', id
         });
       }
     }
@@ -56,10 +61,10 @@ function Content({props}) {
 
   return (
     <Layout.Content className="site-layout-content">
-      <Tabs hideAdd type="editable-card" activeKey={layoutState.pageHistory.current.pathname}
+      <Tabs hideAdd type="editable-card" activeKey={layoutState.pageTab.current.id}
             onTabClick={handlePageHistoryTabClick} onEdit={handlePageHistoryTabEdit}>
-        {layoutState.pageHistory.histories && layoutState.pageHistory.histories.map(page =>
-          <TabPane tab={page.title} key={page.pathname}>
+        {layoutState.pageTab.histories && layoutState.pageTab.histories.map(page =>
+          <TabPane tab={page.title} key={page.id}>
             {props.location.pathname !== "/" && (
               <div style={{backgroundColor: "white", padding: "15px"}}>
                 <Breadcrumb>
@@ -68,9 +73,7 @@ function Content({props}) {
                   ))}
                 </Breadcrumb>
                 <div className="page-title">
-                  {layoutState.breadcrumbItems &&
-                  layoutState.breadcrumbItems.length > 0 &&
-                  layoutState.breadcrumbItems[layoutState.breadcrumbItems.length - 1]}
+                  {page.title}
                 </div>
               </div>
             )}
