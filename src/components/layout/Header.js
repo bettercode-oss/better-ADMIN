@@ -1,8 +1,9 @@
 import React from 'react';
 import LoginInfo from "./LoginInfo";
 import {Layout, Menu} from "antd";
-import * as AllIcons from "@ant-design/icons";
+
 import {useLayoutDispatch, useLayoutState} from "./AppLayoutContext";
+import NavigationIcon from "./NavigationIcon";
 
 function Header() {
   const layoutState = useLayoutState();
@@ -22,7 +23,8 @@ function Header() {
         onClick={handleGnbMenuClick}
       >
         {layoutState.allGnbItems.map((item, idx) => {
-          const GnbIcon = AllIcons[item.icon];
+          const GnbIcon = NavigationIcon(item.icon);
+
           return (
             <Menu.Item key={idx} icon={<GnbIcon/>}>
               {item.title}

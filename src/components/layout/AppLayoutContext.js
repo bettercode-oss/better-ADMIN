@@ -18,6 +18,7 @@ const initialState = {
     current: {
       id: '',
       title: '',
+      icon: '',
       navigationPathName: '',
       link: '',
     },
@@ -193,12 +194,15 @@ function layoutReducer(state, action) {
       if (foundTab.length === 0) {
         // 새로운 탭 추가
         let title = '';
+        let icon = '';
         if (currentItem.snbItem) {
           title = currentItem.snbItem.title;
+          icon = currentItem.snbItem.icon;
         }
 
         if (currentItem.subItem) {
           title = currentItem.subItem.title;
+          icon = currentItem.subItem.icon;
         }
 
         const page = {
@@ -206,6 +210,7 @@ function layoutReducer(state, action) {
           navigationPathName: action.pathname,
           title: title,
           link: action.pathname,
+          icon: icon,
         }
 
         return {

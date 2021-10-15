@@ -85,6 +85,7 @@ export default class NavigationConfig {
         const currentGnbItem = {
           title: gnbItem.title,
           index: String(i),
+          icon: gnbItem.icon,
         }
 
         if (gnbItem && gnbItem.items) {
@@ -93,6 +94,7 @@ export default class NavigationConfig {
             const currentSnbItem = {
               title: snbItem.title,
               index: String(j),
+              icon: snbItem.icon,
             }
 
             if (snbItem.link && snbItem.link === pathName) {
@@ -108,6 +110,7 @@ export default class NavigationConfig {
                 const currentSubItem = {
                   title: subItem.title,
                   index: String(k),
+                  icon: subItem.icon,
                 }
 
                 if (subItem.link && subItem.link === pathName) {

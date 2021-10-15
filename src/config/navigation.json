@@ -2,76 +2,76 @@
   "items": [
     {
       "title": "GNB1-22",
-      "icon": "AndroidOutlined",
+      "icon": "BsFillArchiveFill",
       "items": [
         {
           "title": "SNB1",
-          "icon": "AppleOutlined",
+          "icon": "IoBagHandle",
           "items": [
             {
               "title": "Sub1",
-              "icon": "WindowsOutlined",
+              "icon": "IoIosAmericanFootball",
               "link": "/sub1"
             },
             {
               "title": "Sub2",
-              "icon": "IeOutlined",
+              "icon": "IoAlarmOutline",
               "link": "/sub2"
             }
           ]
         },
         {
           "title": "SNB2",
-          "icon": "ChromeOutlined",
+          "icon": "HiBriefcase",
           "link": "/snb2"
         },
         {
           "title": "Sample",
-          "icon": "ChromeOutlined",
+          "icon": "HiCake",
           "link": "/sample-list"
         }
       ]
     },
     {
       "title": "GNB2",
-      "icon": "GithubOutlined",
+      "icon": "IoIosAlbums",
       "accessPermission": "MANAGE_MEMBERS",
       "items": [
         {
           "title": "SNB3",
-          "icon": "AliwangwangOutlined",
+          "icon": "Si3M",
           "items": [
             {
               "title": "Sub5",
-              "icon": "Html5Outlined",
+              "icon": "SiAdobeaudition",
               "link": "/sub5"
             },
             {
               "title": "Sub6",
-              "icon": "GoogleOutlined",
+              "icon": "VscCalendar",
               "link": "/sub6"
             }
           ]
         },
         {
           "title": "SNB4",
-          "icon": "LinkedinOutlined",
+          "icon": "SiAdobeacrobatreader",
           "items": [
             {
               "title": "Sub7",
-              "icon": "InstagramOutlined",
+              "icon": "SiAiohttp",
               "link": "/sub7"
             },
             {
               "title": "Sub8",
-              "icon": "YoutubeOutlined",
+              "icon": "SiAframe",
               "link": "/sub8"
             }
           ]
         },
         {
           "title": "SNB5",
-          "icon": "SlackOutlined",
+          "icon": "SiAirbnb",
           "link": "/sample"
         }
       ]
