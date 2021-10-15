@@ -63,7 +63,7 @@ const Login = (props) => {
       returnUrl = query.returnUrl.split("#")[1];
     }
 
-    const googleOAuthRedirectLoginUrl = window.location.origin + "/#" + adminConfig.authentication.googleOAuthRedirectLoginUrl + "?returnUrl=" + returnUrl
+    const googleOAuthRedirectLoginUrl = window.location.origin + "/#" + adminConfig.authentication.oauthLoginResultUrl + "?returnUrl=" + returnUrl
     window.location.href = siteSettings.googleWorkspaceOAuthUri + "&state=" + encodeURIComponent(googleOAuthRedirectLoginUrl)
   }
 

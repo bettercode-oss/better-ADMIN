@@ -2,8 +2,8 @@ import React, {useState} from 'react';
 import {Layout, Menu} from "antd";
 import {Link} from "react-router-dom";
 import {adminConfig} from "../../config/admin.config";
-import * as AllIcons from "@ant-design/icons";
 import {useLayoutDispatch, useLayoutState} from "./AppLayoutContext";
+import NavigationIcon from "./NavigationIcon";
 
 function Sider() {
   const [collapsed, setCollapsed] = useState(false);
@@ -33,12 +33,12 @@ function Sider() {
       >
         {layoutState.gnbItem && layoutState.gnbItem.items &&
         layoutState.gnbItem.items.map((item, index) => {
-          const SnbIcon = AllIcons[item.icon];
+          const SnbIcon = NavigationIcon(item.icon);
           if (item.items && item.items.length > 0) {
             return (
               <Menu.SubMenu key={index} title={item.title} icon={<SnbIcon/>} onTitleClick={handleSubMenuClick}>
                 {item.items.map((subItem, subItemIndex) => {
-                  const SubItemIcon = AllIcons[subItem.icon];
+                  const SubItemIcon = NavigationIcon(subItem.icon);
                   return subItem.link ? (
                     <Menu.Item
                       key={index + "-" + subItemIndex}
