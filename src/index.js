@@ -11,7 +11,7 @@ if (adminConfig.authentication.used) {
 }
 
 AxiosConfigur.configServerNetworkErrorInterceptor();
-AxiosConfigur.configServerInternalErrorInterceptor();
+AxiosConfigur.configServerErrorInterceptor();
 AxiosConfigur.configLoadingInterceptor();
 
 ReactDOM.render(

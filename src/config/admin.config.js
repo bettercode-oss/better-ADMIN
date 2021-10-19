@@ -13,6 +13,8 @@ const BetterAdminConfig = {
   },
   errorMessage: {
     serverInternalError: '오류가 발생 했습니다. 잠시 후 다시 시도해 주세요.',
+    badRequestError: '잘못된 요청입니다.',
+    pageNotFoundError: '페이지를 찾을 수 없습니다.',
     networkError: '네트워크 연결이 원활하지 않습니다. 다시 한번 시도해 주세요.',
     badAccessPathError: '잘못된 경로 입니다. 메뉴를 통해 접근해 주세요.'
   }
