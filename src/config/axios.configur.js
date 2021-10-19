@@ -69,15 +69,21 @@ export class AxiosConfigur {
 
   }
 
-  static configServerInternalErrorInterceptor() {
+  static configServerErrorInterceptor() {
     // Add a response interceptor
     axios.interceptors.response.use(function (response) {
       // Any status code that lie within the range of 2xx cause this function to trigger
       return response;
     }, function (error) {
       // Any status codes that falls outside the range of 2xx cause this function to trigger
-      if (error.response && error.response.status && error.response.status === 500) {
-        EventBroadcaster.broadcast(SHOW_ERROR_MESSAGE_EVENT_TOPIC, adminConfig.errorMessage.serverInternalError);
+      if (error.response && error.response.status) {
+        if (error.response.status === 500) {
+          EventBroadcaster.broadcast(SHOW_ERROR_MESSAGE_EVENT_TOPIC, adminConfig.errorMessage.serverInternalError);
+        } else if(error.response.status === 400) {
+          EventBroadcaster.broadcast(SHOW_ERROR_MESSAGE_EVENT_TOPIC, adminConfig.errorMessage.badRequestError);
+        } else if(error.response.status === 404) {
+          EventBroadcaster.broadcast(SHOW_ERROR_MESSAGE_EVENT_TOPIC, adminConfig.errorMessage.pageNotFoundError);
+        }
       }
       return Promise.reject(error);
     });
