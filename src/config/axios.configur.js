@@ -80,6 +80,13 @@ export class AxiosConfigur {
         if (error.response.status === 500) {
           EventBroadcaster.broadcast(SHOW_ERROR_MESSAGE_EVENT_TOPIC, adminConfig.errorMessage.serverInternalError);
         } else if(error.response.status === 400) {
+          if(adminConfig.serverErrorHandlingExcludeUrl && adminConfig.serverErrorHandlingExcludeUrl.badRequest) {
+            const excludeUrls = adminConfig.serverErrorHandlingExcludeUrl.badRequest;
+            const find = excludeUrls.filter((url) => error.response.config.url.endsWith(url));
+            if(find.length > 0) {
+              return Promise.reject(error);
+            }
+          }
           EventBroadcaster.broadcast(SHOW_ERROR_MESSAGE_EVENT_TOPIC, adminConfig.errorMessage.badRequestError);
         } else if(error.response.status === 404) {
           EventBroadcaster.broadcast(SHOW_ERROR_MESSAGE_EVENT_TOPIC, adminConfig.errorMessage.pageNotFoundError);
