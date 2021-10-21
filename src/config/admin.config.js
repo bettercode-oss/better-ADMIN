@@ -17,6 +17,13 @@ const BetterAdminConfig = {
     pageNotFoundError: '페이지를 찾을 수 없습니다.',
     networkError: '네트워크 연결이 원활하지 않습니다. 다시 한번 시도해 주세요.',
     badAccessPathError: '잘못된 경로 입니다. 메뉴를 통해 접근해 주세요.'
+  },
+  serverErrorHandlingExcludeUrl: {
+    badRequest: [
+      "/api/auth/token/refresh",
+      "/api/auth",
+      "/api/auth/dooray"
+    ]
   }
 }
 
