@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Button, Form, Input, message, PageHeader} from 'antd';
-import {AccessControlService} from "./access.control.service";
+import {WebHookService} from "./webhook.service";
 import {CREATE_MODE, EDIT_MODE} from "../AppSettings";
 
 const formItemLayout = {
@@ -28,32 +28,32 @@ const tailFormItemLayout = {
   },
 };
 
-const PermissionForm = ({mode, selectedPermission, onBack}) => {
+const WebHookForm = ({mode, selectedWebHook, onBack}) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (mode === EDIT_MODE) {
       form.setFieldsValue({
-        name: selectedPermission.name,
-        description: selectedPermission.description,
+        name: selectedWebHook.name,
+        description: selectedWebHook.description,
       });
     }
-  }, [form, mode, selectedPermission]);
+  }, [form, mode, selectedWebHook]);
 
   const save = (values) => {
-    const permission = {
+    const webHook = {
       name: values.name,
       description: values.description,
     };
 
     setLoading(true);
     if (mode === EDIT_MODE) {
-      AccessControlService.updatePermission(selectedPermission.id, permission).then(handleSuccess).catch(handleFailure).finally(() => {
+      WebHookService.updateWebHook(selectedWebHook.id, webHook).then(handleSuccess).finally(() => {
         setLoading(false);
       });
     } else if (mode === CREATE_MODE) {
-      AccessControlService.createPermission(permission).then(handleSuccess).catch(handleFailure).finally(() => {
+      WebHookService.createWebHook(webHook).then(handleSuccess).finally(() => {
         setLoading(false);
       });
     }
@@ -63,36 +63,27 @@ const PermissionForm = ({mode, selectedPermission, onBack}) => {
     message.success("저장 되었습니다.");
   }
 
-  const handleFailure = (err) => {
-    if (err.response.status === 400 && err.response.data && err.response.data.message && err.response.data.message === "duplicated") {
-      message.warn("이미 존재하는 권한입니다.");
-    }
-  }
-
   return (
     <>
       <PageHeader
-        title="권한 추가"
-        subTitle="권한을 추가 합니다."
+        title="웹훅(WebHook) 추가"
+        subTitle="웹훅을 추가 합니다."
         onBack={onBack}
       >
         <Form {...formItemLayout} form={form} onFinish={save}>
           <Form.Item
             name="name"
-            label="권한 이름"
+            label="웹훅 이름"
             rules={[{
               required: true,
               message: '권한 이름을 입력해 주세요.',
-            }, {
-              pattern: '^[a-zA-Z0-9_]+$',
-              message: '영문자와 숫자 그리고 언더스코어(_)만 허용됩니다.'
             }]}
           >
             <Input/>
           </Form.Item>
           <Form.Item
             name="description"
-            label="권한 설명"
+            label="웹훅 설명"
           >
             <Input/>
           </Form.Item>
@@ -106,4 +97,4 @@ const PermissionForm = ({mode, selectedPermission, onBack}) => {
     </>
   )
 };
-export default PermissionForm;
+export default WebHookForm;

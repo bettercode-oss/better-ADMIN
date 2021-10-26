@@ -1,6 +1,7 @@
 import axios from "axios";
 import {adminConfig} from "../config/admin.config";
 import {MemberContext} from "./member.context";
+import {AdminWebSocket} from "../websocket/admin.websocket";
 
 const API_URL = adminConfig.authentication.authAPI();
 
@@ -33,6 +34,7 @@ class AuthService {
 
     const memberResponse = await axios.get(API_URL + "/members/my");
     MemberContext.memberInformation = memberResponse.data;
+    AdminWebSocket.init(MemberContext.memberInformation.id);
   }
 
   async loginWithDooray(id, password) {

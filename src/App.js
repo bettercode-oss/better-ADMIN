@@ -6,9 +6,13 @@ import Login from "./components/login/Login";
 import AuthRoute from "./components/router/AuthRoute";
 import {adminConfig} from "./config/admin.config";
 import {AuthService} from "./auth/auth.service";
-import {Modal} from "antd";
-import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "./event/event.broadcaster";
-import {ExclamationCircleOutlined} from "@ant-design/icons";
+import {Modal, notification} from "antd";
+import {
+  EventBroadcaster,
+  SHOW_ERROR_MESSAGE_EVENT_TOPIC,
+  SHOW_WEB_HOOK_MESSAGE_EVENT_TOPIC
+} from "./event/event.broadcaster";
+import {ExclamationCircleOutlined, NotificationTwoTone} from "@ant-design/icons";
 import {LayoutProvider} from "./components/layout/AppLayoutContext";
 import OAuthLoginResult from "./components/login/OAuthLoginResult";
 
@@ -32,6 +36,14 @@ const App = () => {
         okText: '확인',
         cancelText: null,
         cancelButtonProps: {style: {display: 'none'}},
+      });
+    });
+
+    EventBroadcaster.on(SHOW_WEB_HOOK_MESSAGE_EVENT_TOPIC, (msg) => {
+      notification.open({
+        message: msg.title,
+        description: msg.text,
+        icon: <NotificationTwoTone />,
       });
     });
   },);

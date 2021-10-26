@@ -9,6 +9,7 @@ const {Content, Sider} = Layout;
 export const CREATE_MODE = "CREATE";
 export const EDIT_MODE = "EDIT";
 export const VIEW_MODE = "VIEW";
+export const VIEW_DETAILS_MODE = "VIEW_DETAILS";
 
 const DEFAULT_OPEN_KEY = "0";
 

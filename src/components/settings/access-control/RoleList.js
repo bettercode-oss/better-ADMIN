@@ -42,6 +42,8 @@ const RoleList = ({onCreate, onEdit}) => {
   const deleteConfirm = (roleId) => {
     confirm({
       title: '역할을 삭제하시겠습니까?',
+      okText: '예',
+      cancelText: '아니오',
       icon: <ExclamationCircleOutlined/>,
       onOk() {
         deleteRole(roleId);
