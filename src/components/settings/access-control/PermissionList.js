@@ -49,6 +49,8 @@ const PermissionList = ({onCreate, onEdit}) => {
   const deleteConfirm = (permissionId) => {
     confirm({
       title: '권한을 삭제하시겠습니까?',
+      okText: '예',
+      cancelText: '아니오',
       icon: <ExclamationCircleOutlined />,
       onOk() {
         deletePermission(permissionId);

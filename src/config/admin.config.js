@@ -11,6 +11,9 @@ const BetterAdminConfig = {
     },
     errorMessagePermissionDenied: '권한이 없습니다. 관리자에게 문의하세요.'
   },
+  webSocketUrl: () => {
+    return '//localhost:2016/ws'
+  },
   errorMessage: {
     serverInternalError: '오류가 발생 했습니다. 잠시 후 다시 시도해 주세요.',
     badRequestError: '잘못된 요청입니다.',

@@ -7,6 +7,7 @@ import {MemberContext} from "../../auth/member.context";
 import OrganizationSetting from "./organization/OrganizationSetting";
 import MemberApproval from "./member/MemberApproval";
 import GoogleWorkspaceSetting from "./google-workspace/GoogleWorkspaceSetting";
+import WebHooksSetting from "./notification-web-hooks/WebHooksSetting";
 
 const settingsSideMenuItems = [
   {
@@ -40,7 +41,7 @@ const settingsSideMenuItems = [
       }
     ]
   }, {
-    title: "외부 로그인",
+    title: "로그인",
     accessPermission: "MANAGE_SYSTEM_SETTINGS",
     items: [
       {
@@ -52,6 +53,10 @@ const settingsSideMenuItems = [
         component: <GoogleWorkspaceSetting/>,
       }
     ]
+  }, {
+    title: "알림 웹훅(WebHooks)",
+    accessPermission: "MANAGE_SYSTEM_SETTINGS",
+    component: <WebHooksSetting/>
   }
 ];
 
