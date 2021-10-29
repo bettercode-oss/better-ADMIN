@@ -16,6 +16,11 @@ class MemberContext {
   get memberInformation() {
     return this._memberInformation;
   }
+
+  hasPermission(permission) {
+    const memberPermissions = new Set( this.memberInformation().permissions ? this.memberInformation().permissions : []);
+    return memberPermissions.has(permission);
+  }
 }
 
 const instance = new MemberContext()
