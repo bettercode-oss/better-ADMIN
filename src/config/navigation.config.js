@@ -2,6 +2,16 @@ import navigationInfo from "./navigation.json";
 import {MemberContext} from "../auth/member.context";
 
 export default class NavigationConfig {
+  static hasPermissions(memberPermissions, navigationPermissions) {
+    for (let i = 0; i < navigationPermissions.length; i++) {
+      if (memberPermissions.has(navigationPermissions[i])) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   static getItemsByMemberPermission = () => {
     const memberPermissions = new Set(MemberContext.memberInformation.permissions ? MemberContext.memberInformation.permissions : []);
     const accessibleGnbItems = [];
@@ -9,19 +19,19 @@ export default class NavigationConfig {
       const gnbItems = navigationInfo.items;
       gnbItems.forEach(gnbItem => {
         // GNB
-        if (!gnbItem.accessPermission || memberPermissions.has(gnbItem.accessPermission)) {
+        if (!gnbItem.accessPermissions || this.hasPermissions(memberPermissions, gnbItem.accessPermissions)) {
           if (gnbItem.items) {
             // SNB
             const accessibleSnbItems = [];
             const snbItems = gnbItem.items
             snbItems.forEach(snbItem => {
-              if (!snbItem.accessPermission || memberPermissions.has(snbItem.accessPermission)) {
+              if (!snbItem.accessPermissions || this.hasPermissions(memberPermissions, snbItem.accessPermissions)) {
                 if (snbItem.items) {
                   // Sub
                   const accessibleSubItems = [];
                   const subItems = snbItem.items
                   subItems.forEach(subItem => {
-                    if (!snbItem.accessPermission || memberPermissions.has(subItem.accessPermission)) {
+                    if (!snbItem.accessPermissions || this.hasPermissions(memberPermissions, subItem.accessPermissions)) {
                       accessibleSubItems.push(subItem);
                     }
                   });

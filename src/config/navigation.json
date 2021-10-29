@@ -35,7 +35,7 @@
     {
       "title": "GNB2",
       "icon": "IoIosAlbums",
-      "accessPermission": "MANAGE_MEMBERS",
+      "accessPermissions": ["MANAGE_MEMBERS", "MANAGE_SYSTEM_SETTINGS"],
       "items": [
         {
           "title": "SNB3",
