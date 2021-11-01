@@ -68,7 +68,7 @@ const OrganizationMemberChange = ({organization, onBack}) => {
             <Checkbox.Group style={{width: '100%'}}>
               {allMembers && allMembers.map(member => (
                 <Row key={member.id} style={{textAlign: "center"}}>
-                  <Checkbox value={member.id}>{member.name}</Checkbox>
+                  <Checkbox value={member.id}>{member.name}({member.candidateId})</Checkbox>
                 </Row>
               ))}
             </Checkbox.Group>
