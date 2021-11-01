@@ -32,13 +32,12 @@ const MemberList = ({onRoleChange}) => {
   }
 
   const columns = [{
-    title: '아이디',
-    dataIndex: 'id',
-    key: 'id',
-  }, {
     title: '이름',
     dataIndex: 'name',
     key: 'name',
+    render: (text, record) => (
+      <span>{text}({record.candidateId})</span>
+    )
   }, {
     title: '로그인 유형',
     dataIndex: 'typeName',
@@ -68,7 +67,7 @@ const MemberList = ({onRoleChange}) => {
               {organization.roles && organization.roles.map(role =>
                 (<Tag key={role.id} color="orange">{role.name}</Tag>))}
             </Panel>
-            })
+          })
           }</Collapse>
       }
     }
