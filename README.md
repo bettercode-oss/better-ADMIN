@@ -49,7 +49,21 @@ Admin 사이트를 만들다 보면 정작 중요한 업무 페이지를 만드�
 
 ![구글로그인](https://user-images.githubusercontent.com/16472109/134839534-444b1a1d-d80d-4a31-89ea-5c90e932685f.gif)
 
-**5. 공통 에러 처리 지원**
+**5. 화면 히스토리 탭 지원**
+
+![better-admin-page-history-tab](https://user-images.githubusercontent.com/16472109/133744322-6bfb49aa-8783-4727-9586-ede03d1af7c0.gif)
+
+**6. 알림 웹훅 지원**
+* 사용자가 직접 웹훅을 등록할 수 있다.
+* 웹훅을 호출하면 우측 상단에 메시지가 보여 진다.
+
+![image](https://user-images.githubusercontent.com/16472109/139815084-b46335a1-512b-4cd2-8b7a-bc700d9f1168.png)
+
+![image](https://user-images.githubusercontent.com/16472109/139815132-313203fa-b39b-45af-a005-2d544163a1ab.png)
+
+![image](https://user-images.githubusercontent.com/16472109/139815178-31526890-614d-42d8-aa53-2269b2ccf591.png)
+
+**7. 공통 에러 처리 지원**
 
 HTTP Status Code 500(ServerInternalError)인 경우 공통 에러 메시지 제공
 
@@ -58,11 +72,6 @@ HTTP Status Code 500(ServerInternalError)인 경우 공통 에러 메시지 제�
 네트워크 연결 오류 시 공통 에러 메시지 제공
 
 ![image](https://user-images.githubusercontent.com/16472109/119612414-d2423d80-be36-11eb-8811-21c64896da0c.png)
-
-
-**6. 페이지 히스토리 탭 지원**
-
-![better-admin-page-history-tab](https://user-images.githubusercontent.com/16472109/133744322-6bfb49aa-8783-4727-9586-ede03d1af7c0.gif)
 
 
 ## 시작하기
