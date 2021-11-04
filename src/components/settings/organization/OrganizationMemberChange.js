@@ -1,7 +1,9 @@
 import React, {useEffect, useState} from "react";
-import {Button, Checkbox, Form, PageHeader, Row, message} from 'antd';
+import {Button, Form, message, PageHeader, Select} from 'antd';
 import {MemberService} from "../member/member.service";
 import {OrganizationService} from "./organization.service";
+
+const {Option} = Select;
 
 const formItemLayout = {
   labelCol: {
@@ -11,7 +13,7 @@ const formItemLayout = {
   wrapperCol: {
     xs: {span: 24},
     sm: {span: 12},
-    md: {span: 12},
+    md: {span: 24},
   },
 };
 
@@ -37,14 +39,14 @@ const OrganizationMemberChange = ({organization, onBack}) => {
     MemberService.getMembersApproved({page: 0}).then((response) => {
       setAllMembers(response.data.result);
       form.setFieldsValue({
-        assignMembers: organization.members ? organization.members.map(member => member.id) : []
+        assignMembers: organization.members ? organization.members.map(member => String(member.id)) : []
       });
     });
   }, [form, organization]);
 
   const save = (values) => {
     const assignMembers = {
-      memberIds: values.assignMembers ? values.assignMembers : [],
+      memberIds: values.assignMembers ? values.assignMembers.map(memberId => Number(memberId)) : [],
     };
     setLoading(true);
     OrganizationService.assignMembers(organization.id, assignMembers).then(() => {
@@ -65,13 +67,20 @@ const OrganizationMemberChange = ({organization, onBack}) => {
           <Form.Item
             name="assignMembers"
           >
-            <Checkbox.Group style={{width: '100%'}}>
+            <Select
+              mode="multiple"
+              allowClear
+              showArrow
+              style={{width: '100%'}}
+              placeholder="멤버를 선택해 주세요.(여러명을 검색하여 선택할 수 있습니다)"
+              filterOption={(input, option) =>
+                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+            >
               {allMembers && allMembers.map(member => (
-                <Row key={member.id} style={{textAlign: "center"}}>
-                  <Checkbox value={member.id}>{member.name}({member.candidateId})</Checkbox>
-                </Row>
+                <Option key={member.id}>{member.name + '(' + member.candidateId + ')'}</Option>
               ))}
-            </Checkbox.Group>
+            </Select>
           </Form.Item>
           <Form.Item {...tailFormItemLayout}>
             <Button type="primary" loading={loading} htmlType="submit">
