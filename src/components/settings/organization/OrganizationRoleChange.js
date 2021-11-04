@@ -1,7 +1,9 @@
 import React, {useEffect, useState} from "react";
-import {Button, Checkbox, Form, PageHeader, Row, message} from 'antd';
+import {Button, Form, message, PageHeader, Select} from 'antd';
 import {AccessControlService} from "../access-control/access.control.service";
 import {OrganizationService} from "./organization.service";
+
+const {Option} = Select;
 
 const formItemLayout = {
   labelCol: {
@@ -11,7 +13,7 @@ const formItemLayout = {
   wrapperCol: {
     xs: {span: 24},
     sm: {span: 12},
-    md: {span: 12},
+    md: {span: 24},
   },
 };
 
@@ -37,14 +39,14 @@ const OrganizationRoleChange = ({organization, onBack}) => {
     AccessControlService.getRoles({page: 0}).then((response) => {
       setAllRoles(response.data.result);
       form.setFieldsValue({
-        assignRoles: organization.roles ? organization.roles.map(role => role.id) : []
+        assignRoles: organization.roles ? organization.roles.map(role => String(role.id)) : []
       });
     });
   }, [form, organization]);
 
   const save = (values) => {
     const assignRoles = {
-      roleIds: values.assignRoles ? values.assignRoles : [],
+      roleIds: values.assignRoles ? values.assignRoles.map(roleId => Number(roleId)) : [],
     };
     setLoading(true);
     OrganizationService.assignRoles(organization.id, assignRoles).then(() => {
@@ -65,13 +67,20 @@ const OrganizationRoleChange = ({organization, onBack}) => {
           <Form.Item
             name="assignRoles"
           >
-            <Checkbox.Group style={{width: '100%'}}>
+            <Select
+              mode="multiple"
+              allowClear
+              showArrow
+              style={{width: '100%'}}
+              placeholder="역할을 선택해 주세요.(여러 역할 검색하여 선택할 수 있습니다)"
+              filterOption={(input, option) =>
+                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+            >
               {allRoles && allRoles.map(role => (
-                <Row key={role.id} style={{textAlign: "center"}}>
-                  <Checkbox value={role.id}>{role.name}</Checkbox>
-                </Row>
+                <Option key={role.id}>{role.name}</Option>
               ))}
-            </Checkbox.Group>
+            </Select>
           </Form.Item>
           <Form.Item {...tailFormItemLayout}>
             <Button type="primary" loading={loading} htmlType="submit">
