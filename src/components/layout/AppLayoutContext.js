@@ -139,7 +139,7 @@ function layoutReducer(state, action) {
     case 'SHOW_LOADING':
       return {
         ...state,
-        loading: action.loading,
+        loading: action.show,
       };
     case 'ADD_TAB_PAGE':
       const currentItem = NavigationConfig.getItemsByLink(action.pathname, NavigationConfig.getItemsWithoutMemberPermission());
