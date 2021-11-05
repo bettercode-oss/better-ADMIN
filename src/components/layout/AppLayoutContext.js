@@ -38,27 +38,26 @@ function layoutReducer(state, action) {
         }
       }
 
-      if (action.pathname !== '/') {
-        if (currentNavigationItem.gnbItem) {
-          const gnbNavigationItem = state.allGnbItems[currentNavigationItem.gnbItem.index];
-          const breadcrumbNavigationItems = [];
-          breadcrumbNavigationItems.push(currentNavigationItem.gnbItem.title);
+      if (currentNavigationItem.gnbItem) {
+        const gnbNavigationItem = state.allGnbItems[currentNavigationItem.gnbItem.index];
+        const breadcrumbNavigationItems = [];
+        breadcrumbNavigationItems.push(currentNavigationItem.gnbItem.title);
 
-          if (currentNavigationItem.snbItem) {
-            breadcrumbNavigationItems.push(currentNavigationItem.snbItem.title);
-          }
-
-          if (currentNavigationItem.subItem) {
-            breadcrumbNavigationItems.push(currentNavigationItem.subItem.title);
-          }
-
-          state = {
-            ...state,
-            gnbItem: gnbNavigationItem,
-            breadcrumbItems: breadcrumbNavigationItems,
-          };
+        if (currentNavigationItem.snbItem) {
+          breadcrumbNavigationItems.push(currentNavigationItem.snbItem.title);
         }
+
+        if (currentNavigationItem.subItem) {
+          breadcrumbNavigationItems.push(currentNavigationItem.subItem.title);
+        }
+
+        state = {
+          ...state,
+          gnbItem: gnbNavigationItem,
+          breadcrumbItems: breadcrumbNavigationItems,
+        };
       }
+
       const gnbMenuSelectedKeys = currentNavigationItem.gnbItem ? [currentNavigationItem.gnbItem.index] : [''];
       let snbMenuSelectedKeys = currentNavigationItem.snbItem ? [currentNavigationItem.snbItem.index] : [''];
       if (currentNavigationItem.subItem) {
@@ -148,20 +147,6 @@ function layoutReducer(state, action) {
           if (adminConfig.homePage !== action.pathname) {
             EventBroadcaster.broadcast(SHOW_ERROR_MESSAGE_EVENT_TOPIC, adminConfig.errorMessage.badAccessPathError);
             return state;
-          } else {
-            const homePage = {
-              id: String(++pageTabId),
-              navigationPathName: action.pathname,
-              title: 'HOME',
-              link: action.pathname,
-            }
-            return {
-              ...state,
-              pageTab: {
-                current: homePage,
-                histories: state.pageTab.histories.concat(homePage)
-              },
-            };
           }
         }
 

@@ -50,6 +50,24 @@ export default class NavigationConfig {
     return accessibleGnbItems;
   }
 
+  static getFirstItemLink = () => {
+    const gnbItems = this.getItemsByMemberPermission();
+    if (gnbItems && gnbItems.length > 0) {
+      const firstGnbItem = gnbItems[0];
+      if(firstGnbItem.items.length > 0) {
+        const firstSnbItem = firstGnbItem.items[0];
+        if (firstSnbItem.link) {
+          return firstSnbItem.link;
+        } else {
+          if(firstSnbItem.items.length > 0) {
+            return firstSnbItem.items[0].link;
+          }
+        }
+      }
+    }
+    return null;
+  }
+
   static getItemsWithoutMemberPermission = () => {
     const accessibleGnbItems = [];
     if (navigationInfo.items) {
@@ -139,4 +157,6 @@ export default class NavigationConfig {
 
     return result;
   }
+
+
 }
