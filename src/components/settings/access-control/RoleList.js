@@ -92,10 +92,10 @@ const RoleList = ({onCreate, onEdit}) => {
         return (
           <Dropdown overlay={
             <Menu>
-              <Menu.Item>
+              <Menu.Item key={0}>
                 <Button type="text" icon={<EditOutlined/>} onClick={() => onEdit(record)}>수정</Button>
               </Menu.Item>
-              <Menu.Item>
+              <Menu.Item key={1}>
                 <Button type="text" icon={<DeleteOutlined/>} onClick={() => deleteConfirm(record.id)}>삭제</Button>
               </Menu.Item>
             </Menu>} trigger={['click']}>

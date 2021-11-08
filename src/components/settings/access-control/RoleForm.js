@@ -1,7 +1,9 @@
 import React, {useEffect, useState} from "react";
-import {Button, Checkbox, Form, Input, message, PageHeader, Row} from 'antd';
+import {Button, Form, Input, message, PageHeader, Select} from 'antd';
 import {AccessControlService} from "./access.control.service";
 import {CREATE_MODE, EDIT_MODE} from "../AppSettings";
+
+const {Option} = Select;
 
 const formItemLayout = {
   labelCol: {
@@ -40,7 +42,7 @@ const RoleForm = ({mode, selectedRole, onBack}) => {
         form.setFieldsValue({
           name: selectedRole.name,
           description: selectedRole.description,
-          allowPermissions: selectedRole.permissions ? selectedRole.permissions.map(permission => permission.id) : [],
+          allowPermissions: selectedRole.permissions ? selectedRole.permissions.map(permission => String(permission.id)) : [],
         });
       }
     }).catch((err) => {
@@ -52,7 +54,7 @@ const RoleForm = ({mode, selectedRole, onBack}) => {
     const role = {
       name: values.name,
       description: values.description,
-      allowedPermissionIds: values.allowPermissions,
+      allowedPermissionIds: values.allowPermissions ? values.allowPermissions.map(id => Number(id)) : [],
     };
 
     if (mode === EDIT_MODE) {
@@ -115,13 +117,28 @@ const RoleForm = ({mode, selectedRole, onBack}) => {
               },
             ]}
           >
-            <Checkbox.Group style={{width: '100%'}}>
+            <Select
+              mode="multiple"
+              allowClear
+              showArrow
+              style={{width: '100%'}}
+              placeholder="권한을 선택해 주세요.(여러 권한 검색하여 선택할 수 있습니다)"
+              filterOption={(input, option) =>
+                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+            >
               {allPermissions && allPermissions.map(permission => (
-                <Row key={permission.id}>
-                  <Checkbox value={permission.id}>{permission.name}</Checkbox>
-                </Row>
+                <Option key={permission.id}>{permission.name}</Option>
               ))}
-            </Checkbox.Group>
+            </Select>
+
+            {/*<Checkbox.Group style={{width: '100%'}}>*/}
+            {/*  {allPermissions && allPermissions.map(permission => (*/}
+            {/*    <Row key={permission.id}>*/}
+            {/*      <Checkbox value={permission.id}>{permission.name}</Checkbox>*/}
+            {/*    </Row>*/}
+            {/*  ))}*/}
+            {/*</Checkbox.Group>*/}
           </Form.Item>
           <Form.Item {...tailFormItemLayout}>
             <Button type="primary" loading={loading} htmlType="submit">
