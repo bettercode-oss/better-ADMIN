@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Dropdown, Menu, Modal, PageHeader, Table, Tag} from 'antd';
+import {Button, Collapse, Dropdown, Menu, Modal, PageHeader, Table, Tag} from 'antd';
 import {
   DeleteOutlined,
   DownOutlined,
@@ -11,6 +11,7 @@ import {
 import {AccessControlService} from "./access.control.service";
 
 const {confirm} = Modal;
+const {Panel} = Collapse;
 
 const PAGE_SIZE = 5;
 const RoleList = ({onCreate, onEdit}) => {
@@ -74,11 +75,17 @@ const RoleList = ({onCreate, onEdit}) => {
     title: '할당 권한',
     width: "200px",
     render: (text, record) => {
-      return <div>
-        {record.permissions.map(permission => (
-          <Tag key={permission.id} color="orange">{permission.name}</Tag>
-        ))}
-      </div>
+      if (record.permissions) {
+        return (<Collapse ghost>
+          <Panel header={<span style={{color: "#5B71F3"}}>펼쳐 보기</span>}>
+            {record.permissions.map(permission => (
+              <Tag key={permission.id} color="orange">{permission.name}</Tag>
+            ))}
+          </Panel>
+        </Collapse>);
+      } else {
+        return <></>
+      }
     }
   }, {
     title: '설명',

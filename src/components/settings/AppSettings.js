@@ -19,8 +19,8 @@ export const AppSettings = ({onClose}) => {
   useEffect(() => {
     let defaultSelectedKey = "0";
     const items = AppSettingsNavigation.getItems();
-    if(items && items.length > 0) {
-      if(items[0].items && items.length > 0) {
+    if (items && items.length > 0) {
+      if (items[0].items && items.length > 0) {
         defaultSelectedKey += "-0";
       }
     }
@@ -46,9 +46,13 @@ export const AppSettings = ({onClose}) => {
     <>
       <Modal title={[<div key={1}><SettingOutlined/> 사이트 설정</div>]} visible={true}
              onCancel={onClose} footer={null} width={1200} bodyStyle={{margin: 0, padding: 0}}>
-        <Layout>
+        <Layout
+          style={{
+            minHeight: "100%"
+          }}>
           <Sider className="settings-sider">
-            <Menu mode="inline" onClick={handleMenuClick} defaultSelectedKeys={[selectedKey]} defaultOpenKeys={[DEFAULT_OPEN_KEY]}>
+            <Menu mode="inline" onClick={handleMenuClick} defaultSelectedKeys={[selectedKey]}
+                  defaultOpenKeys={[DEFAULT_OPEN_KEY]}>
               {AppSettingsNavigation.getItems() &&
               AppSettingsNavigation.getItems().map((item, index) => {
                 if (item.items && item.items.length > 0) {

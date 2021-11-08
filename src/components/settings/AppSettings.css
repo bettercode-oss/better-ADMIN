@@ -1,5 +1,5 @@
 .settings-sider {
-    height: 600px;
+    min-height: 600px;
     background: white;
     overflow: scroll;
 }
