@@ -11,6 +11,8 @@ class MemberContext {
       permissions: [],
       picture: "",
     };
+
+    this._available = false;
   }
 
   set memberInformation(memberInformation) {
@@ -20,6 +22,10 @@ class MemberContext {
 
   get memberInformation() {
     return this._memberInformation;
+  }
+
+  get available() {
+    return this._available;
   }
 
   hasPermission(permission) {

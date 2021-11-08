@@ -13,6 +13,7 @@ import Footer from "./Footer";
 import {useLayoutDispatch, useLayoutState} from "./AppLayoutContext";
 import {useHistory} from "react-router-dom";
 import NavigationConfig from "../../config/navigation.config";
+import {MemberContext} from "../../auth/member.context";
 
 const AppLayout = (props) => {
   const layoutDispatch = useLayoutDispatch();
@@ -24,10 +25,19 @@ const AppLayout = (props) => {
     layoutDispatch({
       type: 'INIT_NAVIGATION', pathname
     });
+
+    if (pathname === "/" && MemberContext.available) {
+      // PATH 가 루트(/) 인 경우 네비게이션 메뉴 중 가장 첫 번째 메뉴의 화면으로 이동 시킨다.
+      const firstNavigationItemLink = NavigationConfig.getFirstItemLink();
+      if(firstNavigationItemLink) {
+        history.push(firstNavigationItemLink);
+      }
+    }
   }, [
     props.location.pathname,
     layoutDispatch,
     layoutState.allGnbItems,
+    history
   ]);
 
   useEffect(() => {
@@ -35,14 +45,6 @@ const AppLayout = (props) => {
       layoutDispatch({
         type: 'REFRESH_ALL_GNB_ITEMS'
       });
-
-      if (props.location.pathname === "/") {
-        // PATH 가 루트(/) 인 경우 네비게이션 메뉴 중 가장 첫 번째 메뉴의 화면으로 이동 시킨다.
-        const firstNavigationItemLink = NavigationConfig.getFirstItemLink();
-        if(firstNavigationItemLink) {
-          history.push(firstNavigationItemLink);
-        }
-      }
     });
 
     EventBroadcaster.on(SHOW_LOADING_EVENT_TOPIC, (data) => {
@@ -51,7 +53,7 @@ const AppLayout = (props) => {
         type: 'SHOW_LOADING', show
       });
     });
-  }, [history, props.location.pathname, layoutDispatch]);
+  }, [layoutDispatch]);
 
   return (
     <Layout
