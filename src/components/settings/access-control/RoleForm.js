@@ -131,14 +131,6 @@ const RoleForm = ({mode, selectedRole, onBack}) => {
                 <Option key={permission.id}>{permission.name}</Option>
               ))}
             </Select>
-
-            {/*<Checkbox.Group style={{width: '100%'}}>*/}
-            {/*  {allPermissions && allPermissions.map(permission => (*/}
-            {/*    <Row key={permission.id}>*/}
-            {/*      <Checkbox value={permission.id}>{permission.name}</Checkbox>*/}
-            {/*    </Row>*/}
-            {/*  ))}*/}
-            {/*</Checkbox.Group>*/}
           </Form.Item>
           <Form.Item {...tailFormItemLayout}>
             <Button type="primary" loading={loading} htmlType="submit">
