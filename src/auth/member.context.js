@@ -1,4 +1,4 @@
-import {CHANGE_MEMBER_CONTEXT_EVENT_TOPIC, EventBroadcaster} from "../event/event.broadcaster";
+import {EventBroadcaster, MEMBER_CONTEXT_AVAILABLE_EVENT_TOPIC} from "../event/event.broadcaster";
 
 class MemberContext {
   constructor() {
@@ -17,7 +17,7 @@ class MemberContext {
 
   set memberInformation(memberInformation) {
     this._memberInformation = memberInformation;
-    EventBroadcaster.broadcast(CHANGE_MEMBER_CONTEXT_EVENT_TOPIC, memberInformation);
+    EventBroadcaster.broadcast(MEMBER_CONTEXT_AVAILABLE_EVENT_TOPIC, memberInformation);
   }
 
   get memberInformation() {
