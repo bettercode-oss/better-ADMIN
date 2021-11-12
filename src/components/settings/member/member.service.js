@@ -29,6 +29,10 @@ class MemberService {
   approveMember(memberId) {
     return axios.put(API_URL + `/members/${memberId}/approved`);
   }
+
+  getSearchFilters() {
+    return axios.get(`${API_URL}/members/search-filters`);
+  }
 }
 
 const instance = new MemberService()
