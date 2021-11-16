@@ -2,76 +2,76 @@
   "items": [
     {
       "title": "GNB1-22",
-      "icon": "BsFillArchiveFill",
+      "icon": "ApartmentOutlined",
       "items": [
         {
           "title": "SNB1",
-          "icon": "IoBagHandle",
+          "icon": "ApiOutlined",
           "items": [
             {
               "title": "Sub1",
-              "icon": "IoIosAmericanFootball",
+              "icon": "BranchesOutlined",
               "link": "/sub1"
             },
             {
               "title": "Sub2",
-              "icon": "IoAlarmOutline",
+              "icon": "BulbOutlined",
               "link": "/sub2"
             }
           ]
         },
         {
           "title": "SNB2",
-          "icon": "HiBriefcase",
+          "icon": "CiCircleOutlined",
           "link": "/snb2"
         },
         {
           "title": "Sample",
-          "icon": "HiCake",
+          "icon": "CarryOutOutlined",
           "link": "/sample-list"
         }
       ]
     },
     {
       "title": "GNB2",
-      "icon": "IoIosAlbums",
+      "icon": "BarcodeOutlined",
       "accessPermissions": ["MANAGE_MEMBERS", "MANAGE_SYSTEM_SETTINGS"],
       "items": [
         {
           "title": "SNB3",
-          "icon": "Si3M",
+          "icon": "CameraOutlined",
           "items": [
             {
               "title": "Sub5",
-              "icon": "SiAdobeaudition",
+              "icon": "CrownOutlined",
               "link": "/sub5"
             },
             {
               "title": "Sub6",
-              "icon": "VscCalendar",
+              "icon": "ControlOutlined",
               "link": "/sub6"
             }
           ]
         },
         {
           "title": "SNB4",
-          "icon": "SiAdobeacrobatreader",
+          "icon": "BugOutlined",
           "items": [
             {
               "title": "Sub7",
-              "icon": "SiAiohttp",
+              "icon": "AuditOutlined",
               "link": "/sub7"
             },
             {
               "title": "Sub8",
-              "icon": "SiAframe",
+              "icon": "DashboardOutlined",
               "link": "/sub8"
             }
           ]
         },
         {
           "title": "SNB5",
-          "icon": "SiAirbnb",
+          "icon": "DollarOutlined",
           "link": "/sample"
         }
       ]
