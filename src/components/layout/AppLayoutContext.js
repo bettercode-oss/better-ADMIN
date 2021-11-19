@@ -1,10 +1,11 @@
-import React, {createContext, useContext, useReducer} from 'react';
+import React, {createContext, useContext, useEffect, useReducer} from 'react';
 
 import NavigationConfig from "../../config/navigation.config";
-import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "../../event/event.broadcaster";
 import {adminConfig} from "../../config/admin.config";
 
-let pageTabId = 0;
+const SESSION_STORAGE_KEY_BETTER_ADMIN_PAGE_TAB_ID = "betterAdminPageTabId";
+const SESSION_STORAGE_KEY_BETTER_ADMIN_PAGE_TAB = "betterAdminPageTab";
+
 const initialState = {
   allGnbItems: [],
   gnbItem: null,
@@ -14,7 +15,7 @@ const initialState = {
     snbMenuSelectedKeys: [''],
     snbMenuOpenKeys: ['']
   },
-  pageTab: {
+  pageTab: window.sessionStorage.getItem(SESSION_STORAGE_KEY_BETTER_ADMIN_PAGE_TAB) == null ? {
     current: {
       id: '',
       title: '',
@@ -23,9 +24,20 @@ const initialState = {
       link: '',
     },
     histories: [],
-  },
+  } : JSON.parse(window.sessionStorage.getItem(SESSION_STORAGE_KEY_BETTER_ADMIN_PAGE_TAB)),
   loading: false
 };
+
+function getNextPageTabId() {
+  let nextId = 0;
+  const currentId = window.sessionStorage.getItem(SESSION_STORAGE_KEY_BETTER_ADMIN_PAGE_TAB_ID);
+  if(currentId) {
+    nextId = Number(currentId) + 1;
+  }
+  window.sessionStorage.setItem(SESSION_STORAGE_KEY_BETTER_ADMIN_PAGE_TAB_ID, String(nextId));
+  return String(nextId);
+}
+
 
 function layoutReducer(state, action) {
   switch (action.type) {
@@ -145,8 +157,24 @@ function layoutReducer(state, action) {
       if (!currentItem.gnbItem) {
         if (state.pageTab.histories.length === 0) {
           if (adminConfig.homePage !== action.pathname) {
-            EventBroadcaster.broadcast(SHOW_ERROR_MESSAGE_EVENT_TOPIC, adminConfig.errorMessage.badAccessPathError);
-            return state;
+            // navigation.json에 등록되지 않은 URL로 바로 접근하는 경우
+            // 네비게이션을 추정할 수 없기 때문에 빈 탭을 만들어 반환
+            const newPathName = action.pathname + "/"; // 다른 탭에서 같은 URL을 여는 경우 탭의 URL 중복을 방지 하기 위해 Slash 를 추가함.
+            const page = {
+              id: getNextPageTabId(),
+              navigationPathName: newPathName,
+              title: '',
+              link: newPathName,
+              icon: '',
+            }
+
+            return {
+              ...state,
+              pageTab: {
+                current: page,
+                histories: state.pageTab.histories.concat(page)
+              },
+            }
           }
         }
 
@@ -191,7 +219,7 @@ function layoutReducer(state, action) {
         }
 
         const page = {
-          id: String(++pageTabId),
+          id: getNextPageTabId(),
           navigationPathName: action.pathname,
           title: title,
           link: action.pathname,
@@ -244,6 +272,10 @@ const LayoutDispatchContext = createContext();
 
 export function LayoutProvider({children}) {
   const [state, dispatch] = useReducer(layoutReducer, initialState);
+
+  useEffect(() => {
+    window.sessionStorage.setItem(SESSION_STORAGE_KEY_BETTER_ADMIN_PAGE_TAB, JSON.stringify(state.pageTab));
+  }, [state.pageTab]);
 
   return (
     <LayoutStateContext.Provider value={state}>
