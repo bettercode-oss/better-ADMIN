@@ -301,3 +301,8 @@ export function useLayoutDispatch() {
   }
   return context;
 }
+
+export function cleanUpAppLayoutContextResource() {
+  window.sessionStorage.removeItem(SESSION_STORAGE_KEY_BETTER_ADMIN_PAGE_TAB_ID);
+  window.sessionStorage.removeItem(SESSION_STORAGE_KEY_BETTER_ADMIN_PAGE_TAB);
+}
