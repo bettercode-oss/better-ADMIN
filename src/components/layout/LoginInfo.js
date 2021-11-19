@@ -7,6 +7,7 @@ import {MemberContext} from "../../auth/member.context";
 import {AuthService} from "../../auth/auth.service";
 import {AppSettings} from "../settings/AppSettings";
 import {AppSettingsNavigation} from "../settings/app.settings.navigation.config";
+import {cleanUpAppLayoutContextResource} from "./AppLayoutContext";
 
 const LoginInfo = () => {
   const [showSettings, setShowSettings] = useState(false);
@@ -17,6 +18,8 @@ const LoginInfo = () => {
       history.replace(adminConfig.authentication.loginUrl);
     }).catch(() => {
       history.replace(adminConfig.authentication.loginUrl);
+    }).finally(() => {
+      cleanUpAppLayoutContextResource();
     });
   };
 
