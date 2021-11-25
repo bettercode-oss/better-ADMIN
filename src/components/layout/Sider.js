@@ -19,6 +19,8 @@ function Sider() {
       collapsible
       collapsed={collapsed}
       onCollapse={toggleCollapsed}
+      breakpoint="lg"
+      collapsedWidth="80"
     >
       <Link to="/">
         <div className="site-logo">
