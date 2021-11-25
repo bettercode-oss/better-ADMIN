@@ -2,8 +2,8 @@ import React, {useEffect} from 'react';
 import {Breadcrumb, Layout, Spin, Tabs} from "antd";
 import {useHistory} from "react-router-dom";
 import {useLayoutDispatch, useLayoutState} from "./AppLayoutContext";
-import PageRouter from "../../pages/router/PageRouter";
 import NavigationIcon from "./NavigationIcon";
+import PageRouter from "../../pages/router/PageRouter";
 
 const {TabPane} = Tabs;
 
@@ -65,31 +65,32 @@ function Content({props}) {
       <Tabs hideAdd type="editable-card" activeKey={layoutState.pageTab.current.id}
             onTabClick={handlePageHistoryTabClick} onEdit={handlePageHistoryTabEdit}>
         {layoutState.pageTab.histories && layoutState.pageTab.histories.map(page => {
-          let TabIcon = null;
-          if(page.icon && page.icon.length > 0) {
-            TabIcon = NavigationIcon(page.icon);
-          }
-          return (
-            <TabPane tab={<>{TabIcon && <TabIcon/>}&nbsp;{page.title}</>} key={page.id}>
-              {props.location.pathname !== "/" && (
-                <div style={{backgroundColor: "white", padding: "15px"}}>
-                  <Breadcrumb>
-                    {layoutState.breadcrumbItems.map((item, index) => (
-                      <Breadcrumb.Item key={index}>{item}</Breadcrumb.Item>
-                    ))}
-                  </Breadcrumb>
-                  <div className="page-title">
-                    {page.title}
+            let TabIcon = null;
+            if (page.icon && page.icon.length > 0) {
+              TabIcon = NavigationIcon(page.icon);
+            }
+            return (
+              <TabPane tab={<>{TabIcon && <TabIcon/>}&nbsp;{page.title}</>} key={page.id}>
+                {layoutState.pageTab.current.id === page.id &&
+                <>
+                  <div style={{backgroundColor: "white", padding: "15px"}}>
+                    <Breadcrumb>
+                      {layoutState.breadcrumbItems.map((item, index) => (
+                        <Breadcrumb.Item key={index}>{item}</Breadcrumb.Item>
+                      ))}
+                    </Breadcrumb>
+                    <div className="page-title">
+                      {page.title}
+                    </div>
                   </div>
-                </div>
-              )}
-              <div className="site-layout-page">
-                <Spin spinning={layoutState.loading}>
-                  <PageRouter/>
-                </Spin>
-              </div>
-            </TabPane>
-          )
+                  <div className="site-layout-page">
+                    <Spin spinning={layoutState.loading}>
+                      <PageRouter/>
+                    </Spin>
+                  </div>
+                </>}
+              </TabPane>
+            )
           }
         )}
       </Tabs>
