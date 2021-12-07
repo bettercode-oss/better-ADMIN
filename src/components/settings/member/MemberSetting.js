@@ -8,12 +8,13 @@ const VIEW_MODE = "VIEW";
 const MemberSetting = () => {
   const [mode, setMode] = useState(VIEW_MODE);
   const [selectedMember, setSelectedMember] = useState(null);
+  const [searchCondition, setSearchCondition] = useState(null);
 
   const getContent = (mode) => {
     if (mode === ROLE_CHANGE_MODE) {
       return <MemberRoleChange member={selectedMember} onBack={handleOnBack}/>
     } else {
-      return <MemberList onRoleChange={handleRoleChange}/>
+      return <MemberList initSearchCondition={searchCondition} onRoleChange={handleRoleChange}/>
     }
   }
 
@@ -21,7 +22,8 @@ const MemberSetting = () => {
     setMode(VIEW_MODE);
   }
 
-  const handleRoleChange = (member) => {
+  const handleRoleChange = (member, searchCondition) => {
+    setSearchCondition(searchCondition);
     setSelectedMember(member);
     setMode(ROLE_CHANGE_MODE);
   }
