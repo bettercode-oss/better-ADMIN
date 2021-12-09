@@ -25,7 +25,8 @@ const BetterAdminConfig = {
     badRequest: [
       "/api/auth/token/refresh",
       "/api/auth",
-      "/api/auth/dooray"
+      "/api/auth/dooray",
+      "/api/members"
     ]
   }
 }

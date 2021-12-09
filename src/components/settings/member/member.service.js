@@ -30,6 +30,10 @@ class MemberService {
     return axios.put(API_URL + `/members/${memberId}/approved`);
   }
 
+  rejectMember(memberId) {
+    return axios.put(API_URL + `/members/${memberId}/rejected`);
+  }
+
   getSearchFilters() {
     return axios.get(`${API_URL}/members/search-filters`);
   }
