@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {Button, Dropdown, Menu, message, PageHeader, Popconfirm, Table} from 'antd';
 import {MemberService} from "./member.service";
-import {DownOutlined, SettingOutlined} from "@ant-design/icons";
+import {DownOutlined, SettingOutlined, CheckOutlined, CloseOutlined} from "@ant-design/icons";
+import moment from "moment";
 
 const PAGE_SIZE = 5;
 const MemberApproval = ({onRoleChange}) => {
@@ -39,6 +40,15 @@ const MemberApproval = ({onRoleChange}) => {
     });
   }
 
+  const rejectMember =(memberId) => {
+    MemberService.rejectMember(memberId).then(response => {
+      message.success("승인 거절 되었습니다.");
+      loadMembers({
+        page: 1
+      });
+    });
+  }
+
   const columns = [{
     title: '사용자 아이디',
     dataIndex: 'signId',
@@ -47,6 +57,14 @@ const MemberApproval = ({onRoleChange}) => {
     title: '이름',
     dataIndex: 'name',
     key: 'name',
+  }, {
+    title: '신청 일시',
+    dataIndex: 'createdAt',
+    key: 'createdAt',
+    render: (text, record) => {
+      const localDateTime = moment.utc(text).local().format('YYYY-MM-DD HH:mm');
+      return (<span>{localDateTime}</span>)
+    }
   }, {
     title: '',
     align: 'right',
@@ -63,7 +81,19 @@ const MemberApproval = ({onRoleChange}) => {
                 okText="예"
                 cancelText="아니오"
               >
-                <Button type="text">멤버 승인</Button>
+                <Button type="text" icon={<CheckOutlined />} >승인</Button>
+              </Popconfirm>
+            </Menu.Item>
+            <Menu.Item key="1">
+              <Popconfirm
+                title="선택한 사용자를 승인 거절 하시겠습니까?"
+                onConfirm={() => {
+                  rejectMember(record.id);
+                }}
+                okText="예"
+                cancelText="아니오"
+              >
+                <Button type="text" icon={<CloseOutlined />}>거절</Button>
               </Popconfirm>
             </Menu.Item>
           </Menu>} trigger={['click']}>
