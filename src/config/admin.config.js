@@ -26,7 +26,8 @@ const BetterAdminConfig = {
       "/api/auth/token/refresh",
       "/api/auth",
       "/api/auth/dooray",
-      "/api/members"
+      "/api/members",
+      "/api/access-control/permissions"
     ]
   }
 }
