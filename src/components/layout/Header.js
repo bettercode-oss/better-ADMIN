@@ -4,6 +4,8 @@ import {Layout, Menu} from "antd";
 
 import {useLayoutDispatch, useLayoutState} from "./AppLayoutContext";
 import NavigationIcon from "./NavigationIcon";
+import classNames from "classnames";
+import themeConfig from "../../config/theme.config.json";
 
 function Header() {
   const layoutState = useLayoutState();
@@ -12,8 +14,8 @@ function Header() {
   const handleGnbMenuClick = ({key}) => layoutDispatch({type: 'CLICK_GNB_MENU', key});
 
   return (
-    <Layout.Header className="site-layout-header">
-      <div className="login-info">
+    <Layout.Header className={classNames('site-layout-header', {dark: themeConfig.dark})}>
+      <div className={classNames('login-info', {dark: themeConfig.dark})}>
         <LoginInfo/>
       </div>
       {layoutState.allGnbItems &&
