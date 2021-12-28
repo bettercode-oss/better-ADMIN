@@ -3,6 +3,8 @@ import {Layout, Menu, Modal} from 'antd';
 import {SettingOutlined} from "@ant-design/icons";
 import "./AppSettings.css";
 import {AppSettingsNavigation} from "./app.settings.navigation.config";
+import themeConfig from "../../config/theme.config.json";
+import classNames from "classnames";
 
 const {Content, Sider} = Layout;
 
@@ -50,7 +52,7 @@ export const AppSettings = ({onClose}) => {
           style={{
             minHeight: "100%"
           }}>
-          <Sider className="settings-sider">
+          <Sider className={classNames('settings-sider', {dark: themeConfig.dark})}>
             <Menu mode="inline" onClick={handleMenuClick} defaultSelectedKeys={[selectedKey]}
                   defaultOpenKeys={[DEFAULT_OPEN_KEY]}>
               {AppSettingsNavigation.getItems() &&
@@ -76,7 +78,7 @@ export const AppSettings = ({onClose}) => {
             </Menu>
           </Sider>
           <Layout>
-            <Content className="settings-content">
+            <Content className={classNames('settings-content', {dark: themeConfig.dark})}>
               <div>
                 {getSettingContent(selectedKey)}
               </div>

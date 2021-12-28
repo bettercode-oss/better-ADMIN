@@ -4,6 +4,8 @@ import {useHistory} from "react-router-dom";
 import {useLayoutDispatch, useLayoutState} from "./AppLayoutContext";
 import NavigationIcon from "./NavigationIcon";
 import PageRouter from "../../pages/router/PageRouter";
+import classNames from "classnames";
+import themeConfig from "../../config/theme.config.json";
 
 const {TabPane} = Tabs;
 
@@ -61,7 +63,7 @@ function Content({props}) {
   }
 
   return (
-    <Layout.Content className="site-layout-content">
+    <Layout.Content className={classNames('site-layout-content', {dark: themeConfig.dark})}>
       <Tabs hideAdd type="editable-card" activeKey={layoutState.pageTab.current.id}
             onTabClick={handlePageHistoryTabClick} onEdit={handlePageHistoryTabEdit}>
         {layoutState.pageTab.histories && layoutState.pageTab.histories.map(page => {
@@ -73,7 +75,7 @@ function Content({props}) {
               <TabPane tab={<>{TabIcon && <TabIcon/>}&nbsp;{page.title}</>} key={page.id}>
                 {layoutState.pageTab.current.id === page.id &&
                 <>
-                  <div style={{backgroundColor: "white", padding: "15px"}}>
+                  <div className="site-breadcrumb">
                     <Breadcrumb>
                       {layoutState.breadcrumbItems.map((item, index) => (
                         <Breadcrumb.Item key={index}>{item}</Breadcrumb.Item>
@@ -83,7 +85,7 @@ function Content({props}) {
                       {page.title}
                     </div>
                   </div>
-                  <div className="site-layout-page">
+                  <div className={classNames('site-layout-page', {dark: themeConfig.dark})}>
                     <Spin spinning={layoutState.loading}>
                       <PageRouter/>
                     </Spin>
