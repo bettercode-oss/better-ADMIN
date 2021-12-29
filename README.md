@@ -80,6 +80,9 @@ HTTP Status Code 500(ServerInternalError)인 경우 공통 에러 메시지 제�
 
 ![image](https://user-images.githubusercontent.com/16472109/119612414-d2423d80-be36-11eb-8811-21c64896da0c.png)
 
+**8. 다크 모드 지원**
+
+![image](https://user-images.githubusercontent.com/16472109/147641125-f0a5212f-2f31-4f2b-a9d3-dc9e0e259f93.png)
 
 ## 시작하기
 
