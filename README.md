@@ -82,7 +82,11 @@ HTTP Status Code 500(ServerInternalError)인 경우 공통 에러 메시지 제�
 
 **8. 다크 모드 지원**
 
-![image](https://user-images.githubusercontent.com/16472109/147641125-f0a5212f-2f31-4f2b-a9d3-dc9e0e259f93.png)
+![image](https://user-images.githubusercontent.com/16472109/147715222-cd580b7e-8718-4eae-9930-99e6ab5a5f1e.png)
+
+![image](https://user-images.githubusercontent.com/16472109/147715232-01096b0b-587b-437c-9669-fb99b96ca115.png)
+
+![image](https://user-images.githubusercontent.com/16472109/147715249-9f2e92c8-b1c6-4d2d-b651-680d27ae3b6c.png)
 
 ## 시작하기
 
