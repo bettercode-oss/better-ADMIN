@@ -5,6 +5,8 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import {adminConfig} from "./config/admin.config";
 import {AxiosConfigur} from "./config/axios.configur";
+import './styles/antd/index.less';
+import './styles/index.less';
 
 if (adminConfig.authentication.used) {
   AxiosConfigur.configAuthInterceptor();
