@@ -11,8 +11,8 @@ function Sider() {
   const layoutDispatch = useLayoutDispatch();
 
   const toggleCollapsed = () => setCollapsed(!collapsed);
-  const handleSnbMenuClick = ({key}) => layoutDispatch({type: 'CLICK_SNB_MENU', key});
-  const handleSubMenuClick = ({key}) => layoutDispatch({type: 'CLICK_SUB_MENU', key});
+  const handleFirstDepthMenuClick = ({key}) => layoutDispatch({type: 'CLICK_FIRST_DEPTH_MENU', key});
+  const handleSecondDepthMenuClick = ({key}) => layoutDispatch({type: 'CLICK_SECOND_DEPTH_SNB_MENU', key});
 
   return (
     <Layout.Sider
@@ -29,48 +29,78 @@ function Sider() {
         </div>
       </Link>
       <Menu theme="dark" mode="inline"
-            openKeys={collapsed ? undefined : layoutState.navigationState.snbMenuOpenKeys}
-            selectedKeys={layoutState.navigationState.snbMenuSelectedKeys}
-            onClick={handleSnbMenuClick}
+            openKeys={collapsed ? undefined : layoutState.navigationState.menuOpenKeys}
+            selectedKeys={layoutState.navigationState.menuSelectedKeys}
       >
-        {layoutState.gnbItem && layoutState.gnbItem.items &&
-        layoutState.gnbItem.items.map((item, index) => {
-          const SnbIcon = NavigationIcon(item.icon);
-          if (item.items && item.items.length > 0) {
+        {layoutState.allGnbItems && layoutState.allGnbItems.map((gnbItem, idx) => {
+          const GnbIcon = NavigationIcon(gnbItem.icon);
+          if (gnbItem.items && gnbItem.items.length > 0) {
             return (
-              <Menu.SubMenu key={index} title={item.title} icon={<SnbIcon/>} onTitleClick={handleSubMenuClick}>
-                {item.items.map((subItem, subItemIndex) => {
-                  const SubItemIcon = NavigationIcon(subItem.icon);
-                  return subItem.link ? (
-                    <Menu.Item
-                      key={index + "-" + subItemIndex}
-                      icon={<SubItemIcon/>}
-                      title={subItem.title}
-                    >
-                      <Link to={subItem.link}>
-                        <span>{subItem.title}</span>
-                      </Link>
-                    </Menu.Item>
-                  ) : (
-                    <Menu.Item
-                      key={index + "-" + subItemIndex}
-                      icon={<SubItemIcon/>}
-                    >
-                      {subItem.title}
-                    </Menu.Item>
-                  );
+              <Menu.SubMenu key={idx} title={gnbItem.title} icon={<GnbIcon/>}
+                            onTitleClick={handleFirstDepthMenuClick}
+              >
+                {gnbItem.items.map((snbItem, snbItemIndex) => {
+                  const SnbItemIcon = NavigationIcon(snbItem.icon);
+                  if (snbItem.items && snbItem.items.length > 0) {
+                    return (
+                      <Menu.SubMenu key={idx + "-" + snbItemIndex} title={snbItem.title} icon={<SnbItemIcon/>}
+                                    onTitleClick={handleSecondDepthMenuClick}
+                      >
+                        {snbItem.items.map((subItem, subItemIndex) => {
+                          const SubItemIcon = NavigationIcon(subItem.icon);
+                          return subItem.link ? (
+                            <Menu.Item
+                              key={idx + "-" + snbItemIndex + "-" + subItemIndex}
+                              icon={<SubItemIcon/>}
+                              title={subItem.title}
+                            >
+                              <Link to={subItem.link}>
+                                <span>{subItem.title}</span>
+                              </Link>
+                            </Menu.Item>
+                          ) : (
+                            <Menu.Item
+                              key={idx + "-" + snbItemIndex + "-" + subItemIndex}
+                              icon={<SubItemIcon/>}
+                            >
+                              {subItem.title}
+                            </Menu.Item>
+                          );
+                        })}
+                      </Menu.SubMenu>
+                    );
+                  } else {
+                    return snbItem.link ? (
+                      <Menu.Item
+                        key={idx + "-" + snbItemIndex}
+                        icon={<SnbItemIcon/>}
+                        title={snbItem.title}
+                      >
+                        <Link to={snbItem.link}>
+                          <span>{snbItem.title}</span>
+                        </Link>
+                      </Menu.Item>
+                    ) : (
+                      <Menu.Item
+                        key={idx + "-" + snbItemIndex}
+                        icon={<SnbItemIcon/>}
+                      >
+                        {snbItem.title}
+                      </Menu.Item>
+                    );
+                  }
                 })}
               </Menu.SubMenu>
             );
           } else {
             return (
-              <Menu.Item key={index} icon={<SnbIcon/>} title={item.title}>
-                {item.link ? (
-                  <Link to={item.link}>
-                    <span>{item.title}</span>
+              <Menu.Item key={idx} icon={<GnbIcon/>} title={gnbItem.title}>
+                {gnbItem.link ? (
+                  <Link to={gnbItem.link}>
+                    <span>{gnbItem.title}</span>
                   </Link>
                 ) : (
-                  <span>{item.title}</span>
+                  <span>{gnbItem.title}</span>
                 )}
               </Menu.Item>
             );

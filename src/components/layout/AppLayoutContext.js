@@ -11,9 +11,8 @@ const initialState = {
   gnbItem: null,
   breadcrumbItems: [],
   navigationState: {
-    gnbMenuSelectedKeys: [''],
-    snbMenuSelectedKeys: [''],
-    snbMenuOpenKeys: ['']
+    menuOpenKeys: [''],
+    menuSelectedKeys: [''],
   },
   pageTab: window.sessionStorage.getItem(SESSION_STORAGE_KEY_BETTER_ADMIN_PAGE_TAB) == null ? {
     current: {
@@ -70,38 +69,41 @@ function layoutReducer(state, action) {
         };
       }
 
-      const gnbMenuSelectedKeys = currentNavigationItem.gnbItem ? [currentNavigationItem.gnbItem.index] : [''];
-      let snbMenuSelectedKeys = currentNavigationItem.snbItem ? [currentNavigationItem.snbItem.index] : [''];
-      if (currentNavigationItem.subItem) {
-        snbMenuSelectedKeys = currentNavigationItem.snbItem
-          ? [
-            currentNavigationItem.snbItem.index +
-            '-' +
-            currentNavigationItem.subItem.index,
-          ]
-          : [''];
+      const menuOpenKeys = [];
+      let menuSelectedKey = "";
+
+      if (currentNavigationItem.gnbItem) {
+        menuOpenKeys.push(currentNavigationItem.gnbItem.index)
+        menuSelectedKey = currentNavigationItem.gnbItem.index;
       }
-      const snbMenuOpenKeys = currentNavigationItem.snbItem ? [currentNavigationItem.snbItem.index] : [''];
+
+      if (currentNavigationItem.snbItem) {
+        menuOpenKeys.push(currentNavigationItem.gnbItem.index + '-' + currentNavigationItem.snbItem.index)
+        menuSelectedKey = currentNavigationItem.gnbItem.index + '-' + currentNavigationItem.snbItem.index;
+      }
+
+      if(currentNavigationItem.subItem) {
+        menuSelectedKey = currentNavigationItem.gnbItem.index + '-' + currentNavigationItem.snbItem.index + '-' + currentNavigationItem.subItem.index;
+      }
+
       return {
         ...state,
         navigationState: {
-          gnbMenuSelectedKeys: gnbMenuSelectedKeys,
-          snbMenuSelectedKeys: snbMenuSelectedKeys,
-          snbMenuOpenKeys: snbMenuOpenKeys
+          menuOpenKeys: menuOpenKeys,
+          menuSelectedKeys: [menuSelectedKey],
         },
       };
-    case 'CLICK_GNB_MENU':
+    case 'CLICK_FIRST_DEPTH_MENU':
       const gnbIndex = action.key;
       return {
         ...state,
         gnbItem: state.allGnbItems[gnbIndex],
         navigationState: {
-          gnbMenuSelectedKeys: [gnbIndex],
-          snbMenuSelectedKeys: [''],
-          snbMenuOpenKeys: ['']
+          menuOpenKeys: [gnbIndex],
+          menuSelectedKeys: [gnbIndex],
         },
       };
-    case 'CLICK_SNB_MENU':
+    case 'CLICK_SECOND_DEPTH_SNB_MENU':
       const selectedMenuIndices = action.key.split('-');
       if (selectedMenuIndices && state.gnbItem) {
         const breadcrumbNavigationItems = [];
@@ -121,27 +123,19 @@ function layoutReducer(state, action) {
           ...state,
           breadcrumbNavigationItems: breadcrumbNavigationItems,
           navigationState: {
-            ...state.navigationState,
-            snbMenuSelectedKeys: [action.key],
+            menuOpenKeys: [selectedMenuIndices[0], action.key],
+            menuSelectedKeys: [action.key],
           }
         };
       } else {
         return {
           ...state,
           navigationState: {
-            ...state.navigationState,
-            snbMenuSelectedKeys: [action.key],
+            menuOpenKeys: [selectedMenuIndices[0], action.key],
+            menuSelectedKeys: [action.key],
           }
         };
       }
-    case 'CLICK_SUB_MENU':
-      return {
-        ...state,
-        navigationState: {
-          ...state.navigationState,
-          snbMenuOpenKeys: [action.key],
-        }
-      };
     case 'REFRESH_ALL_GNB_ITEMS':
       return {
         ...state,
