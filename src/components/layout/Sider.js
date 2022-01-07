@@ -38,6 +38,7 @@ function Sider() {
             return (
               <Menu.SubMenu key={idx} title={gnbItem.title} icon={<GnbIcon/>}
                             onTitleClick={handleFirstDepthMenuClick}
+                            disabled={gnbItem.disabled ? true : false}
               >
                 {gnbItem.items.map((snbItem, snbItemIndex) => {
                   const SnbItemIcon = NavigationIcon(snbItem.icon);
@@ -45,6 +46,7 @@ function Sider() {
                     return (
                       <Menu.SubMenu key={idx + "-" + snbItemIndex} title={snbItem.title} icon={<SnbItemIcon/>}
                                     onTitleClick={handleSecondDepthMenuClick}
+                                    disabled={snbItem.disabled ? true : false}
                       >
                         {snbItem.items.map((subItem, subItemIndex) => {
                           const SubItemIcon = NavigationIcon(subItem.icon);
@@ -53,6 +55,7 @@ function Sider() {
                               key={idx + "-" + snbItemIndex + "-" + subItemIndex}
                               icon={<SubItemIcon/>}
                               title={subItem.title}
+                              disabled={subItem.disabled ? true : false}
                             >
                               <Link to={subItem.link}>
                                 <span>{subItem.title}</span>
@@ -62,6 +65,7 @@ function Sider() {
                             <Menu.Item
                               key={idx + "-" + snbItemIndex + "-" + subItemIndex}
                               icon={<SubItemIcon/>}
+                              disabled={subItem.disabled ? true : false}
                             >
                               {subItem.title}
                             </Menu.Item>
@@ -75,6 +79,7 @@ function Sider() {
                         key={idx + "-" + snbItemIndex}
                         icon={<SnbItemIcon/>}
                         title={snbItem.title}
+                        disabled={snbItem.disabled ? true : false}
                       >
                         <Link to={snbItem.link}>
                           <span>{snbItem.title}</span>
@@ -84,6 +89,7 @@ function Sider() {
                       <Menu.Item
                         key={idx + "-" + snbItemIndex}
                         icon={<SnbItemIcon/>}
+                        disabled={snbItem.disabled ? true : false}
                       >
                         {snbItem.title}
                       </Menu.Item>
@@ -94,7 +100,7 @@ function Sider() {
             );
           } else {
             return (
-              <Menu.Item key={idx} icon={<GnbIcon/>} title={gnbItem.title}>
+              <Menu.Item key={idx} icon={<GnbIcon/>} title={gnbItem.title} disabled={gnbItem.disabled ? true : false}>
                 {gnbItem.link ? (
                   <Link to={gnbItem.link}>
                     <span>{gnbItem.title}</span>

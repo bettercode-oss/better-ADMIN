@@ -23,6 +23,7 @@
         {
           "title": "SNB2",
           "icon": "CiCircleOutlined",
+          "disabled": true,
           "link": "/snb2"
         },
         {
@@ -43,6 +44,7 @@
           "items": [
             {
               "title": "Sub5",
+              "disabled": true,
               "icon": "CrownOutlined",
               "link": "/sub5"
             },
@@ -75,7 +77,13 @@
           "link": "/sample"
         }
       ]
+    },
+    {
+      "title": "GNB3",
+      "icon": "ApartmentOutlined",
+      "disabled": true
     }
   ]
 }
+
 
