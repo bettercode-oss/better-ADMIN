@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Button, Collapse, Dropdown, Input, Menu, PageHeader, Space, Table, Tag} from 'antd';
 import {MemberService} from "./member.service";
 import {DownOutlined, SearchOutlined, SettingOutlined} from "@ant-design/icons";
+import moment from "moment";
 
 const {Panel} = Collapse;
 const {Column} = Table;
@@ -127,6 +128,7 @@ const MemberList = ({initSearchCondition, onRoleChange}) => {
                    total: memberTotalCount
                  }}
                  onChange={memberTableChanged}>
+            <Column title="ID" dataIndex="id" key="id"/>
             <Column title="이름" dataIndex="name" key="name"
                     render={(text, record) => <span>{text}({record.candidateId})</span>}
                     {...getColumnSearchProps('name')}/>
@@ -156,6 +158,11 @@ const MemberList = ({initSearchCondition, onRoleChange}) => {
                   }</Collapse>
               }
             }}/>
+            <Column title="최근 접속 시간" dataIndex="lastAccessAt" key="lastAccessAt"
+                    render={(text, record) => {
+                      const localDateTime = moment.utc(text).local().format('YYYY-MM-DD HH:mm');
+                      return (<span>{localDateTime}</span>)
+                    }}/>
             <Column title="" align='right' render={(text, record) => {
               return (
                 <Dropdown overlay={
