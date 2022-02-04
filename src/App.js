@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useCallback, useEffect} from "react";
 import {HashRouter, Route, Switch} from "react-router-dom";
 import './App.less';
 import AppLayout from "./components/layout/AppLayout";
@@ -17,6 +17,18 @@ import {LayoutProvider} from "./components/layout/AppLayoutContext";
 import OAuthLoginResult from "./components/login/OAuthLoginResult";
 
 const App = () => {
+  const existQueryStringInUrl = (url) => {
+    return url.split("?")[1] ? true : false;
+  }
+
+  const getQueryStringInUrl = useCallback((url) => {
+    if (existQueryStringInUrl(url)) {
+      return url.split("?")[1];
+    } else {
+      return null;
+    }
+  }, []);
+
   useEffect(() => {
     if (adminConfig.authentication.used) {
       AuthService.silentRefresh().then().catch(() => {
@@ -46,19 +58,8 @@ const App = () => {
         icon: <NotificationTwoTone />,
       });
     });
-  },);
+  }, [getQueryStringInUrl]);
 
-  const existQueryStringInUrl = (url) => {
-    return url.split("?")[1] ? true : false;
-  }
-
-  const getQueryStringInUrl = (url) => {
-    if (existQueryStringInUrl(url)) {
-      return url.split("?")[1];
-    } else {
-      return null;
-    }
-  }
 
   return (<>
     <LayoutProvider>
