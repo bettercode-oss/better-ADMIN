@@ -2,33 +2,9 @@ import React, {useEffect, useState} from "react";
 import {Button, Form, message, PageHeader, Select} from 'antd';
 import {AccessControlService} from "../access-control/access.control.service";
 import {OrganizationService} from "./organization.service";
+import {FormItemLayout, FormTailItemLayout} from "../AppSettings";
 
 const {Option} = Select;
-
-const formItemLayout = {
-  labelCol: {
-    xs: {span: 24},
-    sm: {span: 7},
-  },
-  wrapperCol: {
-    xs: {span: 24},
-    sm: {span: 12},
-    md: {span: 24},
-  },
-};
-
-const tailFormItemLayout = {
-  wrapperCol: {
-    xs: {
-      span: 24,
-      offset: 0,
-    },
-    sm: {
-      span: 10,
-      offset: 7,
-    }
-  },
-};
 
 const OrganizationRoleChange = ({organization, onBack}) => {
   const [form] = Form.useForm();
@@ -63,7 +39,7 @@ const OrganizationRoleChange = ({organization, onBack}) => {
         subTitle="조직의 역할을 변경 합니다."
         onBack={onBack}
       >
-        <Form {...formItemLayout} form={form} onFinish={save}>
+        <Form {...FormItemLayout} form={form} onFinish={save}>
           <Form.Item
             name="assignRoles"
           >
@@ -82,7 +58,7 @@ const OrganizationRoleChange = ({organization, onBack}) => {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item {...tailFormItemLayout}>
+          <Form.Item {...FormTailItemLayout}>
             <Button type="primary" loading={loading} htmlType="submit">
               저장
             </Button>

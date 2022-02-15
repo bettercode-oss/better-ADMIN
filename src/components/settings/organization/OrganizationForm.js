@@ -1,38 +1,14 @@
 import React, {useEffect, useState} from "react";
 import {Button, Form, Input, message, PageHeader} from 'antd';
 import {OrganizationService} from "./organization.service";
-
-const formItemLayout = {
-  labelCol: {
-    xs: {span: 24},
-    sm: {span: 7},
-  },
-  wrapperCol: {
-    xs: {span: 24},
-    sm: {span: 12},
-    md: {span: 12},
-  },
-};
-
-const tailFormItemLayout = {
-  wrapperCol: {
-    xs: {
-      span: 24,
-      offset: 0,
-    },
-    sm: {
-      span: 10,
-      offset: 7,
-    }
-  },
-};
+import {EDIT_MODE, FormItemLayout, FormTailItemLayout} from "../AppSettings";
 
 const OrganizationForm = ({mode, selectedOrganization, onBack}) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (mode === "NAME-CHANGE") {
+    if (mode === EDIT_MODE) {
       form.setFieldsValue({
         name: selectedOrganization.name,
       });
@@ -44,7 +20,7 @@ const OrganizationForm = ({mode, selectedOrganization, onBack}) => {
       name: values.name,
     };
 
-    if (mode === "NAME-CHANGE") {
+    if (mode === EDIT_MODE) {
       setLoading(true);
       OrganizationService.changeName(selectedOrganization.id, organization).then(() => {
         message.success("저장되었습니다.");
@@ -68,11 +44,11 @@ const OrganizationForm = ({mode, selectedOrganization, onBack}) => {
   return (
     <>
       <PageHeader
-        title={mode === "NAME-CHANGE" ? "조직/부서 수정" : "조직/부서 추가"}
-        subTitle={mode === "NAME-CHANGE" ? "조직/부서를 수정합니다." : "조직/부서를 추가 합니다."}
+        title={mode === EDIT_MODE ? "조직/부서 수정" : "조직/부서 추가"}
+        subTitle={mode === EDIT_MODE ? "조직/부서를 수정합니다." : "조직/부서를 추가 합니다."}
         onBack={onBack}
       >
-        <Form {...formItemLayout} form={form} onFinish={save}>
+        <Form {...FormItemLayout} form={form} onFinish={save}>
           <Form.Item
             name="name"
             label="이름"
@@ -85,7 +61,7 @@ const OrganizationForm = ({mode, selectedOrganization, onBack}) => {
           >
             <Input/>
           </Form.Item>
-          <Form.Item {...tailFormItemLayout}>
+          <Form.Item {...FormTailItemLayout}>
             <Button type="primary" loading={loading} htmlType="submit">
               저장
             </Button>

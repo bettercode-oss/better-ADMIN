@@ -1,10 +1,10 @@
-import navigationInfo from "./navigation.json";
 import {MemberContext} from "../auth/member.context";
+import {MenuService} from "../components/settings/menu/menu.service";
 
 export default class NavigationConfig {
   static hasPermissions(memberPermissions, navigationPermissions) {
     for (let i = 0; i < navigationPermissions.length; i++) {
-      if (memberPermissions.has(navigationPermissions[i])) {
+      if (memberPermissions.has(navigationPermissions[i].name)) {
         return true;
       }
     }
@@ -12,24 +12,38 @@ export default class NavigationConfig {
     return false;
   }
 
+  static isInitNavigationInfo() {
+    return window.sessionStorage.getItem("navigationInfo") ? true : false;
+  }
+
+  static loadNavigationInfo() {
+    return JSON.parse(window.sessionStorage.getItem("navigationInfo"));
+  }
+
+  static async reloadNavigationInfo() {
+    const response = await MenuService.getMenus();
+    window.sessionStorage.setItem("navigationInfo", JSON.stringify(response.data));
+  }
+
   static getItemsByMemberPermission = () => {
     const memberPermissions = new Set(MemberContext.memberInformation.permissions ? MemberContext.memberInformation.permissions : []);
     const accessibleGnbItems = [];
-    if (navigationInfo.items) {
-      const gnbItems = navigationInfo.items;
-      gnbItems.forEach(gnbItem => {
-        // GNB
+
+    const navigationInfo = NavigationConfig.loadNavigationInfo();
+    if (navigationInfo) {
+      navigationInfo.forEach(gnbItem => {
+        // 1 Depth Menu
         if (!gnbItem.accessPermissions || this.hasPermissions(memberPermissions, gnbItem.accessPermissions)) {
-          if (gnbItem.items) {
-            // SNB
+          if (gnbItem.subMenus) {
+            // 2 Depth Menu
             const accessibleSnbItems = [];
-            const snbItems = gnbItem.items
+            const snbItems = gnbItem.subMenus
             snbItems.forEach(snbItem => {
               if (!snbItem.accessPermissions || this.hasPermissions(memberPermissions, snbItem.accessPermissions)) {
-                if (snbItem.items) {
-                  // Sub
+                if (snbItem.subMenus) {
+                  // 3 Depth Menu
                   const accessibleSubItems = [];
-                  const subItems = snbItem.items
+                  const subItems = snbItem.subMenus
                   subItems.forEach(subItem => {
                     if (!snbItem.accessPermissions || this.hasPermissions(memberPermissions, subItem.accessPermissions)) {
                       accessibleSubItems.push(subItem);
@@ -54,12 +68,12 @@ export default class NavigationConfig {
     const gnbItems = this.getItemsByMemberPermission();
     if (gnbItems && gnbItems.length > 0) {
       const firstGnbItem = gnbItems[0];
-      if(firstGnbItem.items.length > 0) {
+      if (firstGnbItem.items.length > 0) {
         const firstSnbItem = firstGnbItem.items[0];
         if (firstSnbItem.link) {
           return firstSnbItem.link;
         } else {
-          if(firstSnbItem.items.length > 0) {
+          if (firstSnbItem.items.length > 0) {
             return firstSnbItem.items[0].link;
           }
         }
@@ -70,19 +84,19 @@ export default class NavigationConfig {
 
   static getItemsWithoutMemberPermission = () => {
     const accessibleGnbItems = [];
-    if (navigationInfo.items) {
-      const gnbItems = navigationInfo.items;
-      gnbItems.forEach(gnbItem => {
+    const navigationInfo = NavigationConfig.loadNavigationInfo();
+    if (navigationInfo) {
+      navigationInfo.forEach(gnbItem => {
         // GNB
-        if (gnbItem.items) {
+        if (gnbItem.subMenus) {
           // SNB
           const accessibleSnbItems = [];
-          const snbItems = gnbItem.items
+          const snbItems = gnbItem.subMenus
           snbItems.forEach(snbItem => {
-            if (snbItem.items) {
+            if (snbItem.subMenus) {
               // Sub
               const accessibleSubItems = [];
-              const subItems = snbItem.items
+              const subItems = snbItem.subMenus
               subItems.forEach(subItem => {
                 accessibleSubItems.push(subItem);
               });

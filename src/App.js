@@ -34,6 +34,7 @@ const App = () => {
         } else {
           window.location.hash = adminConfig.authentication.loginUrl;
         }
+
       });
     }
 

@@ -1,31 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Button, Form, Input, message, PageHeader, Radio} from "antd";
 import SiteService from "../site.service";
-
-const formItemLayout = {
-  labelCol: {
-    xs: {span: 24},
-    sm: {span: 7},
-  },
-  wrapperCol: {
-    xs: {span: 24},
-    sm: {span: 12},
-    md: {span: 12},
-  },
-};
-
-const tailFormItemLayout = {
-  wrapperCol: {
-    xs: {
-      span: 24,
-      offset: 0,
-    },
-    sm: {
-      span: 10,
-      offset: 7,
-    }
-  },
-};
+import {FormItemLayout, FormTailItemLayout} from "../AppSettings";
 
 const SETTING_KEY = "dooray-login";
 
@@ -71,7 +47,7 @@ const DooraySetting = () => {
         subTitle="두레이 아이디/비밀번호로 사이트에 로그인할 수 있도록 설정합니다."
       >
         {setting &&
-        <Form {...formItemLayout} form={form} onFinish={saveSetting}>
+        <Form {...FormItemLayout} form={form} onFinish={saveSetting}>
           <Form.Item colon={false} label="Dooray 로그인" name="used">
             <Radio.Group onChange={handleChangeUsed}>
               <Radio value={true}>사용함</Radio>
@@ -107,7 +83,7 @@ const DooraySetting = () => {
               <Input/>
             </Form.Item>
           </>}
-          <Form.Item {...tailFormItemLayout}>
+          <Form.Item {...FormTailItemLayout}>
             <Button type="primary" loading={loading} htmlType="submit">
               저장
             </Button>

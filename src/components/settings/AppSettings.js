@@ -13,6 +13,32 @@ export const EDIT_MODE = "EDIT";
 export const VIEW_MODE = "VIEW";
 export const VIEW_DETAILS_MODE = "VIEW_DETAILS";
 
+export const FormItemLayout = {
+  labelCol: {
+    xs: {span: 24},
+    sm: {span: 7},
+  },
+  wrapperCol: {
+    xs: {span: 24},
+    sm: {span: 12},
+    md: {span: 12},
+  },
+};
+
+export const FormTailItemLayout = {
+  wrapperCol: {
+    xs: {
+      span: 24,
+      offset: 0,
+    },
+    sm: {
+      span: 10,
+      offset: 7,
+    }
+  },
+};
+
+
 const DEFAULT_OPEN_KEY = "0";
 
 export const AppSettings = ({onClose}) => {
