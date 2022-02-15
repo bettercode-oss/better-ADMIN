@@ -157,7 +157,7 @@ function layoutReducer(state, action) {
             const page = {
               id: getNextPageTabId(),
               navigationPathName: newPathName,
-              title: '',
+              name: '',
               link: newPathName,
               icon: '',
             }

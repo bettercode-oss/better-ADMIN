@@ -3,18 +3,16 @@ import Organizations from "./Organizations";
 import OrganizationForm from "./OrganizationForm";
 import OrganizationRoleChange from "./OrganizationRoleChange";
 import OrganizationMemberChange from "./OrganizationMemberChange";
+import {CREATE_MODE, EDIT_MODE, VIEW_MODE} from "../AppSettings";
 
-const VIEW_MODE = "VIEW";
-const CREATE_MODE = "CREATE";
 const ROLE_CHANGE_MODE = "ROLE-CHANGE";
 const MEMBER_CHANGE_MODE = "MEMBER-CHANGE";
-const NAME_CHANGE_MODE = "NAME-CHANGE";
 
 const OrganizationSetting = () => {
   const [mode, setMode] = useState(VIEW_MODE);
   const [selectedOrganization, setSelectedOrganization] = useState(null);
   const getContent = (mode) => {
-    if (mode === CREATE_MODE || mode === NAME_CHANGE_MODE) {
+    if (mode === CREATE_MODE || mode === EDIT_MODE) {
       return <OrganizationForm mode={mode} onBack={handleOnBack} selectedOrganization={selectedOrganization}/>
     } else if (mode === ROLE_CHANGE_MODE) {
       return <OrganizationRoleChange onBack={handleOnBack} organization={selectedOrganization}/>
@@ -52,7 +50,7 @@ const OrganizationSetting = () => {
   }
 
   const handleChangeOrganizationName = (selectedOrganization) => {
-    setMode(NAME_CHANGE_MODE);
+    setMode(EDIT_MODE);
     setSelectedOrganization(selectedOrganization);
   }
 

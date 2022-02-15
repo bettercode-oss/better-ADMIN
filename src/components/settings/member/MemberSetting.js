@@ -1,9 +1,9 @@
 import React, {useState} from "react";
 import MemberList from "./MemberList";
 import MemberRoleChange from "./MemberRoleChange";
+import {VIEW_MODE} from "../AppSettings";
 
 const ROLE_CHANGE_MODE = "ROLE-CHANGE";
-const VIEW_MODE = "VIEW";
 
 const MemberSetting = () => {
   const [mode, setMode] = useState(VIEW_MODE);

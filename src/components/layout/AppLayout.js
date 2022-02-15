@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import {Layout} from "antd";
 import "./AppLayout.css";
 import {
-  CHANGE_MEMBER_CONTEXT_EVENT_TOPIC,
+  CHANGE_MEMBER_CONTEXT_EVENT_TOPIC, CHANGE_MENU_SETTING_EVENT_TOPIC,
   EventBroadcaster,
   SHOW_LOADING_EVENT_TOPIC
 } from "../../event/event.broadcaster";
@@ -20,18 +20,31 @@ const AppLayout = (props) => {
   const layoutState = useLayoutState();
   const history = useHistory();
 
-  useEffect(() => {
-    const pathname = props.location.pathname;
-    layoutDispatch({
-      type: 'INIT_NAVIGATION', pathname
-    });
+  useEffect( () => {
+    const initNavigation = () => {
+      const pathname = props.location.pathname;
+      layoutDispatch({
+        type: 'INIT_NAVIGATION', pathname
+      });
 
-    if (pathname === "/" && MemberContext.available) {
-      // PATH 가 루트(/) 인 경우 네비게이션 메뉴 중 가장 첫 번째 메뉴의 화면으로 이동 시킨다.
-      const firstNavigationItemLink = NavigationConfig.getFirstItemLink();
-      if(firstNavigationItemLink) {
-        history.push(firstNavigationItemLink);
+      if (pathname === "/" && MemberContext.available) {
+        // PATH 가 루트(/) 인 경우 네비게이션 메뉴 중 가장 첫 번째 메뉴의 화면으로 이동 시킨다.
+        const firstNavigationItemLink = NavigationConfig.getFirstItemLink();
+        if(firstNavigationItemLink) {
+          history.push(firstNavigationItemLink);
+        }
       }
+    }
+
+    const reloadNavigationInfo = async () => {
+      await NavigationConfig.reloadNavigationInfo();
+      initNavigation();
+    }
+
+    if(NavigationConfig.isInitNavigationInfo()) {
+      initNavigation();
+    } else {
+      reloadNavigationInfo();
     }
   }, [
     props.location.pathname,
@@ -41,7 +54,8 @@ const AppLayout = (props) => {
   ]);
 
   useEffect(() => {
-    EventBroadcaster.on(CHANGE_MEMBER_CONTEXT_EVENT_TOPIC, () => {
+    EventBroadcaster.on(CHANGE_MEMBER_CONTEXT_EVENT_TOPIC, async () => {
+      await NavigationConfig.reloadNavigationInfo();
       layoutDispatch({
         type: 'REFRESH_ALL_GNB_ITEMS'
       });
@@ -51,6 +65,13 @@ const AppLayout = (props) => {
       const show = data.show;
       layoutDispatch({
         type: 'SHOW_LOADING', show
+      });
+    });
+
+    EventBroadcaster.on(CHANGE_MENU_SETTING_EVENT_TOPIC, async () => {
+      await NavigationConfig.reloadNavigationInfo();
+      layoutDispatch({
+        type: 'REFRESH_ALL_GNB_ITEMS'
       });
     });
   }, [layoutDispatch]);

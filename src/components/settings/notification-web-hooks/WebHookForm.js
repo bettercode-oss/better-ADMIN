@@ -1,32 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Button, Form, Input, message, PageHeader} from 'antd';
 import {WebHookService} from "./webhook.service";
-import {CREATE_MODE, EDIT_MODE} from "../AppSettings";
-
-const formItemLayout = {
-  labelCol: {
-    xs: {span: 24},
-    sm: {span: 7},
-  },
-  wrapperCol: {
-    xs: {span: 24},
-    sm: {span: 12},
-    md: {span: 12},
-  },
-};
-
-const tailFormItemLayout = {
-  wrapperCol: {
-    xs: {
-      span: 24,
-      offset: 0,
-    },
-    sm: {
-      span: 10,
-      offset: 7,
-    }
-  },
-};
+import {CREATE_MODE, EDIT_MODE, FormItemLayout, FormTailItemLayout} from "../AppSettings";
 
 const WebHookForm = ({mode, selectedWebHook, onBack}) => {
   const [form] = Form.useForm();
@@ -70,7 +45,7 @@ const WebHookForm = ({mode, selectedWebHook, onBack}) => {
         subTitle="웹훅을 추가 합니다."
         onBack={onBack}
       >
-        <Form {...formItemLayout} form={form} onFinish={save}>
+        <Form {...FormItemLayout} form={form} onFinish={save}>
           <Form.Item
             name="name"
             label="웹훅 이름"
@@ -87,7 +62,7 @@ const WebHookForm = ({mode, selectedWebHook, onBack}) => {
           >
             <Input/>
           </Form.Item>
-          <Form.Item {...tailFormItemLayout}>
+          <Form.Item {...FormTailItemLayout}>
             <Button type="primary" loading={loading} htmlType="submit">
               저장
             </Button>
