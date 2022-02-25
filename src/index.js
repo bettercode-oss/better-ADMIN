@@ -15,6 +15,7 @@ if (adminConfig.authentication.used) {
 AxiosConfigur.configServerNetworkErrorInterceptor();
 AxiosConfigur.configServerErrorInterceptor();
 AxiosConfigur.configLoadingInterceptor();
+AxiosConfigur.configLoggingInterceptor();
 
 ReactDOM.render(
   <App/>,
