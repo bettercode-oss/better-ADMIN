@@ -27,7 +27,11 @@ const BetterAdminConfig = {
       "/api/auth",
       "/api/auth/dooray",
       "/api/members",
-      "/api/access-control/permissions"
+      "/api/access-control/permissions",
+      "/member-access-logs"
+    ],
+    serverInternal: [
+      "/api/member-access-logs"
     ]
   }
 }

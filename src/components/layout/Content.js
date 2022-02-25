@@ -6,6 +6,7 @@ import NavigationIcon from "./NavigationIcon";
 import PageRouter from "../../pages/router/PageRouter";
 import classNames from "classnames";
 import themeConfig from "../../config/theme.config.json";
+import {MemberAccessLogger} from "../../logger/member.access.logger";
 
 const {TabPane} = Tabs;
 
@@ -25,6 +26,7 @@ function Content({props}) {
       layoutDispatch({
         type: 'ADD_TAB_PAGE', pathname
       });
+      MemberAccessLogger.logPageAccess(location.pathname)
     });
     return unlisten;
   }, [

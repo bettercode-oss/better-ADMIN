@@ -3,6 +3,7 @@ import {adminConfig} from "./admin.config";
 import {AuthService} from "../auth/auth.service";
 import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "../event/event.broadcaster";
 import {hideLoading, showLoading} from "../helper/loading.helper";
+import {MemberAccessLogger} from "../logger/member.access.logger";
 
 const DEFAULT_PERMISSION_DENIED_ERROR_MESSAGE = "권한이 없습니다. 관리자에게 문의하세요.";
 
@@ -78,6 +79,13 @@ export class AxiosConfigur {
       // Any status codes that falls outside the range of 2xx cause this function to trigger
       if (error.response && error.response.status) {
         if (error.response.status === 500) {
+          if(adminConfig.serverErrorHandlingExcludeUrl && adminConfig.serverErrorHandlingExcludeUrl.serverInternal) {
+            const excludeUrls = adminConfig.serverErrorHandlingExcludeUrl.serverInternal;
+            const find = excludeUrls.filter((url) => error.response.config.url.endsWith(url));
+            if(find.length > 0) {
+              return Promise.reject(error);
+            }
+          }
           EventBroadcaster.broadcast(SHOW_ERROR_MESSAGE_EVENT_TOPIC, adminConfig.errorMessage.serverInternalError);
         } else if(error.response.status === 400) {
           if(adminConfig.serverErrorHandlingExcludeUrl && adminConfig.serverErrorHandlingExcludeUrl.badRequest) {
@@ -136,5 +144,24 @@ export class AxiosConfigur {
         }
         return Promise.reject(error);
       });
+  }
+
+  static configLoggingInterceptor() {
+    axios.interceptors.request.use(
+      function (config) {
+        if(AxiosConfigur.isLoggingTarget(config)) {
+          MemberAccessLogger.logServerAPIAccess(config.url, config.method, config.params, config.data);
+        }
+
+        return config;
+      },
+      function (error) {
+        // 오류 요청을 보내기전 수행할 일
+        return Promise.reject(error);
+      });
+  }
+
+  static isLoggingTarget(config) {
+    return (config.headers['Authorization'] && !config.url.endsWith("/auth/check") && !config.url.endsWith("/api/member-access-logs"));
   }
 }

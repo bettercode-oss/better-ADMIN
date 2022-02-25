@@ -1,0 +1,14 @@
+.settings-sider {
+    min-height: 600px;
+    background: white;
+    overflow: scroll;
+}
+
+.settings-content {
+    margin: 24px 16px 0;
+    background-color: white;
+}
+
+.settings-content > div {
+    margin: 20px;
+}
