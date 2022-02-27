@@ -11,7 +11,7 @@ import {
 import {AccessControlService} from "./access.control.service";
 
 const { confirm } = Modal;
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 10;
 const PermissionList = ({onCreate, onEdit}) => {
   const [permissions, setPermissions] = useState([]);
   const [permissionTotalCount, setPermissionTotalCount] = useState(0);
@@ -106,7 +106,7 @@ const PermissionList = ({onCreate, onEdit}) => {
         ]}
       >
         <Table rowKey="id" dataSource={permissions} columns={columns} locale={{emptyText: "데이터 없음"}}
-               pagination={{pageSize: PAGE_SIZE, total: permissionTotalCount}}
+               pagination={{pageSize: PAGE_SIZE, total: permissionTotalCount, showSizeChanger: false,}}
                onChange={permissionTableChanged}/>
       </PageHeader>
     </>

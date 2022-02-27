@@ -11,7 +11,7 @@ import {
 import {WebHookService} from "./webhook.service";
 
 const {confirm} = Modal;
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 10;
 
 const WebHooksList = ({onCreate, onEdit, onShowDetails}) => {
   const [webHooks, setWebHooks] = useState([]);
@@ -107,7 +107,7 @@ const WebHooksList = ({onCreate, onEdit, onShowDetails}) => {
         ]}
       >
         <Table rowKey="id" dataSource={webHooks} columns={columns} locale={{emptyText: "데이터 없음"}}
-               pagination={{pageSize: PAGE_SIZE, total: webHookTotalCount}}
+               pagination={{pageSize: PAGE_SIZE, total: webHookTotalCount, showSizeChanger: false,}}
                onChange={webHookTableChanged}/>
       </PageHeader>
     </>

@@ -13,7 +13,7 @@ import {AccessControlService} from "./access.control.service";
 const {confirm} = Modal;
 const {Panel} = Collapse;
 
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 10;
 const RoleList = ({onCreate, onEdit}) => {
   const [roles, setRoles] = useState([]);
   const [roleTotalCount, setRoleTotalCount] = useState(0);
