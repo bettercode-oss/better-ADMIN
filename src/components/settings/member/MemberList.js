@@ -6,7 +6,7 @@ import moment from "moment";
 
 const {Panel} = Collapse;
 const {Column} = Table;
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 10;
 
 const MemberList = ({initSearchCondition, onRoleChange}) => {
   const [members, setMembers] = useState([]);
@@ -125,6 +125,7 @@ const MemberList = ({initSearchCondition, onRoleChange}) => {
                  pagination={{
                    current: (searchCondition && searchCondition.pagination && searchCondition.pagination.current) ? searchCondition.pagination.current : 1,
                    pageSize: PAGE_SIZE,
+                   showSizeChanger: false,
                    total: memberTotalCount
                  }}
                  onChange={memberTableChanged}>

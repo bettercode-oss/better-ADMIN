@@ -4,7 +4,7 @@ import {MemberService} from "./member.service";
 import {DownOutlined, SettingOutlined, CheckOutlined, CloseOutlined} from "@ant-design/icons";
 import moment from "moment";
 
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 10;
 const MemberApproval = ({onRoleChange}) => {
   const [members, setMembers] = useState([]);
   const [memberTotalCount, setMemberTotalCount] = useState(0);
@@ -111,7 +111,7 @@ const MemberApproval = ({onRoleChange}) => {
         subTitle="신청한 멤버를 승인 합니다."
       >
         <Table rowKey="id" dataSource={members} columns={columns} locale={{emptyText: "데이터 없음"}}
-               pagination={{pageSize: PAGE_SIZE, total: memberTotalCount}}
+               pagination={{pageSize: PAGE_SIZE, total: memberTotalCount, showSizeChanger: false,}}
                onChange={memberTableChanged}/>
       </PageHeader>
     </>

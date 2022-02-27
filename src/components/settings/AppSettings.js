@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Layout, Menu, Modal} from 'antd';
 import {SettingOutlined} from "@ant-design/icons";
-import "./AppSettings.css";
 import {AppSettingsNavigation} from "./app.settings.navigation.config";
 import themeConfig from "../../config/theme.config.json";
 import classNames from "classnames";
@@ -72,8 +71,10 @@ export const AppSettings = ({onClose}) => {
 
   return (
     <>
-      <Modal title={[<div key={1}><SettingOutlined/> 사이트 설정</div>]} visible={true}
-             onCancel={onClose} footer={null} width={1200} bodyStyle={{margin: 0, padding: 0}}>
+      <Modal className="ant-modal-full-screen" title={[<div key={1}><SettingOutlined/> 사이트 설정</div>]} visible={true}
+             onCancel={onClose} bodyStyle={{height: "calc(100vh - 55px)", margin: "0", padding: "0"}} footer={null}
+             modalRender={modal => <div className="ant-modal-full-screen">{modal}</div>}
+      >
         <Layout
           style={{
             minHeight: "100%"
@@ -82,25 +83,25 @@ export const AppSettings = ({onClose}) => {
             <Menu mode="inline" onClick={handleMenuClick} defaultSelectedKeys={[selectedKey]}
                   defaultOpenKeys={[DEFAULT_OPEN_KEY]}>
               {AppSettingsNavigation.getItems() &&
-              AppSettingsNavigation.getItems().map((item, index) => {
-                if (item.items && item.items.length > 0) {
-                  return (
-                    <Menu.SubMenu key={index} title={item.title}>
-                      {item.items.map((subItem, subItemIndex) => {
-                        return (
-                          <Menu.Item key={index + "-" + subItemIndex}>
-                            {subItem.title}
-                          </Menu.Item>
-                        )
-                      })}
-                    </Menu.SubMenu>);
-                } else {
-                  return (
-                    <Menu.Item key={index} title={item.title}>
-                      <span>{item.title}</span>
-                    </Menu.Item>);
-                }
-              })}
+                AppSettingsNavigation.getItems().map((item, index) => {
+                  if (item.items && item.items.length > 0) {
+                    return (
+                      <Menu.SubMenu key={index} title={item.title}>
+                        {item.items.map((subItem, subItemIndex) => {
+                          return (
+                            <Menu.Item key={index + "-" + subItemIndex}>
+                              {subItem.title}
+                            </Menu.Item>
+                          )
+                        })}
+                      </Menu.SubMenu>);
+                  } else {
+                    return (
+                      <Menu.Item key={index} title={item.title}>
+                        <span>{item.title}</span>
+                      </Menu.Item>);
+                  }
+                })}
             </Menu>
           </Sider>
           <Layout>

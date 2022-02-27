@@ -5,7 +5,7 @@ import {MemberAccessLogService} from "./member.access.log.service";
 import {SearchOutlined} from "@ant-design/icons";
 
 const {Column} = Table;
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 10;
 
 const MemberAccessLogs = () => {
   const [accessLogs, setAccessLogs] = useState([]);

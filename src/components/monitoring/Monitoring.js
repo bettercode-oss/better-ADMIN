@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Layout, Menu, Modal} from 'antd';
 import {MonitorOutlined} from "@ant-design/icons";
-import "./Monitoring.css";
 import themeConfig from "../../config/theme.config.json";
 import classNames from "classnames";
 import {MonitoringNavigation} from "./monitoring.navigation.config";
@@ -41,8 +40,10 @@ export const Monitoring = ({onClose}) => {
 
   return (
     <>
-      <Modal title={[<div key={1}><MonitorOutlined/> 사이트 모니터링</div>]} visible={true}
-             onCancel={onClose} footer={null} width={1200} bodyStyle={{margin: 0, padding: 0}}>
+      <Modal className="ant-modal-full-screen" title={[<div key={1}><MonitorOutlined/> 사이트 모니터링</div>]} visible={true}
+             onCancel={onClose} bodyStyle={{height: "calc(100vh - 55px)", margin: "0", padding: "0"}} footer={null}
+             modalRender={modal => <div className="ant-modal-full-screen">{modal}</div>}
+      >
         <Layout
           style={{
             minHeight: "100%"
