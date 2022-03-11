@@ -124,6 +124,26 @@ const MemberAccessLogs = () => {
           <Column title="Method" dataIndex="method" key="method"/>
           <Column title="URL Parameters" dataIndex="parameters" key="parameters"/>
           <Column title="Body" dataIndex="payload" key="payload"/>
+          <Column title="StatusCode" dataIndex="statusCode" key="statusCode"
+                  render={(text, record) => {
+                    if(record.statusCode) {
+                      if(record.statusCode >= 200 && record.statusCode < 300) {
+                        return <Tag color='blue'>{text}</Tag>
+                      }
+
+                      if(record.statusCode >= 400 && record.statusCode < 500) {
+                        return <Tag color='orange'>{text}</Tag>
+                      }
+
+                      if(record.statusCode >= 500) {
+                        return <Tag color='red'>{text}</Tag>
+                      }
+
+                      return <Tag color='gray'>{text}</Tag>
+                    } else {
+                      return <span></span>
+                    }
+                  }}/>
         </Column>
         <Column title="IP" dataIndex="ipAddress" key="ipAddress"/>
         <Column title="일시" dataIndex="lastAccessAt" key="lastAccessAt" fixed="right" width={150}

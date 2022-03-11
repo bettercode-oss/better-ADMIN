@@ -9,11 +9,12 @@ class MemberAccessLogger {
     axios.post(API_URL + `/member-access-logs`, {type: "PAGE_ACCESS", "url": pageUrl}).then();
   }
 
-  logServerAPIAccess(apiUrl, method, parameters, payload) {
+  logServerAPIAccess(apiUrl, method, parameters, payload, statusCode) {
     const request = {
       type: "API_ACCESS",
       url: apiUrl,
-      method: method
+      method: method,
+      statusCode: statusCode,
     };
 
     if(parameters) {
