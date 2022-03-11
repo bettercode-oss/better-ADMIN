@@ -147,18 +147,26 @@ export class AxiosConfigur {
   }
 
   static configLoggingInterceptor() {
-    axios.interceptors.request.use(
-      function (config) {
-        if(AxiosConfigur.isLoggingTarget(config)) {
-          MemberAccessLogger.logServerAPIAccess(config.url, config.method, config.params, config.data);
-        }
+    axios.interceptors.response.use(
+      function (response) {
+        const config = response.config;
+        AxiosConfigur.loggingWithAxiosConfig(config, response.status);
 
-        return config;
+        return response;
       },
       function (error) {
         // 오류 요청을 보내기전 수행할 일
+        const config = error.config;
+        AxiosConfigur.loggingWithAxiosConfig(config, error.response.status);
+
         return Promise.reject(error);
       });
+  }
+
+  static loggingWithAxiosConfig(config, statusCode) {
+    if(AxiosConfigur.isLoggingTarget(config)) {
+      MemberAccessLogger.logServerAPIAccess(config.url, config.method, config.params, config.data, statusCode);
+    }
   }
 
   static isLoggingTarget(config) {
