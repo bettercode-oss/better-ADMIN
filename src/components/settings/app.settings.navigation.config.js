@@ -9,9 +9,9 @@ import MemberApproval from "./member/MemberApproval";
 import GoogleWorkspaceSetting from "./google-workspace/GoogleWorkspaceSetting";
 import WebHooksSetting from "./notification-web-hooks/WebHooksSetting";
 import MenuSetting from "./menu/MenuSetting";
+import MemberAccessLogSetting from "./member-access-logs/MemberAccessLogSetting";
 
-const settingsSideMenuItems = [
-  {
+const settingsSideMenuItems = [{
     title: "사용자 / 조직도",
     accessPermission: "MANAGE_MEMBERS",
     items: [
@@ -62,6 +62,10 @@ const settingsSideMenuItems = [
     title: "알림 웹훅(WebHooks)",
     accessPermission: "MANAGE_SYSTEM_SETTINGS",
     component: <WebHooksSetting/>
+  }, {
+    title: "멤버 접근 로그 설정",
+    accessPermission: "MANAGE_SYSTEM_SETTINGS",
+    component: <MemberAccessLogSetting/>
   }
 ];
 
