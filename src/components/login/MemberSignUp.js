@@ -2,6 +2,8 @@ import React, {useState} from "react";
 import {Button, Form, Input, Modal, message} from "antd";
 import {LockOutlined, UserOutlined, FormOutlined} from "@ant-design/icons";
 import {MemberService} from "../settings/member/member.service";
+import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "../../event/event.broadcaster";
+import {adminConfig} from "../../config/admin.config";
 
 const MemberSignUp = ({show, onClose}) => {
   const [loading, setLoading] = useState(false);
@@ -20,6 +22,8 @@ const MemberSignUp = ({show, onClose}) => {
     }).catch(error => {
       if (error.response && error.response.status === 400 && error.response.data === "duplicated") {
         message.warn("이미 존재하는 아이디입니다.")
+      } else {
+        EventBroadcaster.broadcast(SHOW_ERROR_MESSAGE_EVENT_TOPIC, adminConfig.errorMessage.serverInternalError);
       }
     }).finally(() => {
       setLoading(false);

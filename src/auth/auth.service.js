@@ -7,7 +7,7 @@ const API_URL = adminConfig.authentication.authAPI();
 
 class AuthService {
   async login(id, password) {
-    const authResponse = await axios.post(API_URL + "/auth", {id, password})
+    const authResponse = await axios.post(API_URL + "/auth", {id, password}, {autoErrorHandling: false})
     const {accessToken} = authResponse.data;
     axios.defaults.headers['Authorization'] = `Bearer ${accessToken}`;
 
@@ -28,7 +28,7 @@ class AuthService {
 
   async silentRefresh() {
     delete axios.defaults.headers['Authorization'];
-    const authResponse = await axios.post(API_URL + "/auth/token/refresh")
+    const authResponse = await axios.post(API_URL + "/auth/token/refresh", null, {autoErrorHandling: false})
     const {accessToken} = authResponse.data;
     axios.defaults.headers['Authorization'] = `Bearer ${accessToken}`;
 
@@ -38,7 +38,7 @@ class AuthService {
   }
 
   async loginWithDooray(id, password) {
-    const authResponse = await axios.post(API_URL + "/auth/dooray", {id, password})
+    const authResponse = await axios.post(API_URL + "/auth/dooray", {id, password}, {autoErrorHandling: false})
     const {accessToken} = authResponse.data;
     axios.defaults.headers['Authorization'] = `Bearer ${accessToken}`;
 

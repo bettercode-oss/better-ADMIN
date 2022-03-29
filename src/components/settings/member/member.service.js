@@ -23,7 +23,7 @@ class MemberService {
   }
 
   signUpMember(signUp) {
-    return axios.post(API_URL + `/members`, signUp);
+    return axios.post(API_URL + `/members`, signUp, {autoErrorHandling: false});
   }
 
   approveMember(memberId) {

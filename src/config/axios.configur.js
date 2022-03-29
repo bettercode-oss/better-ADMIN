@@ -71,30 +71,17 @@ export class AxiosConfigur {
   }
 
   static configServerErrorInterceptor() {
+    axios.defaults["autoErrorHandling"] = true;
     // Add a response interceptor
     axios.interceptors.response.use(function (response) {
       // Any status code that lie within the range of 2xx cause this function to trigger
       return response;
     }, function (error) {
       // Any status codes that falls outside the range of 2xx cause this function to trigger
-      if (error.response && error.response.status) {
+      if (error.response && error.response.status && error.config.autoErrorHandling === true) {
         if (error.response.status === 500) {
-          if(adminConfig.serverErrorHandlingExcludeUrl && adminConfig.serverErrorHandlingExcludeUrl.serverInternal) {
-            const excludeUrls = adminConfig.serverErrorHandlingExcludeUrl.serverInternal;
-            const find = excludeUrls.filter((url) => error.response.config.url.endsWith(url));
-            if(find.length > 0) {
-              return Promise.reject(error);
-            }
-          }
           EventBroadcaster.broadcast(SHOW_ERROR_MESSAGE_EVENT_TOPIC, adminConfig.errorMessage.serverInternalError);
         } else if(error.response.status === 400) {
-          if(adminConfig.serverErrorHandlingExcludeUrl && adminConfig.serverErrorHandlingExcludeUrl.badRequest) {
-            const excludeUrls = adminConfig.serverErrorHandlingExcludeUrl.badRequest;
-            const find = excludeUrls.filter((url) => error.response.config.url.endsWith(url));
-            if(find.length > 0) {
-              return Promise.reject(error);
-            }
-          }
           EventBroadcaster.broadcast(SHOW_ERROR_MESSAGE_EVENT_TOPIC, adminConfig.errorMessage.badRequestError);
         } else if(error.response.status === 404) {
           EventBroadcaster.broadcast(SHOW_ERROR_MESSAGE_EVENT_TOPIC, adminConfig.errorMessage.pageNotFoundError);
