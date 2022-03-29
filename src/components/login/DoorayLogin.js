@@ -2,6 +2,8 @@ import React, {useState} from "react";
 import {Button, Form, Input, message, Modal} from "antd";
 import {LockOutlined, UserOutlined} from "@ant-design/icons";
 import {AuthService} from "../../auth/auth.service";
+import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "../../event/event.broadcaster";
+import {adminConfig} from "../../config/admin.config";
 
 const DoorayLogin = ({show, onLoginSuccess, onClose}) => {
   const [loading, setLoading] = useState(false);
@@ -18,6 +20,9 @@ const DoorayLogin = ({show, onLoginSuccess, onClose}) => {
       if (error.response && error.response.status === 400) {
         message.warn("아이디 혹시 비밀번호를 확인해 주세요.")
       }
+    }).finally(() => {
+      setLoading(false);
+      EventBroadcaster.broadcast(SHOW_ERROR_MESSAGE_EVENT_TOPIC, adminConfig.errorMessage.serverInternalError);
     });
   }
 

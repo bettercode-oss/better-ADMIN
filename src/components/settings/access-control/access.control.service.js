@@ -9,7 +9,7 @@ class AccessControlService {
   }
 
   createPermission(permission) {
-    return axios.post(`${API_URL}/access-control/permissions`, permission)
+    return axios.post(`${API_URL}/access-control/permissions`, permission, {autoErrorHandling: false})
   }
 
   deletePermission(permissionId) {
@@ -17,11 +17,11 @@ class AccessControlService {
   }
 
   updatePermission(permissionId, permission) {
-    return axios.put(`${API_URL}/access-control/permissions/${permissionId}`, permission)
+    return axios.put(`${API_URL}/access-control/permissions/${permissionId}`, permission, {autoErrorHandling: false})
   }
 
   createRole(role) {
-    return axios.post(`${API_URL}/access-control/roles`, role)
+    return axios.post(`${API_URL}/access-control/roles`, role, {autoErrorHandling: false})
   }
 
   getRoles(params) {
@@ -33,7 +33,7 @@ class AccessControlService {
   }
 
   updateRole(roleId, role) {
-    return axios.put(`${API_URL}/access-control/roles/${roleId}`, role)
+    return axios.put(`${API_URL}/access-control/roles/${roleId}`, role, {autoErrorHandling: false})
   }
 }
 

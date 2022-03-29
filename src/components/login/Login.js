@@ -9,6 +9,7 @@ import DoorayLogin from "./DoorayLogin";
 import {AuthService} from "../../auth/auth.service";
 import MemberSignUp from "./MemberSignUp";
 import * as queryString from "query-string";
+import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "../../event/event.broadcaster";
 
 const Login = (props) => {
   const [siteSettings, setSiteSettings] = useState({});
@@ -30,15 +31,17 @@ const Login = (props) => {
 
     setLoading(true);
     AuthService.login(signId, password).then(() => {
-      setLoading(false);
       goToNextPage();
     }).catch(error => {
-      setLoading(false);
       if (error.response && error.response.status === 400) {
         message.warn("아이디 혹시 비밀번호를 확인해 주세요.")
       } else if (error.response && error.response.status === 406) {
         message.warn("신청한 계정은 아직 미승인 상태 입니다. 관리자에게 문의하세요.")
+      } else {
+        EventBroadcaster.broadcast(SHOW_ERROR_MESSAGE_EVENT_TOPIC, adminConfig.errorMessage.serverInternalError);
       }
+    }).finally(() => {
+      setLoading(false);
     });
   };
 

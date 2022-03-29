@@ -6,7 +6,7 @@ const API_URL = adminConfig.authentication.authAPI();
 class MemberAccessLogger {
 
   logPageAccess(pageUrl) {
-    axios.post(API_URL + `/member-access-logs`, {type: "PAGE_ACCESS", "url": pageUrl}).then();
+    axios.post(API_URL + `/member-access-logs`, {type: "PAGE_ACCESS", "url": pageUrl}, {autoErrorHandling: false}).then();
   }
 
   logServerAPIAccess(apiUrl, method, parameters, payload, statusCode) {
@@ -25,7 +25,7 @@ class MemberAccessLogger {
       request.payload = JSON.stringify(payload);
     }
 
-    axios.post(API_URL + `/member-access-logs`, request).then();
+    axios.post(API_URL + `/member-access-logs`, request, {autoErrorHandling: false}).then();
   }
 
 }

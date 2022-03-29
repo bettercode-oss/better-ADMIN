@@ -2,6 +2,8 @@ import React, {useEffect, useState} from "react";
 import {Button, Form, Input, message, PageHeader, Select} from 'antd';
 import {AccessControlService} from "./access.control.service";
 import {CREATE_MODE, EDIT_MODE, FormItemLayout, FormTailItemLayout} from "../AppSettings";
+import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "../../../event/event.broadcaster";
+import {adminConfig} from "../../../config/admin.config";
 
 const {Option} = Select;
 
@@ -53,6 +55,8 @@ const RoleForm = ({mode, selectedRole, onBack}) => {
   const handleFailure = (err) => {
     if (err.response.status === 400 && err.response.data && err.response.data.message && err.response.data.message === "duplicated") {
       message.warn("이미 존재하는 권한입니다.");
+    } else {
+      EventBroadcaster.broadcast(SHOW_ERROR_MESSAGE_EVENT_TOPIC, adminConfig.errorMessage.serverInternalError);
     }
   }
 
