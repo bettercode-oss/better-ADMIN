@@ -1,10 +1,10 @@
+import navigationInfo from "./navigation.json";
 import {MemberContext} from "../auth/member.context";
-import {MenuService} from "../components/settings/menu/menu.service";
 
 export default class NavigationConfig {
   static hasPermissions(memberPermissions, navigationPermissions) {
     for (let i = 0; i < navigationPermissions.length; i++) {
-      if (memberPermissions.has(navigationPermissions[i].name)) {
+      if (memberPermissions.has(navigationPermissions[i])) {
         return true;
       }
     }
@@ -12,38 +12,24 @@ export default class NavigationConfig {
     return false;
   }
 
-  static isInitNavigationInfo() {
-    return window.sessionStorage.getItem("navigationInfo") ? true : false;
-  }
-
-  static loadNavigationInfo() {
-    return JSON.parse(window.sessionStorage.getItem("navigationInfo"));
-  }
-
-  static async reloadNavigationInfo() {
-    const response = await MenuService.getMenus();
-    window.sessionStorage.setItem("navigationInfo", JSON.stringify(response.data));
-  }
-
   static getItemsByMemberPermission = () => {
     const memberPermissions = new Set(MemberContext.memberInformation.permissions ? MemberContext.memberInformation.permissions : []);
     const accessibleGnbItems = [];
-
-    const navigationInfo = NavigationConfig.loadNavigationInfo();
-    if (navigationInfo) {
-      navigationInfo.forEach(gnbItem => {
-        // 1 Depth Menu
+    if (navigationInfo.items) {
+      const gnbItems = navigationInfo.items;
+      gnbItems.forEach(gnbItem => {
+        // GNB
         if (!gnbItem.accessPermissions || this.hasPermissions(memberPermissions, gnbItem.accessPermissions)) {
-          if (gnbItem.subMenus) {
-            // 2 Depth Menu
+          if (gnbItem.items) {
+            // SNB
             const accessibleSnbItems = [];
-            const snbItems = gnbItem.subMenus
+            const snbItems = gnbItem.items
             snbItems.forEach(snbItem => {
               if (!snbItem.accessPermissions || this.hasPermissions(memberPermissions, snbItem.accessPermissions)) {
-                if (snbItem.subMenus) {
-                  // 3 Depth Menu
+                if (snbItem.items) {
+                  // Sub
                   const accessibleSubItems = [];
-                  const subItems = snbItem.subMenus
+                  const subItems = snbItem.items
                   subItems.forEach(subItem => {
                     if (!snbItem.accessPermissions || this.hasPermissions(memberPermissions, subItem.accessPermissions)) {
                       accessibleSubItems.push(subItem);
@@ -84,19 +70,19 @@ export default class NavigationConfig {
 
   static getItemsWithoutMemberPermission = () => {
     const accessibleGnbItems = [];
-    const navigationInfo = NavigationConfig.loadNavigationInfo();
-    if (navigationInfo) {
-      navigationInfo.forEach(gnbItem => {
+    if (navigationInfo.items) {
+      const gnbItems = navigationInfo.items;
+      gnbItems.forEach(gnbItem => {
         // GNB
-        if (gnbItem.subMenus) {
+        if (gnbItem.items) {
           // SNB
           const accessibleSnbItems = [];
-          const snbItems = gnbItem.subMenus
+          const snbItems = gnbItem.items
           snbItems.forEach(snbItem => {
-            if (snbItem.subMenus) {
+            if (snbItem.items) {
               // Sub
               const accessibleSubItems = [];
-              const subItems = snbItem.subMenus
+              const subItems = snbItem.items
               subItems.forEach(subItem => {
                 accessibleSubItems.push(subItem);
               });
@@ -168,9 +154,6 @@ export default class NavigationConfig {
         }
       }
     }
-
     return result;
   }
-
-
 }

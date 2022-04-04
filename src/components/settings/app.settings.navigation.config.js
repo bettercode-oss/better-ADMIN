@@ -8,7 +8,6 @@ import OrganizationSetting from "./organization/OrganizationSetting";
 import MemberApproval from "./member/MemberApproval";
 import GoogleWorkspaceSetting from "./google-workspace/GoogleWorkspaceSetting";
 import WebHooksSetting from "./notification-web-hooks/WebHooksSetting";
-import MenuSetting from "./menu/MenuSetting";
 import MemberAccessLogSetting from "./member-access-logs/MemberAccessLogSetting";
 
 const settingsSideMenuItems = [{
@@ -41,10 +40,6 @@ const settingsSideMenuItems = [{
         component: <PermissionSetting/>,
       }
     ]
-  }, {
-    title: "메뉴 관리",
-    accessPermission: "MANAGE_MENUS",
-    component: <MenuSetting/>,
   }, {
     title: "로그인",
     accessPermission: "MANAGE_SYSTEM_SETTINGS",
