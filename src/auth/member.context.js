@@ -17,8 +17,12 @@ class MemberContext {
 
   set memberInformation(memberInformation) {
     this._memberInformation = memberInformation;
-    this._available = true;
-    EventBroadcaster.broadcast(MEMBER_CONTEXT_AVAILABLE_EVENT_TOPIC, memberInformation);
+    if(memberInformation) {
+      this._available = true;
+      EventBroadcaster.broadcast(MEMBER_CONTEXT_AVAILABLE_EVENT_TOPIC, memberInformation);
+    } else {
+      this._available = false;
+    }
   }
 
   get memberInformation() {

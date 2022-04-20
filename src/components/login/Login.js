@@ -8,14 +8,16 @@ import SiteService from "../settings/site.service";
 import DoorayLogin from "./DoorayLogin";
 import {AuthService} from "../../auth/auth.service";
 import MemberSignUp from "./MemberSignUp";
-import * as queryString from "query-string";
 import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "../../event/event.broadcaster";
+import {useNavigate, useSearchParams} from "react-router-dom";
 
-const Login = (props) => {
+const Login = () => {
   const [siteSettings, setSiteSettings] = useState({});
   const [showDoorayLogin, setShowDoorayLogin] = useState(false);
   const [showMemberSignUp, setShowMemberSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
+  let navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     SiteService.getSettings().then(response => {
@@ -23,6 +25,7 @@ const Login = (props) => {
     }).catch(error => {
       console.log(error);
     });
+    return () => setSiteSettings(null);
   }, []);
 
   const onFinish = (values) => {
@@ -50,24 +53,20 @@ const Login = (props) => {
   }
 
   const goToNextPage = () => {
-    const query = queryString.parse(props.location.search);
-    if (query.returnUrl) {
-      window.location.href = query.returnUrl;
-      window.location.reload();
+    if (searchParams.get('returnUrl')) {
+      window.location.href = searchParams.get('returnUrl');
     } else {
-      window.location = adminConfig.homePage;
+      navigate("/");
     }
   }
 
   const handleGoogleLoginClick = () => {
     let returnUrl = adminConfig.homePage;
-    const query = queryString.parse(props.location.search);
-    if (query.returnUrl) {
-      returnUrl = query.returnUrl.split("#")[1];
+    if (searchParams.get('returnUrl')) {
+      returnUrl = searchParams.get('returnUrl').replace(window.location.origin, '');
     }
-
-    const googleOAuthRedirectLoginUrl = window.location.origin + "/#" + adminConfig.authentication.oauthLoginResultUrl + "?returnUrl=" + returnUrl
-    window.location.href = siteSettings.googleWorkspaceOAuthUri + "&state=" + encodeURIComponent(googleOAuthRedirectLoginUrl)
+    const googleOAuthRedirectLoginUrl = window.location.origin + adminConfig.authentication.oauthLoginResultUrl + "?returnUrl=" + returnUrl;
+    window.location.href = siteSettings.googleWorkspaceOAuthUri + "&state=" + encodeURIComponent(googleOAuthRedirectLoginUrl);
   }
 
   return (

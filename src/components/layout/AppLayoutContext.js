@@ -1,9 +1,9 @@
 import React, {createContext, useContext, useEffect, useReducer} from 'react';
+import {v4 as uuidv4} from 'uuid';
 
 import NavigationConfig from "../../config/navigation.config";
 import {adminConfig} from "../../config/admin.config";
 
-const SESSION_STORAGE_KEY_BETTER_ADMIN_PAGE_TAB_ID = "betterAdminPageTabId";
 const SESSION_STORAGE_KEY_BETTER_ADMIN_PAGE_TAB = "betterAdminPageTab";
 
 const initialState = {
@@ -28,15 +28,8 @@ const initialState = {
 };
 
 function getNextPageTabId() {
-  let nextId = 0;
-  const currentId = window.sessionStorage.getItem(SESSION_STORAGE_KEY_BETTER_ADMIN_PAGE_TAB_ID);
-  if(currentId) {
-    nextId = Number(currentId) + 1;
-  }
-  window.sessionStorage.setItem(SESSION_STORAGE_KEY_BETTER_ADMIN_PAGE_TAB_ID, String(nextId));
-  return String(nextId);
+  return uuidv4();
 }
-
 
 function layoutReducer(state, action) {
   switch (action.type) {
@@ -297,6 +290,5 @@ export function useLayoutDispatch() {
 }
 
 export function cleanUpAppLayoutContextResource() {
-  window.sessionStorage.removeItem(SESSION_STORAGE_KEY_BETTER_ADMIN_PAGE_TAB_ID);
   window.sessionStorage.removeItem(SESSION_STORAGE_KEY_BETTER_ADMIN_PAGE_TAB);
 }

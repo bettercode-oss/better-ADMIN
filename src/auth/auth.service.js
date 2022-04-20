@@ -18,11 +18,11 @@ class AuthService {
   logout() {
     return axios.post(API_URL + "/auth/logout").then(() => {
       delete axios.defaults.headers['Authorization'];
+      MemberContext.memberInformation = null;
     });
   }
 
   checkAuth() {
-    // TODO 오류를 대비해 Retry 추가해야
     return axios.get(API_URL + "/auth/check");
   }
 

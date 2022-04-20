@@ -1,23 +1,24 @@
 import React from "react";
-import * as queryString from "query-string";
 import axios from "axios";
-import {Redirect} from 'react-router'
+import {Navigate, useLocation, useSearchParams} from "react-router-dom";
 import {adminConfig} from "../../config/admin.config";
 import {message} from "antd";
 
-const OAuthLoginResult = (props) => {
-  const query = queryString.parse(props.location.search);
-  if(query.error) {
-    if(query.error === "server-internal-error") {
+const OAuthLoginResult = () => {
+  const [searchParams] = useSearchParams();
+  const location = useLocation();
+
+  if(searchParams.get('error')) {
+    if(searchParams.error === "server-internal-error") {
       message.error(adminConfig.errorMessage.serverInternalError);
     } else {
-      message.error(query.error);
+      message.error(searchParams.get('error'));
     }
 
-    return <Redirect to={adminConfig.authentication.loginUrl}/>
+    return <Navigate to={adminConfig.authentication.loginUrl} replace state={{from: location}}/>;
   } else {
-    axios.defaults.headers['Authorization'] = `Bearer ${query.accessToken}`;
-    return <Redirect to={query.returnUrl}/>;
+    axios.defaults.headers['Authorization'] = `Bearer ${searchParams.get('accessToken')}`;
+    return <Navigate to={searchParams.get('returnUrl')} replace state={{from: location}}/>;
   }
 };
 

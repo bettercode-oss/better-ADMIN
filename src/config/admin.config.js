@@ -3,7 +3,6 @@ const BetterAdminConfig = {
   logo: '/better-admin.png',
   homePage: '/',
   authentication: {
-    used: true,
     loginUrl: '/login',
     oauthLoginResultUrl: '/oauth-login-result',
     authAPI: () => {

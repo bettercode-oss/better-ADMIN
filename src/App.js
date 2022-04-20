@@ -1,11 +1,9 @@
-import React, {useEffect} from "react";
-import {HashRouter, Route, Switch} from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 import './App.less';
 import AppLayout from "./components/layout/AppLayout";
 import Login from "./components/login/Login";
-import AuthRoute from "./components/router/AuthRoute";
 import {adminConfig} from "./config/admin.config";
-import {AuthService} from "./auth/auth.service";
 import {Modal, notification} from "antd";
 import {
   EventBroadcaster,
@@ -15,28 +13,14 @@ import {
 import {ExclamationCircleOutlined, NotificationTwoTone} from "@ant-design/icons";
 import {LayoutProvider} from "./components/layout/AppLayoutContext";
 import OAuthLoginResult from "./components/login/OAuthLoginResult";
+import ProtectedRoute from "./components/router/ProtectedRoute";
+import {AuthService} from "./auth/auth.service";
 
 const App = () => {
+  const [silentRefreshCompleted, setSilentRefreshCompleted] = useState(false);
+
   useEffect(() => {
-    const getQueryStringInUrl = (url) => {
-      if (existQueryStringInUrl(url)) {
-        return url.split("?")[1];
-      } else {
-        return null;
-      }
-    };
-
-    if (adminConfig.authentication.used) {
-      AuthService.silentRefresh().then().catch(() => {
-        const queryString = getQueryStringInUrl(window.location.href)
-        if (queryString) {
-          window.location.hash = adminConfig.authentication.loginUrl + "?" + queryString;
-        } else {
-          window.location.hash = adminConfig.authentication.loginUrl;
-        }
-
-      });
-    }
+    AuthService.silentRefresh().then().finally(() => setSilentRefreshCompleted(true));
 
     EventBroadcaster.on(SHOW_ERROR_MESSAGE_EVENT_TOPIC, (msg) => {
       Modal.confirm({
@@ -52,28 +36,24 @@ const App = () => {
       notification.open({
         message: msg.title,
         description: msg.text,
-        icon: <NotificationTwoTone />,
+        icon: <NotificationTwoTone/>,
       });
     });
   }, []);
 
-  const existQueryStringInUrl = (url) => {
-    return url.split("?")[1] ? true : false;
-  }
-
   return (<>
     <LayoutProvider>
-      <HashRouter>
-        <Switch>
-          <Route path={adminConfig.authentication.loginUrl} component={Login}/>
-          <Route path={adminConfig.authentication.oauthLoginResultUrl} component={OAuthLoginResult}/>
-          {adminConfig.authentication.used ? (
-            <AuthRoute path={'/'} component={AppLayout}/>
-          ) : (
-            <Route path={'/'} component={AppLayout}/>
-          )}
-        </Switch>
-      </HashRouter>
+      <BrowserRouter>
+        <Routes>
+          <Route path={adminConfig.authentication.loginUrl} element={<Login/>}/>
+          <Route path={adminConfig.authentication.oauthLoginResultUrl} element={<OAuthLoginResult/>}/>
+          <Route path="/*" element={
+            <ProtectedRoute silentRefreshCompleted={silentRefreshCompleted}>
+              <AppLayout/>
+            </ProtectedRoute>
+          }/>
+        </Routes>
+      </BrowserRouter>
     </LayoutProvider>
   </>)
 };

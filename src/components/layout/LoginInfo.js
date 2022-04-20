@@ -1,7 +1,7 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Avatar, Dropdown, Menu} from "antd";
 import {LogoutOutlined, MonitorOutlined, SettingOutlined, UserOutlined} from "@ant-design/icons";
-import {useHistory} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {adminConfig} from "../../config/admin.config";
 import {MemberContext} from "../../auth/member.context";
 import {AuthService} from "../../auth/auth.service";
@@ -10,19 +10,26 @@ import {AppSettingsNavigation} from "../settings/app.settings.navigation.config"
 import {cleanUpAppLayoutContextResource} from "./AppLayoutContext";
 import {MonitoringNavigation} from "../monitoring/monitoring.navigation.config";
 import {Monitoring} from "../monitoring/Monitoring";
+import {EventBroadcaster, INVALID_ACCESS_TOKEN_TOPIC} from "../../event/event.broadcaster";
 
 const LoginInfo = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [showMonitoring, setShowMonitoring] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    EventBroadcaster.on(INVALID_ACCESS_TOKEN_TOPIC, () => {
+      cleanUpAppLayoutContextResource();
+      AuthService.logout().then().finally(() => {
+        navigate(adminConfig.authentication.loginUrl);
+      });
+    });
+  }, [navigate]);
 
   const logout = () => {
-    AuthService.logout().then(() => {
-      history.replace(adminConfig.authentication.loginUrl);
-    }).catch(() => {
-      history.replace(adminConfig.authentication.loginUrl);
-    }).finally(() => {
-      cleanUpAppLayoutContextResource();
+    cleanUpAppLayoutContextResource();
+    AuthService.logout().then().finally(() => {
+      navigate(adminConfig.authentication.loginUrl);
     });
   };
 
