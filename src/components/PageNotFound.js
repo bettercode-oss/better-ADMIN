@@ -1,7 +1,10 @@
 import React from 'react';
 import {Result} from "antd";
+import {useLocation} from "react-router-dom";
 
-export const PageNotFound = ({location}) => {
+export const PageNotFound = () => {
+  let location = useLocation();
+
   return (
     <Result
       status="404"

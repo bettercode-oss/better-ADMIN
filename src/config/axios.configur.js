@@ -1,7 +1,7 @@
 import axios from "axios";
 import {adminConfig} from "./admin.config";
 import {AuthService} from "../auth/auth.service";
-import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "../event/event.broadcaster";
+import {EventBroadcaster, INVALID_ACCESS_TOKEN_TOPIC, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "../event/event.broadcaster";
 import {hideLoading, showLoading} from "../helper/loading.helper";
 import {MemberAccessLogger} from "../logger/member.access.logger";
 
@@ -52,12 +52,7 @@ export class AxiosConfigur {
           });
         } else {
           // invalid access token
-          delete axios.defaults.headers['Authorization'];
-          AuthService.logout().then().catch((error) => {
-            console.log("logout error", error);
-          }).finally(() => {
-            window.location.hash = adminConfig.authentication.loginUrl;
-          });
+          EventBroadcaster.broadcast(INVALID_ACCESS_TOKEN_TOPIC, null);
         }
       } else if (error.response && error.response.status === 403) {
         EventBroadcaster.broadcast(SHOW_ERROR_MESSAGE_EVENT_TOPIC,

@@ -1,45 +1,57 @@
-import React, {useEffect} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {Breadcrumb, Layout, Spin, Tabs} from "antd";
-import {useHistory} from "react-router-dom";
+import {useLocation, useNavigate, UNSAFE_NavigationContext} from "react-router-dom";
 import {useLayoutDispatch, useLayoutState} from "./AppLayoutContext";
 import NavigationIcon from "./NavigationIcon";
 import PageRouter from "../../pages/router/PageRouter";
 import classNames from "classnames";
 import themeConfig from "../../config/theme.config.json";
 import {MemberAccessLogger} from "../../logger/member.access.logger";
+import {MemberContext} from "../../auth/member.context";
 
 const {TabPane} = Tabs;
 
-function Content({props}) {
-  const history = useHistory();
+function Content() {
+  let navigate = useNavigate();
+  let location = useLocation();
   const layoutState = useLayoutState();
   const layoutDispatch = useLayoutDispatch();
+  const navigation = useContext(UNSAFE_NavigationContext).navigator;
 
   useEffect(() => {
-    const pathname = props.location.pathname;
+    const pathname = location.pathname;
     layoutDispatch({
       type: 'ADD_TAB_PAGE', pathname
     });
-
-    const unlisten = history.listen((location) => {
-      const pathname = location.pathname;
-      layoutDispatch({
-        type: 'ADD_TAB_PAGE', pathname
-      });
-      MemberAccessLogger.logPageAccess(location.pathname)
-    });
-    return unlisten;
   }, [
-    props.location.pathname,
-    layoutDispatch,
-    history,
+    layoutDispatch,location.pathname
   ]);
+
+  useEffect(() => {
+    if (navigation) {
+      navigation.listen((locationListener) => {
+        const pathname = locationListener.location.pathname;
+        layoutDispatch({
+          type: 'ADD_TAB_PAGE', pathname
+        });
+
+        layoutDispatch({
+          type: 'INIT_NAVIGATION', pathname
+        });
+
+        if(MemberContext.available) {
+          MemberAccessLogger.logPageAccess(pathname);
+        }
+      });
+    }
+  }, [layoutDispatch, navigation]);
+
 
   const handlePageHistoryTabClick = (pageTabId) => {
     if (pageTabId !== layoutState.pageTab.current.id) {
       const find = layoutState.pageTab.histories.filter(history => history.id === pageTabId);
       if (find.length === 1) {
-        history.push(find[0].link);
+        navigate(find[0].link);
       }
     }
   }
@@ -51,7 +63,7 @@ function Content({props}) {
         // 현재 페이지를 삭제할 때
         const newHistories = layoutState.pageTab.histories.filter(history => history.id !== id);
         const currentPage = newHistories.slice(-1)[0];
-        history.push(currentPage.link);
+        navigate(currentPage.link);
         layoutDispatch({
           type: 'REMOVE_TAB_PAGE', id, currentPage
         });
