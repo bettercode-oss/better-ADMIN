@@ -13,16 +13,15 @@ const DoorayLogin = ({show, onLoginSuccess, onClose}) => {
 
     setLoading(true);
     AuthService.loginWithDooray(signId, password).then(() => {
-      setLoading(false);
       onLoginSuccess();
     }).catch(error => {
-      setLoading(false);
       if (error.response && error.response.status === 400) {
         message.warn("아이디 혹시 비밀번호를 확인해 주세요.")
+      } else {
+        EventBroadcaster.broadcast(SHOW_ERROR_MESSAGE_EVENT_TOPIC, adminConfig.errorMessage.serverInternalError);
       }
     }).finally(() => {
       setLoading(false);
-      EventBroadcaster.broadcast(SHOW_ERROR_MESSAGE_EVENT_TOPIC, adminConfig.errorMessage.serverInternalError);
     });
   }
 
@@ -38,7 +37,7 @@ const DoorayLogin = ({show, onLoginSuccess, onClose}) => {
             rules={[
               {
                 required: true,
-                message: 'Please input your ID!',
+                message: '아이디를 입력해 주세요.',
               },
             ]}
           >
@@ -49,7 +48,7 @@ const DoorayLogin = ({show, onLoginSuccess, onClose}) => {
             rules={[
               {
                 required: true,
-                message: 'Please input your Password!',
+                message: '비밀번호를 입력해 주세요.',
               },
             ]}
           >
