@@ -1,13 +1,11 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {Breadcrumb, Layout, Spin, Tabs} from "antd";
-import {useLocation, useNavigate, UNSAFE_NavigationContext} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {useLayoutDispatch, useLayoutState} from "./AppLayoutContext";
 import NavigationIcon from "./NavigationIcon";
 import PageRouter from "../../pages/router/PageRouter";
 import classNames from "classnames";
 import themeConfig from "../../config/theme.config.json";
-import {MemberAccessLogger} from "../../logger/member.access.logger";
-import {MemberContext} from "../../auth/member.context";
 
 const {TabPane} = Tabs;
 
@@ -16,7 +14,6 @@ function Content() {
   let location = useLocation();
   const layoutState = useLayoutState();
   const layoutDispatch = useLayoutDispatch();
-  const navigation = useContext(UNSAFE_NavigationContext).navigator;
 
   useEffect(() => {
     const pathname = location.pathname;
@@ -26,26 +23,6 @@ function Content() {
   }, [
     layoutDispatch,location.pathname
   ]);
-
-  useEffect(() => {
-    if (navigation) {
-      navigation.listen((locationListener) => {
-        const pathname = locationListener.location.pathname;
-        layoutDispatch({
-          type: 'ADD_TAB_PAGE', pathname
-        });
-
-        layoutDispatch({
-          type: 'INIT_NAVIGATION', pathname
-        });
-
-        if(MemberContext.available) {
-          MemberAccessLogger.logPageAccess(pathname);
-        }
-      });
-    }
-  }, [layoutDispatch, navigation]);
-
 
   const handlePageHistoryTabClick = (pageTabId) => {
     if (pageTabId !== layoutState.pageTab.current.id) {
