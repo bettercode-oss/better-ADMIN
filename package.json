@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@bettercode/react-app-version-checker": "^2.2.2",
     "@craco/craco": "^6.0.0",
     "@testing-library/jest-dom": "^5.9.0",
     "@testing-library/react": "^11.0.0",
