@@ -139,7 +139,9 @@ export class AxiosConfigur {
       function (error) {
         // 오류 요청을 보내기전 수행할 일
         const config = error.config;
-        AxiosConfigur.loggingWithAxiosConfig(config, error.response.status);
+        if(error && error.response && error.response.status) {
+          AxiosConfigur.loggingWithAxiosConfig(config, error.response.status);
+        }
 
         return Promise.reject(error);
       });
