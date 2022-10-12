@@ -1,77 +1,133 @@
 import React from "react";
-// import { Button as AntButton } from 'antd';
-import AntButton, { ButtonProps as AntButtonProps, } from 'antd/lib/button/index';
 import Tooltip from 'antd/lib/tooltip';
 import classNames from 'classnames';
 import PropTypes from "prop-types";
-import styled from 'styled-components';
 
-/* const ButtonStyled = styled(AntButton)`
-    color: blue;
-    font-weight: normal;
-    :focus {
-      color: blue;
-      border-color: blue;
-    }
-    :hover {
-      color: red;
-      border-color: red;
-    }
-    &.ant-btn-clicked:after {
-      content:'',
-      position: absolute,
-      top: -1px,
-      left: -1px,
-      bottom: -1px,
-      right:-1px,
-      opacity: 0.4,
-      -webkit-animation: buttonEffect 0.4s;
-      animation: buttonEffect 0.4s;
-      display: block,
-    }
-` ; */
+import { darken, lighten } from 'polished';
+import AntButton, { ButtonProps as AntButtonProps, } from 'antd/lib/button/index';
+import styled from "styled-components";
+import theme from '../styles/theme';
+import { SearchOutlined, DiffOutlined, DeleteOutlined, DownloadOutlined, ReloadOutlined } from '@ant-design/icons';
 
-const ButtonStyled = styled(AntButton)`
-    font-weight: normal;
-    border-radius: 3px;
-    background-color: ${props => props.color};
+const IconButton = styled(AntButton)`
+    ${props => theme.buttonCommon} ;
+    background-color: ${props => theme.colors.orange};
+    border-color: ${props => theme.colors.orange};
     :hover {
-      background-color: darken(${props => props.color}, 50%);
+      background-color: ${lighten(0.1, theme.colors.orange)};
+      border-color: ${lighten(0.1, theme.colors.orange)};
     }
-    `;
-    /* background-color: {backgroundColor}; */
-    // background-color: ${props => (isSelected ? `black` : `#C4C4C4`)};
+    :active ,:focus{
+      background-color: ${darken(0.2, theme.colors.orange)};
+      border-color: ${darken(0.2, theme.colors.orange)};
+    }
+`;
+
+const NormalButton = styled(AntButton)`
+    ${props => theme.buttonCommon} ;
+    background-color: #fff;
+    border-color: ${props => theme.colors.ligthgray};
+    :hover {
+      color: #222;
+      background-color: ${darken(0.1, '#fff')};
+      border-color: ${darken(0.1, theme.colors.ligthgray)};
+    }
+    :active , :focus{
+      color: #222;
+      background-color: ${darken(0.2, '#fff')};
+      border-color: ${darken(0.2, theme.colors.ligthgray)};    
+    }
+`;
+const SearchButton = styled(AntButton)`
+    ${props => theme.buttonCommon} ;
+    color: #fff;
+    background-color: ${props => theme.colors.darkgray};
+    border-color: ${props => theme.colors.darkgray};
+    :hover {
+      color: #fff;
+      background-color: ${lighten(0.1, theme.colors.darkgray)};
+      border-color: ${lighten(0.1, theme.colors.darkgray)};
+    }
+    :active , :focus{
+      color: #fff;
+      background-color: ${lighten(0.2, theme.colors.darkgray)};
+      border-color: ${lighten(0.2, theme.colors.darkgray)};    
+    }
+`;
+
 
 export type ButtonProps = AntButtonProps & {
-  tooltipTitle?: React.ReactNode;
+  tooltip?: React.ReactNode;
 };
 
-export const Button = ({ tooltipTitle,  ...props }) => {
+export const BtnRegist = ({ tooltip, ...props }) => {
   const button = (
-    // <ButtonStyled {...props}>
-     <ButtonStyled {...props} style={{backgroundColor:props.backgroundColor, borderColor:props.backgroundColor}}> 
-      {props.label}
-    </ButtonStyled>
+        <IconButton {...props}  icon={<DiffOutlined />}>
+          {props.label}
+        </IconButton>
   );
-  if (tooltipTitle) {
-    return <Tooltip title={tooltipTitle}>{button}</Tooltip>;
+  if (tooltip) {
+    return <Tooltip title={tooltip}>{button}</Tooltip>;
   }
   return button;
 };
 
-Button.propTypes = {
+export const BtnDown = ({ tooltip, ...props }) => {
+  const button = (
+        <NormalButton {...props} icon={<DownloadOutlined />}>
+          {props.label}
+        </NormalButton>
+  );
+  if (tooltip) {
+    return <Tooltip title={tooltip}>{button}</Tooltip>;
+  }
+  return button;
+};
+
+export const BtnDelete = ({ tooltip, ...props }) => {
+  const button = (
+        <NormalButton {...props} icon={<DeleteOutlined />}>
+          {props.label}
+        </NormalButton>
+  );
+  if (tooltip) {
+    return <Tooltip title={tooltip}>{button}</Tooltip>;
+  }
+  return button;
+};
+
+export const BtnRefresh = ({ tooltip, ...props }) => {
+  const button = (
+        <NormalButton {...props} icon={<ReloadOutlined />}>
+          {props.label}
+        </NormalButton>
+  );
+  if (tooltip) {
+    return <Tooltip title={tooltip}>{button}</Tooltip>;
+  }
+  return button;
+};
+
+export const BtnSearch = ({ tooltip, ...props }) => {
+  const button = (
+        <SearchButton {...props} icon={<SearchOutlined />}>
+          {props.label}
+        </SearchButton>
+  );
+  if (tooltip) {
+    return <Tooltip title={tooltip}>{button}</Tooltip>;
+  }
+  return button;
+};
+
+BtnRegist.propTypes = {
   label: PropTypes.string.isRequired,
   type: PropTypes.string,
   size: PropTypes.string,
   loading: PropTypes.bool,
-  icon: PropTypes.node,
   tooltip: PropTypes.string,
-  backgroundColor: PropTypes.string,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
 };
 
-Button.defaultProps = {
-  type: 'primary',
-  size: 'middle',
-};
+
 
