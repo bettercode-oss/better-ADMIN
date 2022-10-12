@@ -16,13 +16,18 @@ function Content() {
   const layoutDispatch = useLayoutDispatch();
 
   useEffect(() => {
-    const pathname = location.pathname;
+    let pathname = location.pathname;
+    if(location.search) {
+      pathname += location.search;
+    }
+
     layoutDispatch({
       type: 'ADD_TAB_PAGE', pathname
     });
   }, [
-    layoutDispatch,location.pathname
+    layoutDispatch, location
   ]);
+
 
   const handlePageHistoryTabClick = (pageTabId) => {
     if (pageTabId !== layoutState.pageTab.current.id) {
