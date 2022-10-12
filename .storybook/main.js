@@ -7,8 +7,14 @@ module.exports = {
     "@storybook/addon-links",
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
+    "storybook-addon-styled-component-theme/dist/preset",
+    "themeprovider-storybook/register",
     // '@storybook/preset-create-react-app',
-    "storybook-addon-styled-component-theme",
+    // "storybook-addon-styled-component-theme",
+    // "@storybook/addon-actions/register",
+    // "@storybook/addon-knobs/register",
+    // "@storybook/addon-links/register",
+
     {
       name: '@storybook/preset-create-react-app',
       options: {
@@ -51,6 +57,19 @@ module.exports = {
         return true;
       }),
     };
+    
+    config.resolve.modules = [
+      path.resolve(__dirname, ".."),
+      "node_modules",
+      "styles",
+    ];
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      components: path.resolve(__dirname, "../components"),
+      assets: path.resolve(__dirname, "../assets"),
+    };
+    return config;
+    
   },
   "framework": "@storybook/react"
 }
