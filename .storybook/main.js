@@ -8,13 +8,6 @@ module.exports = {
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
     "storybook-addon-styled-component-theme/dist/preset",
-    "themeprovider-storybook/register",
-    // '@storybook/preset-create-react-app',
-    // "storybook-addon-styled-component-theme",
-    // "@storybook/addon-actions/register",
-    // "@storybook/addon-knobs/register",
-    // "@storybook/addon-links/register",
-
     {
       name: '@storybook/preset-create-react-app',
       options: {
