@@ -1,58 +1,61 @@
 import React from 'react';
-import { BtnRegist, BtnDown, BtnDelete, BtnRefresh, BtnSearch } from './index';
+import { Button } from './index';
+import { SearchOutlined, DiffOutlined, DeleteOutlined, DownloadOutlined, ReloadOutlined } from '@ant-design/icons';
 
 export default {
   title: 'atoms/button',
-  component: BtnRegist,
+  component: Button,
   argTypes: {
     size: { options: ['small', 'medium', 'large'], control: { type: 'radio' } },
+    classname: {options: ['sub-default','sub-light','sub-dark'], control: {type: 'select'}},
+    // type: {options: ['primary','dashed','text','link','disabled'], control: {type: 'select'}},
+    // icon: {options; [<SearchOutlined/>,<DiffOutlined/>,<DeleteOutlined/>,<DownloadOutlined/>,<ReloadOutlined/>], control: {type: 'select'}},
   },
- /*  decorators: [
-    (Story) => (
-      <div style={{ margin: '1em' }}>
-        <Story/>
-      </div>
-    ),
-  ], */
 };
 
-const TempA = (args) => <BtnRegist {...args} tooltip={args.tooltip} />;
-const TempB = (args) => <BtnDown {...args} tooltip={args.tooltip} />;
-const TempC = (args) => <BtnDelete {...args} tooltip={args.tooltip} />;
-const TempD = (args) => <BtnRefresh {...args} tooltip={args.tooltip} />;
-const TempE = (args) => <BtnSearch {...args} tooltip={args.tooltip} />;
+const Template = (args) => <Button {...args}  className={args.classname} icon={args.icon} type={args.type}/>;
 
-export const Registration = TempA.bind({});
+export const Registration = Template.bind({});
 Registration.args = {
   type: 'primary',
   label: '등록',
   size: 'medium',
+  classname: 'sub-default',
+  icon: <DiffOutlined/>,
 };
 
-export const Download = TempB.bind({});
+export const Download = Template.bind({});
 Download.args = {
   type: 'default',
   label: '다운로드',
-  size: 'medium'
+  size: 'medium',
+  classname: 'sub-light',
+  icon: <DownloadOutlined/>,
 };
 
-export const Delete = TempC.bind({});
+export const Delete = Template.bind({});
 Delete.args = {
   type: 'default',
   label: '삭제',
-  size: 'medium'
+  size: 'medium',
+  classname: 'sub-light',
+  icon: <DeleteOutlined/>,
 };
 
-export const Refresh = TempD.bind({});
+export const Refresh = Template.bind({});
 Refresh.args = {
   type: 'default',
   label: '초기화',
-  size: 'medium'
+  size: 'medium',
+  classname: 'sub-light',
+  icon: <ReloadOutlined/>,
 };
 
-export const Search = TempE.bind({});
+export const Search = Template.bind({});
 Search.args = {
-  type: 'dark',
+  type: 'default',
   label: '검색',
-  size: 'medium'
+  size: 'medium',
+  classname: 'sub-dark',
+  icon: <SearchOutlined/>,
 };

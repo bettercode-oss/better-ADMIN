@@ -1,13 +1,6 @@
-import styled, { ThemeProvider } from 'styled-components';
-
 const buttonCommon = {
     fontWeight: "bold",
     borderRadius: "3px",
-}
-
-const inputCommont = {
-    backgroundClor: "#fff",
-    // placeHolder: "#ccc",
 }
 
 const colors = {
