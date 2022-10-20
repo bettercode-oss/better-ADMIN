@@ -50,19 +50,6 @@ module.exports = {
         return true;
       }),
     };
-    
-    config.resolve.modules = [
-      path.resolve(__dirname, ".."),
-      "node_modules",
-      "styles",
-    ];
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      components: path.resolve(__dirname, "../components"),
-      assets: path.resolve(__dirname, "../assets"),
-    };
-    return config;
-    
   },
   "framework": "@storybook/react"
 }
