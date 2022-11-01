@@ -1,11 +1,15 @@
 import axios from "axios";
-import {adminConfig} from "../../../config/admin.config";
+import {adminConfig} from "../../../../config/admin.config";
 
 const API_URL = adminConfig.authentication.authAPI();
 
 class AccessControlService {
   getPermissions(params) {
     return axios.get(`${API_URL}/access-control/permissions`, { params: params });
+  }
+
+  getPermissionById(id) {
+    return axios.get(`${API_URL}/access-control/permissions/${id}`);
   }
 
   createPermission(permission) {
@@ -26,6 +30,10 @@ class AccessControlService {
 
   getRoles(params) {
     return axios.get(`${API_URL}/access-control/roles`, { params: params });
+  }
+
+  getRoleById(id) {
+    return axios.get(`${API_URL}/access-control/roles/${id}`);
   }
 
   deleteRole(roleId) {

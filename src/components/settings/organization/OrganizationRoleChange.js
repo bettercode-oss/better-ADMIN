@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {Button, Form, message, PageHeader, Select} from 'antd';
-import {AccessControlService} from "../access-control/access.control.service";
 import {OrganizationService} from "./organization.service";
 import {FormItemLayout, FormTailItemLayout} from "../AppSettings";
+import {AccessControlService} from "../../templates/settings/access-control/access.control.service";
 
 const {Option} = Select;
 

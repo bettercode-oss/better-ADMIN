@@ -1,7 +1,5 @@
 import React from "react";
 import MemberSetting from "./member/MemberSetting";
-import RoleSetting from "./access-control/RoleSetting";
-import PermissionSetting from "./access-control/PermissionSetting";
 import DooraySetting from "./dooray/DooraySetting";
 import {MemberContext} from "../../auth/member.context";
 import OrganizationSetting from "./organization/OrganizationSetting";
@@ -25,19 +23,6 @@ const settingsSideMenuItems = [{
       {
         title: "멤버 승인",
         component: <MemberApproval/>,
-      }
-    ]
-  }, {
-    title: "접근 제어",
-    accessPermission: "MANAGE_ACCESS_CONTROL",
-    items: [
-      {
-        title: "역할",
-        component: <RoleSetting/>,
-      },
-      {
-        title: "권한",
-        component: <PermissionSetting/>,
       }
     ]
   }, {
