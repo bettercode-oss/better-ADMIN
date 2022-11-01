@@ -1,31 +1,41 @@
 import React, {useEffect, useState} from "react";
 import {Button, Form, Input, message, PageHeader, Select} from 'antd';
-import {AccessControlService} from "./access.control.service";
-import {CREATE_MODE, EDIT_MODE, FormItemLayout, FormTailItemLayout} from "../AppSettings";
-import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "../../../event/event.broadcaster";
-import {adminConfig} from "../../../config/admin.config";
+import {AccessControlService} from "../access.control.service";
+import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "../../../../../event/event.broadcaster";
+import {adminConfig} from "../../../../../config/admin.config";
+import {FormItemLayout, FormTailItemLayout} from "../../../../modules/layout/from-item";
+import {useNavigate, useParams} from "react-router-dom";
 
 const {Option} = Select;
 
-const RoleForm = ({mode, selectedRole, onBack}) => {
+let editRoleId = null;
+
+const RoleForm = () => {
+  const navigate = useNavigate();
+  let params = useParams();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [allPermissions, setAllPermissions] = useState([]);
+  const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
     AccessControlService.getPermissions({page: 0}).then((response) => {
       setAllPermissions(response.data.result);
-      if (mode === EDIT_MODE) {
-        form.setFieldsValue({
-          name: selectedRole.name,
-          description: selectedRole.description,
-          allowPermissions: selectedRole.permissions ? selectedRole.permissions.map(permission => String(permission.id)) : [],
+      if (params.roleId) {
+        setEditMode(true);
+
+        AccessControlService.getRoleById(params.roleId).then((res) => {
+          const role = res.data;
+          editRoleId = role.id;
+          form.setFieldsValue({
+            name: role.name,
+            description: role.description,
+            allowPermissions: role.permissions ? role.permissions.map(permission => String(permission.id)) : [],
+          });
         });
       }
-    }).catch((err) => {
-      console.log(err);
     });
-  }, [form, mode, selectedRole]);
+  }, [params, form]);
 
   const save = (values) => {
     const role = {
@@ -34,14 +44,13 @@ const RoleForm = ({mode, selectedRole, onBack}) => {
       allowedPermissionIds: values.allowPermissions ? values.allowPermissions.map(id => Number(id)) : [],
     };
 
-    if (mode === EDIT_MODE) {
-      setLoading(true);
-      AccessControlService.updateRole(selectedRole.id, role).then(handleSuccess).catch(handleFailure).finally(() => {
+    setLoading(true);
+    if (editMode) {
+      AccessControlService.updateRole(editRoleId, role).then(handleSuccess).catch(handleFailure).finally(() => {
         setLoading(false);
       });
 
-    } else if (mode === CREATE_MODE) {
-      setLoading(true);
+    } else {
       AccessControlService.createRole(role).then(handleSuccess).catch(handleFailure).finally(() => {
         setLoading(false);
       });
@@ -54,18 +63,22 @@ const RoleForm = ({mode, selectedRole, onBack}) => {
 
   const handleFailure = (err) => {
     if (err.response.status === 400 && err.response.data && err.response.data.message && err.response.data.message === "duplicated") {
-      message.warn("이미 존재하는 권한입니다.");
+      message.warn("이미 존재하는 역할입니다.");
     } else {
       EventBroadcaster.broadcast(SHOW_ERROR_MESSAGE_EVENT_TOPIC, adminConfig.errorMessage.serverInternalError);
     }
   }
 
+  const handleBack = () => {
+    navigate(-1);
+  }
+
   return (
     <>
       <PageHeader
-        title="역할 추가"
-        subTitle="역할을 추가 합니다."
-        onBack={onBack}
+        title={editMode ? "역할 수정" : "역할 생성"}
+        subTitle={editMode ? "역할을 수정합니다." : "역할을 생성합니다."}
+        onBack={handleBack}
       >
         <Form {...FormItemLayout} form={form} onFinish={save}>
           <Form.Item

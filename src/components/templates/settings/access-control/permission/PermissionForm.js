@@ -1,22 +1,32 @@
 import React, {useEffect, useState} from "react";
 import {Button, Form, Input, message, PageHeader} from 'antd';
-import {AccessControlService} from "./access.control.service";
-import {CREATE_MODE, EDIT_MODE, FormItemLayout, FormTailItemLayout} from "../AppSettings";
-import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "../../../event/event.broadcaster";
-import {adminConfig} from "../../../config/admin.config";
+import {AccessControlService} from "../access.control.service";
+import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "../../../../../event/event.broadcaster";
+import {adminConfig} from "../../../../../config/admin.config";
+import {useNavigate, useParams} from "react-router-dom";
+import {FormItemLayout, FormTailItemLayout} from "../../../../modules/layout/from-item";
 
-const PermissionForm = ({mode, selectedPermission, onBack}) => {
+let editPermissionId = null;
+const PermissionForm = () => {
+  const navigate = useNavigate();
+  let params = useParams();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
-    if (mode === EDIT_MODE) {
-      form.setFieldsValue({
-        name: selectedPermission.name,
-        description: selectedPermission.description,
+    if (params.permissionId) {
+      setEditMode(true);
+      AccessControlService.getPermissionById(params.permissionId).then((res) => {
+        const permission = res.data;
+        editPermissionId = permission.id;
+        form.setFieldsValue({
+          name: permission.name,
+          description: permission.description,
+        });
       });
     }
-  }, [form, mode, selectedPermission]);
+  }, [form, params]);
 
   const save = (values) => {
     const permission = {
@@ -25,12 +35,14 @@ const PermissionForm = ({mode, selectedPermission, onBack}) => {
     };
 
     setLoading(true);
-    if (mode === EDIT_MODE) {
-      AccessControlService.updatePermission(selectedPermission.id, permission).then(handleSuccess).catch(handleFailure).finally(() => {
+    if (editMode) {
+      AccessControlService.updatePermission(editPermissionId, permission).then(handleSuccess).catch(handleFailure).finally(() => {
         setLoading(false);
       });
-    } else if (mode === CREATE_MODE) {
-      AccessControlService.createPermission(permission).then(handleSuccess).catch(handleFailure).finally(() => {
+    } else {
+      AccessControlService.createPermission(permission)
+        .then(handleSuccess)
+        .catch(handleFailure).finally(() => {
         setLoading(false);
       });
     }
@@ -48,12 +60,16 @@ const PermissionForm = ({mode, selectedPermission, onBack}) => {
     }
   }
 
+  const handleBack = () => {
+    navigate(-1);
+  }
+
   return (
     <>
       <PageHeader
-        title="권한 추가"
-        subTitle="권한을 추가 합니다."
-        onBack={onBack}
+        title={editMode ? "권한 수정" : "권한 생성"}
+        subTitle={editMode ? "권한을 수정합니다." : "권한을 생성합니다."}
+        onBack={handleBack}
       >
         <Form {...FormItemLayout} form={form} onFinish={save}>
           <Form.Item

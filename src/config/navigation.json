@@ -79,9 +79,23 @@
       ]
     },
     {
-      "title": "GNB3",
-      "icon": "ApartmentOutlined",
-      "disabled": true
+      "title": "설정",
+      "icon": "SettingOutlined",
+      "items": [
+        {
+          "title": "접근 제어",
+          "items": [
+            {
+              "title": "역할",
+              "link": "/settings/access-control/roles"
+            },
+            {
+              "title": "권한",
+              "link": "/settings/access-control/permissions"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

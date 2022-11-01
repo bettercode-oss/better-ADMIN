@@ -98,37 +98,13 @@ function layoutReducer(state, action) {
       };
     case 'CLICK_SECOND_DEPTH_SNB_MENU':
       const selectedMenuIndices = action.key.split('-');
-      if (selectedMenuIndices && state.gnbItem) {
-        const breadcrumbNavigationItems = [];
-        breadcrumbNavigationItems.push(state.gnbItem.title);
-        let selectedSnbItem = {};
-
-        selectedMenuIndices.forEach((menuIndex, arrayIndex) => {
-          if (arrayIndex === 0) {
-            selectedSnbItem = state.gnbItem.items[menuIndex];
-            breadcrumbNavigationItems.push(selectedSnbItem.title);
-          } else if (arrayIndex === 1) {
-            const selectedSubItem = selectedSnbItem.items[menuIndex];
-            breadcrumbNavigationItems.push(selectedSubItem.title);
-          }
-        });
-        return {
-          ...state,
-          breadcrumbNavigationItems: breadcrumbNavigationItems,
-          navigationState: {
-            menuOpenKeys: [selectedMenuIndices[0], action.key],
-            menuSelectedKeys: [action.key],
-          }
-        };
-      } else {
-        return {
-          ...state,
-          navigationState: {
-            menuOpenKeys: [selectedMenuIndices[0], action.key],
-            menuSelectedKeys: [action.key],
-          }
-        };
-      }
+      return {
+        ...state,
+        navigationState: {
+          menuOpenKeys: [selectedMenuIndices[0], action.key],
+          menuSelectedKeys: [action.key],
+        }
+      };
     case 'REFRESH_ALL_GNB_ITEMS':
       return {
         ...state,
