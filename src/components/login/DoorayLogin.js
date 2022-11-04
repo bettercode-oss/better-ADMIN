@@ -16,7 +16,7 @@ const DoorayLogin = ({show, onLoginSuccess, onClose}) => {
       onLoginSuccess();
     }).catch(error => {
       if (error.response && error.response.status === 400) {
-        message.warn("아이디 혹시 비밀번호를 확인해 주세요.")
+        message.warn("아이디 혹은 비밀번호를 확인해 주세요.")
       } else {
         EventBroadcaster.broadcast(SHOW_ERROR_MESSAGE_EVENT_TOPIC, adminConfig.errorMessage.serverInternalError);
       }

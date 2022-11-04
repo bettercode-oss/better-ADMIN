@@ -81,9 +81,11 @@
     {
       "title": "설정",
       "icon": "SettingOutlined",
+      "accessPermissions": ["MANAGE_SYSTEM_SETTINGS"],
       "items": [
         {
           "title": "접근 제어",
+          "accessPermissions": ["MANAGE_ACCESS_CONTROL"],
           "items": [
             {
               "title": "역할",
