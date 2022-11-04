@@ -37,7 +37,7 @@ const Login = () => {
       goToNextPage();
     }).catch(error => {
       if (error.response && error.response.status === 400) {
-        message.warn("아이디 혹시 비밀번호를 확인해 주세요.")
+        message.warn("아이디 혹은 비밀번호를 확인해 주세요.")
       } else if (error.response && error.response.status === 406) {
         message.warn("신청한 계정은 아직 미승인 상태 입니다. 관리자에게 문의하세요.")
       } else {

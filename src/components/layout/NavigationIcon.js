@@ -1,6 +1,6 @@
 import * as AntDesignIcons from "@ant-design/icons";
 
-const DEFAULT_ICON_NAME = 'FolderOutlined';
+const DEFAULT_ICON_NAME = 'SwapRightOutlined';
 
 export default function NavigationIcon(iconName) {
   const iconComponent = AntDesignIcons[iconName];

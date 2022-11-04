@@ -3,13 +3,17 @@ import {MemberContext} from "../auth/member.context";
 
 export default class NavigationConfig {
   static hasPermissions(memberPermissions, navigationPermissions) {
-    for (let i = 0; i < navigationPermissions.length; i++) {
-      if (memberPermissions.has(navigationPermissions[i])) {
-        return true;
+    if(navigationPermissions) {
+      for(const permission of navigationPermissions) {
+        if (memberPermissions.has(permission)) {
+          return true;
+        }
       }
+
+      return false;
     }
 
-    return false;
+    return true;
   }
 
   static getItemsByMemberPermission = () => {
