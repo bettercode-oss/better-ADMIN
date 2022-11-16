@@ -1,9 +1,9 @@
 import React, {useState} from "react";
 import {Button, Form, Input, Modal, message} from "antd";
 import {LockOutlined, UserOutlined, FormOutlined} from "@ant-design/icons";
-import {MemberService} from "../settings/member/member.service";
 import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "../../event/event.broadcaster";
 import {adminConfig} from "../../config/admin.config";
+import {MemberService} from "../templates/member/member.service";
 
 const MemberSignUp = ({show, onClose}) => {
   const [loading, setLoading] = useState(false);

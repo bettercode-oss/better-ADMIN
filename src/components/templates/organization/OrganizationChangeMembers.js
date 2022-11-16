@@ -1,24 +1,34 @@
 import React, {useEffect, useState} from "react";
-import {Button, Form, message, PageHeader, Select} from 'antd';
-import {MemberService} from "../member/member.service";
+import {Button, Descriptions, Form, message, PageHeader, Select} from 'antd';
 import {OrganizationService} from "./organization.service";
-import {FormItemLayout, FormTailItemLayout} from "../AppSettings";
+import {MemberService} from "../../templates/member/member.service";
+import {useNavigate, useParams} from "react-router-dom";
+import {FormItemLayout, FormTailItemLayout} from "../../modules/layout/from-item";
 
 const {Option} = Select;
 
-const OrganizationMemberChange = ({organization, onBack}) => {
+const OrganizationChangeMembers = () => {
+  const navigate = useNavigate();
   const [form] = Form.useForm();
+  let params = useParams();
+
   const [loading, setLoading] = useState(false);
   const [allMembers, setAllMembers] = useState([]);
+  const [organization, setOrganization] = useState(null);
 
   useEffect(() => {
     MemberService.getMembersApproved({page: 0}).then((response) => {
       setAllMembers(response.data.result);
-      form.setFieldsValue({
-        assignMembers: organization.members ? organization.members.map(member => String(member.id)) : []
+
+      OrganizationService.getOrganizationById(params.organizationId).then((res) => {
+        const organization = res.data;
+        setOrganization(organization);
+        form.setFieldsValue({
+          assignMembers: organization.members ? organization.members.map(member => String(member.id)) : []
+        });
       });
     });
-  }, [form, organization]);
+  }, [params, form]);
 
   const save = (values) => {
     const assignMembers = {
@@ -32,13 +42,22 @@ const OrganizationMemberChange = ({organization, onBack}) => {
     });
   }
 
+  const handleBack = () => {
+    navigate(-1);
+  }
+
+
   return (
     <>
       <PageHeader
-        title="멤버 편집"
-        subTitle="조직의 멤버를 편집 합니다."
-        onBack={onBack}
+        title="멤버 변경"
+        subTitle="조직의 멤버를 변경 합니다."
+        onBack={handleBack}
       >
+        {organization &&
+          <Descriptions>
+            <Descriptions.Item label="조직 이름">{organization.name}</Descriptions.Item>
+          </Descriptions>}
         <Form {...FormItemLayout} form={form} onFinish={save}>
           <Form.Item
             name="assignMembers"
@@ -68,4 +87,4 @@ const OrganizationMemberChange = ({organization, onBack}) => {
     </>
   )
 };
-export default OrganizationMemberChange;
+export default OrganizationChangeMembers;

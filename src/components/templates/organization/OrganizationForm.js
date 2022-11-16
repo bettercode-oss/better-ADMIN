@@ -1,35 +1,44 @@
 import React, {useEffect, useState} from "react";
 import {Button, Form, Input, message, PageHeader} from 'antd';
 import {OrganizationService} from "./organization.service";
-import {EDIT_MODE, FormItemLayout, FormTailItemLayout} from "../AppSettings";
+import {useNavigate, useParams, useSearchParams} from "react-router-dom";
+import {FormItemLayout, FormTailItemLayout} from "../../modules/layout/from-item";
 
-const OrganizationForm = ({mode, selectedOrganization, onBack}) => {
+const OrganizationForm = () => {
+  const navigate = useNavigate();
+  let params = useParams();
+  const [searchParams] = useSearchParams();
+
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
-    if (mode === EDIT_MODE) {
-      form.setFieldsValue({
-        name: selectedOrganization.name,
+    if (params.organizationId) {
+      setEditMode(true);
+      OrganizationService.getOrganizationById(params.organizationId).then((res) => {
+        form.setFieldsValue({
+          name: res.data.name,
+        });
       });
     }
-  }, [form, mode, selectedOrganization]);
+  }, [form, params]);
 
   const save = (values) => {
     const organization = {
       name: values.name,
     };
 
-    if (mode === EDIT_MODE) {
+    if (editMode) {
       setLoading(true);
-      OrganizationService.changeName(selectedOrganization.id, organization).then(() => {
+      OrganizationService.changeName(params.organizationId, organization).then(() => {
         message.success("저장되었습니다.");
       }).finally(() => {
         setLoading(false);
       });
     } else {
-      if(selectedOrganization && selectedOrganization.id) {
-        organization.parentOrganizationId = selectedOrganization.id;
+      if (searchParams.get('parentId')) {
+        organization.parentOrganizationId = Number(searchParams.get('parentId'));
       }
 
       setLoading(true);
@@ -41,12 +50,16 @@ const OrganizationForm = ({mode, selectedOrganization, onBack}) => {
     }
   }
 
+  const handleBack = () => {
+    navigate(-1);
+  }
+
   return (
     <>
       <PageHeader
-        title={mode === EDIT_MODE ? "조직/부서 수정" : "조직/부서 추가"}
-        subTitle={mode === EDIT_MODE ? "조직/부서를 수정합니다." : "조직/부서를 추가 합니다."}
-        onBack={onBack}
+        title={editMode ? "조직/부서 수정" : "조직/부서 추가"}
+        subTitle={editMode ? "조직/부서를 수정합니다." : "조직/부서를 추가 합니다."}
+        onBack={handleBack}
       >
         <Form {...FormItemLayout} form={form} onFinish={save}>
           <Form.Item

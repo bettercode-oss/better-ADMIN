@@ -10,6 +10,13 @@ import PermissionList from "../../components/templates/settings/access-control/p
 import PermissionForm from "../../components/templates/settings/access-control/permission/PermissionForm";
 import RoleList from "../../components/templates/settings/access-control/role/RoleList";
 import RoleForm from "../../components/templates/settings/access-control/role/RoleForm";
+import MemberList from "../../components/templates/member/MemberList";
+import MemberRoleChange from "../../components/templates/member/MemberRoleChange";
+import MemberApproval from "../../components/templates/member/MemberApproval";
+import Organizations from "../../components/templates/organization/Organizations";
+import OrganizationForm from "../../components/templates/organization/OrganizationForm";
+import OrganizationChangeRoles from "../../components/templates/organization/OrganizationChangeRoles";
+import OrganizationChangeMembers from "../../components/templates/organization/OrganizationChangeMembers";
 
 const PageRouter = () => (
   <>
@@ -28,6 +35,18 @@ const PageRouter = () => (
         <Route index={true} element={<RoleList />}/>
         <Route path="new" element={<RoleForm />} />
         <Route path=":roleId" element={<RoleForm />} />
+      </Route>
+      <Route path="/settings/members">
+        <Route index={true} element={<MemberList />}/>
+        <Route path=":memberId" element={<MemberRoleChange />} />
+      </Route>
+      <Route path="/settings/member-approval" element={<MemberApproval />} />
+      <Route path="/settings/organization">
+        <Route index={true} element={<Organizations />}/>
+        <Route path="new" element={<OrganizationForm />} />
+        <Route path=":organizationId" element={<OrganizationForm />} />
+        <Route path=":organizationId/change-roles" element={<OrganizationChangeRoles />} />
+        <Route path=":organizationId/change-members" element={<OrganizationChangeMembers />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

@@ -1,46 +1,61 @@
 import React, {useEffect, useState} from "react";
-import {Button, Form, message, PageHeader, Select} from 'antd';
-import {MemberService} from "./member.service";
-import {FormItemLayout, FormTailItemLayout} from "../AppSettings";
+import {Button, Descriptions, Form, message, PageHeader, Select} from 'antd';
+import {OrganizationService} from "./organization.service";
 import {AccessControlService} from "../../templates/settings/access-control/access.control.service";
+import {useNavigate, useParams} from "react-router-dom";
+import {FormItemLayout, FormTailItemLayout} from "../../modules/layout/from-item";
 
 const {Option} = Select;
 
-const MemberRoleChange = ({member, onBack}) => {
+const OrganizationChangeRoles = () => {
+  const navigate = useNavigate();
+  let params = useParams();
+
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [allRoles, setAllRoles] = useState([]);
+  const [organization, setOrganization] = useState(null);
 
   useEffect(() => {
     AccessControlService.getRoles({page: 0}).then((response) => {
       setAllRoles(response.data.result);
-      form.setFieldsValue({
-        assignRoles: member.roles ? member.roles.map(role => String(role.id)) : []
+      OrganizationService.getOrganizationById(params.organizationId).then((res) => {
+        const organization = res.data;
+        setOrganization(organization);
+        form.setFieldsValue({
+          assignRoles: organization.roles ? organization.roles.map(role => String(role.id)) : []
+        });
       });
-    }).catch((err) => {
-      console.log(err);
     });
-  }, [form, member]);
+  }, [form, params]);
 
   const save = (values) => {
     const assignRoles = {
       roleIds: values.assignRoles ? values.assignRoles.map(roleId => Number(roleId)) : [],
     };
     setLoading(true);
-    MemberService.assignRoles(member.id, assignRoles).then(() => {
+    OrganizationService.assignRoles(organization.id, assignRoles).then(() => {
       message.success("저장 되었습니다.");
     }).finally(() => {
       setLoading(false);
     });
   }
 
+  const handleBack = () => {
+    navigate(-1);
+  }
+
   return (
     <>
       <PageHeader
         title="역할 변경"
-        subTitle="멤버의 역할을 변경 합니다."
-        onBack={onBack}
+        subTitle="조직의 역할을 변경 합니다."
+        onBack={handleBack}
       >
+        {organization &&
+          <Descriptions>
+            <Descriptions.Item label="조직 이름">{organization.name}</Descriptions.Item>
+          </Descriptions>}
         <Form {...FormItemLayout} form={form} onFinish={save}>
           <Form.Item
             name="assignRoles"
@@ -70,4 +85,5 @@ const MemberRoleChange = ({member, onBack}) => {
     </>
   )
 };
-export default MemberRoleChange;
+
+export default OrganizationChangeRoles;

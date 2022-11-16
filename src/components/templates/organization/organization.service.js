@@ -8,6 +8,10 @@ class OrganizationService {
     return axios.get(`${API_URL}/organizations`);
   }
 
+  getOrganizationById(id) {
+    return axios.get(`${API_URL}/organizations/${id}`);
+  }
+
   createOrganization(organization) {
     return axios.post(`${API_URL}/organizations`, organization)
   }
