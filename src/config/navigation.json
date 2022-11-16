@@ -96,6 +96,23 @@
               "link": "/settings/access-control/permissions"
             }
           ]
+        },
+        {
+          "title": "사용자/조직도",
+          "items": [
+            {
+              "title": "멤버",
+              "link": "/settings/members"
+            },
+            {
+              "title": "멤버 승인",
+              "link": "/settings/member-approval"
+            },
+            {
+              "title": "조직도",
+              "link": "/settings/organization"
+            }
+          ]
         }
       ]
     }

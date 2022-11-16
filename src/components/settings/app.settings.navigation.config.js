@@ -1,31 +1,11 @@
 import React from "react";
-import MemberSetting from "./member/MemberSetting";
 import DooraySetting from "./dooray/DooraySetting";
 import {MemberContext} from "../../auth/member.context";
-import OrganizationSetting from "./organization/OrganizationSetting";
-import MemberApproval from "./member/MemberApproval";
 import GoogleWorkspaceSetting from "./google-workspace/GoogleWorkspaceSetting";
 import WebHooksSetting from "./notification-web-hooks/WebHooksSetting";
 import MemberAccessLogSetting from "./member-access-logs/MemberAccessLogSetting";
 
 const settingsSideMenuItems = [{
-    title: "사용자 / 조직도",
-    accessPermission: "MANAGE_MEMBERS",
-    items: [
-      {
-        title: "멤버",
-        component: <MemberSetting/>,
-      },
-      {
-        title: "조직도",
-        component: <OrganizationSetting/>,
-      },
-      {
-        title: "멤버 승인",
-        component: <MemberApproval/>,
-      }
-    ]
-  }, {
     title: "로그인",
     accessPermission: "MANAGE_SYSTEM_SETTINGS",
     items: [

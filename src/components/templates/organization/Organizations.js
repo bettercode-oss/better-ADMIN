@@ -2,14 +2,11 @@ import React, {useEffect, useState} from "react";
 import {Button, Col, Descriptions, Dropdown, Menu, message, PageHeader, Popconfirm, Row, Tag, Tree} from "antd";
 import {ApartmentOutlined, DeleteOutlined, DownOutlined, EditOutlined, SettingOutlined} from "@ant-design/icons";
 import {OrganizationService} from "./organization.service";
+import {useNavigate} from "react-router-dom";
 
-const Organizations = ({
-                         onCreateOrganization,
-                         onCreateDepartment,
-                         onRoleChange,
-                         onMemberChange,
-                         onChangeOrganizationName
-                       }) => {
+const Organizations = () => {
+  const navigate = useNavigate();
+
   const [treeData, setTreeData] = useState([]);
   const [selectedOrganization, setSelectedOrganization] = useState(null);
 
@@ -56,7 +53,6 @@ const Organizations = ({
       // Drop on the content
       loop(data, dropKey, item => {
         item.children = item.children || [];
-        // where to insert 示例添加到头部，可以是随意位置
         item.children.unshift(dragObj);
       });
     } else if (
@@ -66,10 +62,7 @@ const Organizations = ({
     ) {
       loop(data, dropKey, item => {
         item.children = item.children || [];
-        // where to insert 示例添加到头部，可以是随意位置
         item.children.unshift(dragObj);
-        // in previous version, we use item.children.push(dragObj) to insert the
-        // item to the tail of the children
       });
     } else {
       let ar;
@@ -140,7 +133,7 @@ const Organizations = ({
     }
   }
 
-  const onDeleteDepartment = (selectedOrganization) => {
+  const handleDeleteDepartment = (selectedOrganization) => {
     if (selectedOrganization && selectedOrganization.id) {
       OrganizationService.deleteDepartment(selectedOrganization.id).then(() => {
         OrganizationService.getOrganizations().then(response => {
@@ -153,13 +146,32 @@ const Organizations = ({
     }
   }
 
+  const handleCreateOrganization = () => {
+    navigate(`/settings/organization/new`);
+  }
+
+  const handleCreateDepartment = (parentOrganization) => {
+    navigate(`/settings/organization/new?parentId=${parentOrganization.id}`);
+  }
+
+  const handleChangeOrganizationName = (organization) => {
+    navigate(`/settings/organization/${organization.id}`);
+  }
+
+  const handleChangeRoles = (organization) => {
+    navigate(`/settings/organization/${organization.id}/change-roles`);
+  }
+
+  const handleChangeMembers = (organization) => {
+    navigate(`/settings/organization/${organization.id}/change-members`);
+  }
+
   return (
     <>
       <PageHeader
-        title="조직도"
         subTitle="조직을 추가하거나 삭제합니다."
         extra={[
-          <Button key="1" type="primary" icon={<ApartmentOutlined/>} onClick={onCreateOrganization}>최상위 조직 추가</Button>,
+          <Button key="1" type="primary" icon={<ApartmentOutlined/>} onClick={handleCreateOrganization}>최상위 조직 추가</Button>,
         ]}
       >
         <Row>
@@ -183,14 +195,14 @@ const Organizations = ({
                               <Menu>
                                 <Menu.Item key="0">
                                   <Button type="text" icon={<EditOutlined/>} onClick={() => {
-                                    onChangeOrganizationName(selectedOrganization);
+                                    handleChangeOrganizationName(selectedOrganization);
                                   }}>조직 이름 변경</Button>
                                 </Menu.Item>
                                 <Menu.Item key="1">
                                   <Popconfirm
                                     title="하위 조직까지 함께 삭제됩니다. 선택한 조직을 삭제하시겠습니까?"
                                     onConfirm={() => {
-                                      onDeleteDepartment(selectedOrganization);
+                                      handleDeleteDepartment(selectedOrganization);
                                     }}
                                     okText="예"
                                     cancelText="아니오"
@@ -201,18 +213,18 @@ const Organizations = ({
                                 <Menu.Divider/>
                                 <Menu.Item key="2">
                                   <Button type="text" onClick={() => {
-                                    onCreateDepartment(selectedOrganization);
+                                    handleCreateDepartment(selectedOrganization);
                                   }}>하위 부서 추가</Button>
                                 </Menu.Item>
                                 <Menu.Item key="3">
                                   <Button type="text" onClick={() => {
-                                    onRoleChange(selectedOrganization);
+                                    handleChangeRoles(selectedOrganization);
                                   }}>역할 변경</Button>
                                 </Menu.Item>
                                 <Menu.Item key="4">
                                   <Button type="text" onClick={() => {
-                                    onMemberChange(selectedOrganization);
-                                  }}>멤버 편집</Button>
+                                    handleChangeMembers(selectedOrganization);
+                                  }}>멤버 변경</Button>
                                 </Menu.Item>
                               </Menu>} trigger={['click']}>
                               <Button style={{borderRadius: '5px'}} icon={<SettingOutlined/>}>
