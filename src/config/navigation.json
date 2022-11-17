@@ -36,47 +36,7 @@
     {
       "title": "GNB2",
       "icon": "BarcodeOutlined",
-      "accessPermissions": ["MANAGE_MEMBERS", "MANAGE_SYSTEM_SETTINGS"],
-      "items": [
-        {
-          "title": "SNB3",
-          "icon": "CameraOutlined",
-          "items": [
-            {
-              "title": "Sub5",
-              "disabled": true,
-              "icon": "CrownOutlined",
-              "link": "/sub5"
-            },
-            {
-              "title": "Sub6",
-              "icon": "ControlOutlined",
-              "link": "/sub6"
-            }
-          ]
-        },
-        {
-          "title": "SNB4",
-          "icon": "BugOutlined",
-          "items": [
-            {
-              "title": "Sub7",
-              "icon": "AuditOutlined",
-              "link": "/sub7"
-            },
-            {
-              "title": "Sub8",
-              "icon": "DashboardOutlined",
-              "link": "/sub8"
-            }
-          ]
-        },
-        {
-          "title": "SNB5",
-          "icon": "DollarOutlined",
-          "link": "/sample"
-        }
-      ]
+      "link": "/gnb2"
     },
     {
       "title": "설정",
