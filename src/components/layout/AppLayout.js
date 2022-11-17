@@ -42,7 +42,7 @@ const AppLayout = () => {
 
   useEffect(() => {
     layoutDispatch({
-      type: 'REFRESH_ALL_GNB_ITEMS'
+      type: 'REFRESH_ALL_MENU_ITEMS'
     });
 
     EventBroadcaster.on(SHOW_LOADING_EVENT_TOPIC, (data) => {

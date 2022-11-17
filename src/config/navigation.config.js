@@ -58,14 +58,18 @@ export default class NavigationConfig {
     const gnbItems = this.getItemsByMemberPermission();
     if (gnbItems && gnbItems.length > 0) {
       const firstGnbItem = gnbItems[0];
-      if (firstGnbItem.items.length > 0) {
+      if(firstGnbItem.link) {
+        return firstGnbItem.link;
+      }
+
+      if(firstGnbItem.items && firstGnbItem.items.length > 0) {
         const firstSnbItem = firstGnbItem.items[0];
         if (firstSnbItem.link) {
           return firstSnbItem.link;
-        } else {
-          if (firstSnbItem.items.length > 0) {
-            return firstSnbItem.items[0].link;
-          }
+        }
+
+        if(firstSnbItem.items && firstSnbItem.items.length > 0 && firstSnbItem.items[0].link) {
+          return firstSnbItem.items[0].link;
         }
       }
     }
@@ -111,18 +115,20 @@ export default class NavigationConfig {
     }
 
     if (navigationItems) {
-      for (let i = 0; i < navigationItems.length; i++) {
-        const gnbItem = navigationItems[i];
-
+      for(const [i, gnbItem] of navigationItems.entries()) {
         const currentGnbItem = {
           title: gnbItem.title,
           index: String(i),
           icon: gnbItem.icon,
         }
 
+        if (gnbItem.link && gnbItem.link === pathName) {
+          result.gnbItem = currentGnbItem;
+          return result;
+        }
+
         if (gnbItem && gnbItem.items) {
-          for (let j = 0; j < gnbItem.items.length; j++) {
-            const snbItem = gnbItem.items[j];
+          for(const [j, snbItem] of gnbItem.items.entries()) {
             const currentSnbItem = {
               title: snbItem.title,
               index: String(j),
@@ -137,8 +143,7 @@ export default class NavigationConfig {
             }
 
             if (snbItem && snbItem.items) {
-              for (let k = 0; k < snbItem.items.length; k++) {
-                const subItem = snbItem.items[k];
+              for(const [k, subItem] of snbItem.items.entries()) {
                 const currentSubItem = {
                   title: subItem.title,
                   index: String(k),
@@ -158,6 +163,7 @@ export default class NavigationConfig {
         }
       }
     }
+
     return result;
   }
 }

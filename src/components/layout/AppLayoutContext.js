@@ -86,7 +86,7 @@ function layoutReducer(state, action) {
           menuSelectedKeys: [menuSelectedKey],
         },
       };
-    case 'CLICK_FIRST_DEPTH_MENU':
+    case 'CLICK_LEVEL_1_MENU':
       const gnbIndex = action.key;
       return {
         ...state,
@@ -96,7 +96,7 @@ function layoutReducer(state, action) {
           menuSelectedKeys: [gnbIndex],
         },
       };
-    case 'CLICK_SECOND_DEPTH_SNB_MENU':
+    case 'CLICK_LEVEL_2_MENU':
       const selectedMenuIndices = action.key.split('-');
       return {
         ...state,
@@ -105,7 +105,7 @@ function layoutReducer(state, action) {
           menuSelectedKeys: [action.key],
         }
       };
-    case 'REFRESH_ALL_GNB_ITEMS':
+    case 'REFRESH_ALL_MENU_ITEMS':
       return {
         ...state,
         allGnbItems: NavigationConfig.getItemsByMemberPermission(),
@@ -141,13 +141,13 @@ function layoutReducer(state, action) {
           }
         }
 
-        const foundTab = state.pageTab.histories.filter(page => page.link === action.pathname);
-        if (foundTab.length > 0) {
+        const foundTab = state.pageTab.histories.find(page => page.link === action.pathname);
+        if(foundTab) {
           return {
             ...state,
             pageTab: {
               ...state.pageTab,
-              current: foundTab[0],
+              current: foundTab,
             },
           };
         } else {
@@ -166,11 +166,26 @@ function layoutReducer(state, action) {
         }
       }
 
-      const foundTab = state.pageTab.histories.filter(page => page.navigationPathName === action.pathname);
-      if (foundTab.length === 0) {
+      const foundTab = state.pageTab.histories.find(page => page.navigationPathName === action.pathname);
+      if(foundTab) {
+        // 기존 탭 전환
+        return {
+          ...state,
+          pageTab: {
+            ...state.pageTab,
+            current: foundTab,
+          },
+        }
+      } else {
         // 새로운 탭 추가
         let title = '';
         let icon = '';
+
+        if (currentItem.gnbItem) {
+          title = currentItem.gnbItem.title;
+          icon = currentItem.gnbItem.icon;
+        }
+
         if (currentItem.snbItem) {
           title = currentItem.snbItem.title;
           icon = currentItem.snbItem.icon;
@@ -194,15 +209,6 @@ function layoutReducer(state, action) {
           pageTab: {
             current: page,
             histories: state.pageTab.histories.concat(page)
-          },
-        }
-      } else {
-        // 기존 탭 전환
-        return {
-          ...state,
-          pageTab: {
-            ...state.pageTab,
-            current: foundTab[0],
           },
         }
       }
