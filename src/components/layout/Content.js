@@ -21,9 +21,12 @@ function Content() {
       pathname += location.search;
     }
 
-    layoutDispatch({
-      type: 'ADD_TAB_PAGE', pathname
-    });
+    // PATH 가 루트(/) 인 경우 탭에서 제외
+    if(pathname !== '/') {
+      layoutDispatch({
+        type: 'ADD_TAB_PAGE', pathname
+      });
+    }
   }, [
     layoutDispatch, location
   ]);
