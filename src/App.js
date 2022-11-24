@@ -10,7 +10,6 @@ import {
   SHOW_WEB_HOOK_MESSAGE_EVENT_TOPIC
 } from "./event/event.broadcaster";
 import {ExclamationCircleOutlined, NotificationTwoTone} from "@ant-design/icons";
-import {LayoutProvider} from "./components/layout/AppLayoutContext";
 import OAuthLoginResult from "./components/login/OAuthLoginResult";
 import ProtectedRoute from "./components/router/ProtectedRoute";
 import {AuthService} from "./auth/auth.service";
@@ -42,19 +41,17 @@ const App = () => {
   }, []);
 
   return (<>
-    <LayoutProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path={adminConfig.authentication.loginUrl} element={<Login/>}/>
-          <Route path={adminConfig.authentication.oauthLoginResultUrl} element={<OAuthLoginResult/>}/>
-          <Route path="/*" element={
-            <ProtectedRoute silentRefreshCompleted={silentRefreshCompleted}>
-              <AppLayout/>
-            </ProtectedRoute>
-          }/>
-        </Routes>
-      </BrowserRouter>
-    </LayoutProvider>
+    <BrowserRouter>
+      <Routes>
+        <Route path={adminConfig.authentication.loginUrl} element={<Login/>}/>
+        <Route path={adminConfig.authentication.oauthLoginResultUrl} element={<OAuthLoginResult/>}/>
+        <Route path="/*" element={
+          <ProtectedRoute silentRefreshCompleted={silentRefreshCompleted}>
+            <AppLayout/>
+          </ProtectedRoute>
+        }/>
+      </Routes>
+    </BrowserRouter>
   </>)
 };
 

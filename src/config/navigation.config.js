@@ -18,58 +18,55 @@ export default class NavigationConfig {
 
   static getItemsByMemberPermission = () => {
     const memberPermissions = new Set(MemberContext.memberInformation.permissions ? MemberContext.memberInformation.permissions : []);
-    const accessibleGnbItems = [];
+    const accessibleLevel1Items = [];
     if (navigationInfo.items) {
-      const gnbItems = navigationInfo.items;
-      gnbItems.forEach(gnbItem => {
-        // GNB
-        if (!gnbItem.accessPermissions || this.hasPermissions(memberPermissions, gnbItem.accessPermissions)) {
-          if (gnbItem.items) {
-            // SNB
-            const accessibleSnbItems = [];
-            const snbItems = gnbItem.items
-            snbItems.forEach(snbItem => {
-              if (!snbItem.accessPermissions || this.hasPermissions(memberPermissions, snbItem.accessPermissions)) {
-                if (snbItem.items) {
-                  // Sub
-                  const accessibleSubItems = [];
-                  const subItems = snbItem.items
-                  subItems.forEach(subItem => {
-                    if (!snbItem.accessPermissions || this.hasPermissions(memberPermissions, subItem.accessPermissions)) {
-                      accessibleSubItems.push(subItem);
+      const level1Items = navigationInfo.items;
+      level1Items.forEach(level1Item => {
+        if (!level1Item.accessPermissions || this.hasPermissions(memberPermissions, level1Item.accessPermissions)) {
+          if (level1Item.items) {
+            const accessibleLevel2Items = [];
+            const level2Items = level1Item.items
+            level2Items.forEach(level2Item => {
+              if (!level2Item.accessPermissions || this.hasPermissions(memberPermissions, level2Item.accessPermissions)) {
+                if (level2Item.items) {
+                  const accessibleLevel3Items = [];
+                  const level3Items = level2Item.items
+                  level3Items.forEach(level3Item => {
+                    if (!level2Item.accessPermissions || this.hasPermissions(memberPermissions, level3Item.accessPermissions)) {
+                      accessibleLevel3Items.push(level3Item);
                     }
                   });
-                  snbItem.items = accessibleSubItems;
+                  level2Item.items = accessibleLevel3Items;
                 }
 
-                accessibleSnbItems.push(snbItem);
+                accessibleLevel2Items.push(level2Item);
               }
             });
-            gnbItem.items = accessibleSnbItems;
+            level1Item.items = accessibleLevel2Items;
           }
-          accessibleGnbItems.push(gnbItem);
+          accessibleLevel1Items.push(level1Item);
         }
       });
     }
-    return accessibleGnbItems;
+    return accessibleLevel1Items;
   }
 
   static getFirstItemLink = () => {
-    const gnbItems = this.getItemsByMemberPermission();
-    if (gnbItems && gnbItems.length > 0) {
-      const firstGnbItem = gnbItems[0];
-      if(firstGnbItem.link) {
-        return firstGnbItem.link;
+    const items = this.getItemsByMemberPermission();
+    if (items && items.length > 0) {
+      const firstLevel1Item = items[0];
+      if(firstLevel1Item.link) {
+        return firstLevel1Item.link;
       }
 
-      if(firstGnbItem.items && firstGnbItem.items.length > 0) {
-        const firstSnbItem = firstGnbItem.items[0];
-        if (firstSnbItem.link) {
-          return firstSnbItem.link;
+      if(firstLevel1Item.items && firstLevel1Item.items.length > 0) {
+        const firstLevel2Item = firstLevel1Item.items[0];
+        if (firstLevel2Item.link) {
+          return firstLevel2Item.link;
         }
 
-        if(firstSnbItem.items && firstSnbItem.items.length > 0 && firstSnbItem.items[0].link) {
-          return firstSnbItem.items[0].link;
+        if(firstLevel2Item.items && firstLevel2Item.items.length > 0 && firstLevel2Item.items[0].link) {
+          return firstLevel2Item.items[0].link;
         }
       }
     }
@@ -77,83 +74,80 @@ export default class NavigationConfig {
   }
 
   static getItemsWithoutMemberPermission = () => {
-    const accessibleGnbItems = [];
+    const accessibleItems = [];
     if (navigationInfo.items) {
-      const gnbItems = navigationInfo.items;
-      gnbItems.forEach(gnbItem => {
-        // GNB
-        if (gnbItem.items) {
-          // SNB
-          const accessibleSnbItems = [];
-          const snbItems = gnbItem.items
-          snbItems.forEach(snbItem => {
-            if (snbItem.items) {
-              // Sub
-              const accessibleSubItems = [];
-              const subItems = snbItem.items
-              subItems.forEach(subItem => {
-                accessibleSubItems.push(subItem);
+      const level1Items = navigationInfo.items;
+      level1Items.forEach(level1Item => {
+        if (level1Item.items) {
+          const accessibleLevel2Items = [];
+          const level2Items = level1Item.items
+          level2Items.forEach(level2Item => {
+            if (level2Item.items) {
+              const accessibleLevel3Items = [];
+              const level3Items = level2Item.items
+              level3Items.forEach(level3Item => {
+                accessibleLevel3Items.push(level3Item);
               });
-              snbItem.items = accessibleSubItems;
+              level2Item.items = accessibleLevel3Items;
             }
 
-            accessibleSnbItems.push(snbItem);
+            accessibleLevel2Items.push(level2Item);
           });
-          gnbItem.items = accessibleSnbItems;
+          level1Item.items = accessibleLevel2Items;
         }
-        accessibleGnbItems.push(gnbItem);
+        accessibleItems.push(level1Item);
       });
     }
-    return accessibleGnbItems;
+    return accessibleItems;
   }
 
-  static getItemsByLink = (pathName, navigationItems) => {
+  static getItemByLink = (pathName, navigationItems) => {
     const result = {
-      gnbItem: null,
-      snbItem: null,
-      subItem: null
+      level1Item: null,
+      level2Item: null,
+      level3Item: null
     }
 
     if (navigationItems) {
-      for(const [i, gnbItem] of navigationItems.entries()) {
-        const currentGnbItem = {
-          title: gnbItem.title,
+      for(const [i, level1Item] of navigationItems.entries()) {
+        const currentLevel1Item = {
+          title: level1Item.title,
           index: String(i),
-          icon: gnbItem.icon,
+          icon: level1Item.icon,
         }
 
-        if (gnbItem.link && gnbItem.link === pathName) {
-          result.gnbItem = currentGnbItem;
+        if (level1Item.link && level1Item.link === pathName) {
+          result.level1Item = currentLevel1Item;
           return result;
         }
 
-        if (gnbItem && gnbItem.items) {
-          for(const [j, snbItem] of gnbItem.items.entries()) {
-            const currentSnbItem = {
-              title: snbItem.title,
+        if (level1Item && level1Item.items) {
+          for(const [j, level2Item] of level1Item.items.entries()) {
+            const currentLevel2Item = {
+              title: level2Item.title,
               index: String(j),
-              icon: snbItem.icon,
+              icon: level2Item.icon,
             }
 
-            if (snbItem.link && snbItem.link === pathName) {
-              result.gnbItem = currentGnbItem;
-              result.snbItem = currentSnbItem;
+            if (level2Item.link && level2Item.link === pathName) {
+              result.level1Item = currentLevel1Item;
+              result.level2Item = currentLevel2Item;
 
               return result;
             }
 
-            if (snbItem && snbItem.items) {
-              for(const [k, subItem] of snbItem.items.entries()) {
-                const currentSubItem = {
-                  title: subItem.title,
+            if (level2Item && level2Item.items) {
+              for(const [k, level3Item] of level2Item.items.entries()) {
+                const currentLevel3Item = {
+                  title: level3Item.title,
                   index: String(k),
-                  icon: subItem.icon,
+                  icon: level3Item.icon,
                 }
 
-                if (subItem.link && subItem.link === pathName) {
-                  result.gnbItem = currentGnbItem;
-                  result.snbItem = currentSnbItem;
-                  result.subItem = currentSubItem;
+                if (level3Item.link && level3Item.link === pathName) {
+                  result.level1Item = currentLevel1Item;
+                  result.level2Item = currentLevel2Item;
+                  result.level3Item = currentLevel3Item;
 
                   return result;
                 }
@@ -165,5 +159,9 @@ export default class NavigationConfig {
     }
 
     return result;
+  }
+
+  static isEmptyItem = (item) => {
+    return !item.level1Item;
   }
 }

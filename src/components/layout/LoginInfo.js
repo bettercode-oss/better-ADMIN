@@ -7,10 +7,10 @@ import {MemberContext} from "../../auth/member.context";
 import {AuthService} from "../../auth/auth.service";
 import {AppSettings} from "../settings/AppSettings";
 import {AppSettingsNavigation} from "../settings/app.settings.navigation.config";
-import {cleanUpAppLayoutContextResource} from "./AppLayoutContext";
 import {MonitoringNavigation} from "../monitoring/monitoring.navigation.config";
 import {Monitoring} from "../monitoring/Monitoring";
 import {EventBroadcaster, INVALID_ACCESS_TOKEN_TOPIC} from "../../event/event.broadcaster";
+import {PageTabStorage} from "./page.tab.storage";
 
 const LoginInfo = () => {
   const [showSettings, setShowSettings] = useState(false);
@@ -19,7 +19,7 @@ const LoginInfo = () => {
 
   useEffect(() => {
     EventBroadcaster.on(INVALID_ACCESS_TOKEN_TOPIC, () => {
-      cleanUpAppLayoutContextResource();
+      PageTabStorage.clear();
       AuthService.logout().then().finally(() => {
         navigate(adminConfig.authentication.loginUrl);
       });
@@ -27,7 +27,7 @@ const LoginInfo = () => {
   }, [navigate]);
 
   const logout = () => {
-    cleanUpAppLayoutContextResource();
+    PageTabStorage.clear();
     AuthService.logout().then().finally(() => {
       navigate(adminConfig.authentication.loginUrl);
     });

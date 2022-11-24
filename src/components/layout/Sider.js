@@ -1,19 +1,91 @@
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Layout, Menu} from "antd";
-import {Link} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import {adminConfig} from "../../config/admin.config";
-import {useLayoutDispatch, useLayoutState} from "./AppLayoutContext";
 import NavigationIcon from "./NavigationIcon";
+import NavigationConfig from "../../config/navigation.config";
+import {MemberContext} from "../../auth/member.context";
+import {EventBroadcaster, SELECTED_TAB_NOT_CONTAINS_NAVIGATION_TOPIC} from "../../event/event.broadcaster";
 
 function Sider() {
+  let location = useLocation();
+  let navigate = useNavigate();
+
   const [collapsed, setCollapsed] = useState(false);
-  const layoutState = useLayoutState();
-  const layoutDispatch = useLayoutDispatch();
+  const [menuDataSource, setMenuDataSource] = useState({
+    menuItems: [],
+    navigationState: {
+      menuOpenKeys: [''],
+      menuSelectedKeys: [''],
+    }
+  });
 
   const toggleCollapsed = () => setCollapsed(!collapsed);
-  const handleLevel1MenuClick = ({key}) => layoutDispatch({type: 'CLICK_LEVEL_1_MENU', key});
-  const handleLevel2MenuClick = ({key}) => layoutDispatch({type: 'CLICK_LEVEL_2_MENU', key});
 
+  const loadMenuItems = useCallback((pathname) => {
+    const menuItems = NavigationConfig.getItemsByMemberPermission();
+    let currentNavigationItem = NavigationConfig.getItemByLink(pathname, menuItems);
+
+    if (currentNavigationItem.level1Item) {
+      const menuOpenKeys = [];
+      let menuSelectedKey = "";
+
+      if (currentNavigationItem.level1Item) {
+        menuOpenKeys.push(currentNavigationItem.level1Item.index)
+        menuSelectedKey = currentNavigationItem.level1Item.index;
+      }
+
+      if (currentNavigationItem.level2Item) {
+        menuOpenKeys.push(currentNavigationItem.level1Item.index + '-' + currentNavigationItem.level2Item.index)
+        menuSelectedKey = currentNavigationItem.level1Item.index + '-' + currentNavigationItem.level2Item.index;
+      }
+
+      if (currentNavigationItem.level3Item) {
+        menuSelectedKey = currentNavigationItem.level1Item.index + '-' + currentNavigationItem.level2Item.index + '-' + currentNavigationItem.level3Item.index;
+      }
+
+      setMenuDataSource((menuDataSource) => {
+        return {
+          ...menuDataSource,
+          menuItems: menuItems,
+          navigationState: {
+            menuOpenKeys: menuOpenKeys,
+            menuSelectedKeys: [menuSelectedKey],
+          }
+        }
+      });
+    } else {
+      setMenuDataSource((menuDataSource) => {
+        return {
+          ...menuDataSource,
+          menuItems: menuItems,
+        }
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    const pathname = location.pathname;
+    loadMenuItems(pathname);
+  }, [loadMenuItems, location.pathname]);
+
+  useEffect(() => {
+    EventBroadcaster.on(SELECTED_TAB_NOT_CONTAINS_NAVIGATION_TOPIC, (pathname) => {
+      loadMenuItems(pathname);
+    });
+  }, [loadMenuItems]);
+
+  useEffect(() => {
+    const pathname = location.pathname;
+
+    if (pathname === "/" && MemberContext.available) {
+      // PATH 가 루트(/) 인 경우 네비게이션 메뉴 중 가장 첫 번째 메뉴의 화면으로 이동 시킨다.
+      const firstNavigationItemLink = NavigationConfig.getFirstItemLink();
+      if (firstNavigationItemLink) {
+        navigate(firstNavigationItemLink);
+      }
+    }
+  }, [location.pathname, menuDataSource, navigate]);
 
   const getItem = (label, key, icon, children, onTitleClick, type) => {
     return {
@@ -30,42 +102,68 @@ function Sider() {
     return <Link to={url}>{label}</Link>;
   }
 
+  const handleLevel1MenuClick = ({key}) => {
+    const menuIndex = key;
+    setMenuDataSource({
+      ...menuDataSource,
+      navigationState: {
+        menuOpenKeys: [menuIndex],
+        menuSelectedKeys: [menuIndex],
+      }
+    });
+  }
+
+  const handleLevel2MenuClick = ({key}) => {
+    const selectedMenuIndices = key.split('-');
+    setMenuDataSource({
+      ...menuDataSource,
+      navigationState: {
+        menuOpenKeys: [selectedMenuIndices[0], key],
+        menuSelectedKeys: [key],
+      }
+    });
+  }
+
   const generateMenuItems = () => {
     const menusItems = [];
-
-    if(layoutState.allGnbItems) {
-      for(const [level1ItemIndex, level1Item] of layoutState.allGnbItems.entries()) {
+    if (menuDataSource.menuItems) {
+      for (const [level1ItemIndex, level1Item] of menuDataSource.menuItems.entries()) {
         const Level1ItemIcon = NavigationIcon(level1Item.icon);
         if (level1Item.items && level1Item.items.length > 0) {
           const level2MenuItems = [];
-          for(const [level2ItemIndex, level2ItemItem] of level1Item.items.entries()) {
-            const Level2ItemItemIcon = NavigationIcon(level2ItemItem.icon);
+          for (const [level2ItemIndex, level2Item] of level1Item.items.entries()) {
+            const Level2ItemItemIcon = NavigationIcon(level2Item.icon);
             const level2ItemMenuItemKey = level1ItemIndex + "-" + level2ItemIndex;
 
-            if (level2ItemItem.items && level2ItemItem.items.length > 0) {
+            if (level2Item.items && level2Item.items.length > 0) {
               const level3MenuItems = [];
-              for(const [level3ItemIndex, level3Item] of level2ItemItem.items.entries()) {
+              for (const [level3ItemIndex, level3Item] of level2Item.items.entries()) {
                 const Level3ItemIcon = NavigationIcon(level3Item.icon);
                 const level3ItemMenuItemKey = level1ItemIndex + "-" + level2ItemIndex + "-" + level3ItemIndex;
-                if(level3Item.link) {
-                  level3MenuItems.push(getItem(getMenuLink(level3Item.title, level3Item.link), level3ItemMenuItemKey, <Level3ItemIcon/>));
+                if (level3Item.link) {
+                  level3MenuItems.push(getItem(getMenuLink(level3Item.title, level3Item.link), level3ItemMenuItemKey,
+                    <Level3ItemIcon/>));
                 } else {
                   level3MenuItems.push(getItem(level3Item.title, level3ItemMenuItemKey, <Level3ItemIcon/>));
                 }
               }
-              level2MenuItems.push(getItem(level2ItemItem.title, level2ItemMenuItemKey, <Level2ItemItemIcon/>, level3MenuItems, handleLevel2MenuClick));
+              level2MenuItems.push(getItem(level2Item.title, level2ItemMenuItemKey,
+                <Level2ItemItemIcon/>, level3MenuItems, handleLevel2MenuClick));
             } else {
-              if(level2ItemItem.link) {
-                level2MenuItems.push(getItem(getMenuLink(level2ItemItem.title, level2ItemItem.link), level2ItemMenuItemKey, <Level2ItemItemIcon/>));
+              if (level2Item.link) {
+                level2MenuItems.push(getItem(getMenuLink(level2Item.title, level2Item.link), level2ItemMenuItemKey,
+                  <Level2ItemItemIcon/>));
               } else {
-                level2MenuItems.push(getItem(level2ItemItem.title, level2ItemMenuItemKey, <Level2ItemItemIcon/>));
+                level2MenuItems.push(getItem(level2Item.title, level2ItemMenuItemKey, <Level2ItemItemIcon/>));
               }
             }
           }
-          menusItems.push(getItem(level1Item.title, level1ItemIndex, <Level1ItemIcon/>, level2MenuItems, handleLevel1MenuClick));
+          menusItems.push(getItem(level1Item.title, level1ItemIndex,
+            <Level1ItemIcon/>, level2MenuItems, handleLevel1MenuClick));
         } else {
-          if(level1Item.link) {
-            menusItems.push(getItem(getMenuLink(level1Item.title, level1Item.link), level1ItemIndex, <Level1ItemIcon/>));
+          if (level1Item.link) {
+            menusItems.push(getItem(getMenuLink(level1Item.title, level1Item.link), level1ItemIndex,
+              <Level1ItemIcon/>));
           } else {
             menusItems.push(getItem(level1Item.title, level1ItemIndex, <Level1ItemIcon/>));
           }
@@ -90,8 +188,8 @@ function Sider() {
         </div>
       </Link>
       <Menu theme="dark" mode="inline"
-            openKeys={collapsed ? undefined : layoutState.navigationState.menuOpenKeys}
-            selectedKeys={layoutState.navigationState.menuSelectedKeys}
+            openKeys={collapsed ? undefined : menuDataSource.navigationState.menuOpenKeys}
+            selectedKeys={menuDataSource.navigationState.menuSelectedKeys}
             items={generateMenuItems()}
       />
     </Layout.Sider>
