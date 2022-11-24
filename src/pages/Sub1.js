@@ -1,11 +1,15 @@
-import React from "react";
+import React, {useEffect} from "react";
 
-const Sub1 = () => (
-  <>
-    <div>
-      <h1>Sub1 Page</h1>
-    </div>
-  </>
-);
+function Sub1() {
+
+  useEffect(() => {
+    console.log('Sub1 - useEffect')
+  }, []);
+
+
+  return <div>
+    <h1>Sub1 Page</h1>
+  </div>;
+}
 
 export default Sub1;

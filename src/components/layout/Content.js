@@ -1,101 +1,123 @@
-import React, {useEffect} from 'react';
-import {Breadcrumb, Layout, Spin, Tabs} from "antd";
+import React, {useEffect, useRef} from 'react';
+import {Breadcrumb, Layout, Tabs} from "antd";
 import {useLocation, useNavigate} from "react-router-dom";
-import {useLayoutDispatch, useLayoutState} from "./AppLayoutContext";
 import NavigationIcon from "./NavigationIcon";
 import PageRouter from "../../pages/router/PageRouter";
 import classNames from "classnames";
 import themeConfig from "../../config/theme.config.json";
-
-const {TabPane} = Tabs;
+import {useLayoutContentDispatch, useLayoutContentState} from "./AppLayoutContentContext";
 
 function Content() {
+  const renderingCompleted = useRef(false);
+  const useEffected = useRef(false);
+  const tabRemoved = useRef(false);
+
   let navigate = useNavigate();
   let location = useLocation();
-  const layoutState = useLayoutState();
-  const layoutDispatch = useLayoutDispatch();
+  const layoutContentDispatch = useLayoutContentDispatch();
+  const layoutContentState = useLayoutContentState();
 
   useEffect(() => {
+    useEffected.current = true;
     let pathname = location.pathname;
-    if(location.search) {
+    if (location.search) {
       pathname += location.search;
     }
 
     // PATH 가 루트(/) 인 경우 탭에서 제외
-    if(pathname !== '/') {
-      layoutDispatch({
-        type: 'ADD_TAB_PAGE', pathname
+    if (pathname !== '/') {
+      layoutContentDispatch({
+        type: 'SETUP_PAGE_TABS', pathname
       });
     }
-  }, [
-    layoutDispatch, location
-  ]);
-
+  }, [location.pathname, location.search, layoutContentDispatch]);
 
   const handlePageHistoryTabClick = (pageTabId) => {
-    if (pageTabId !== layoutState.pageTab.current.id) {
-      const find = layoutState.pageTab.histories.filter(history => history.id === pageTabId);
-      if (find.length === 1) {
-        navigate(find[0].link);
+    if (pageTabId !== layoutContentState.pageTab.current.id) {
+      const findTab = layoutContentState.pageTab.histories.find(history => history.id === pageTabId);
+      if (findTab) {
+        navigate(findTab.link);
       }
     }
   }
 
   const handlePageHistoryTabEdit = (pageTabId, action) => {
-    if (action === "remove" && layoutState.pageTab.histories.length > 1) {
+    if (action === "remove" && layoutContentState.pageTab.histories.length > 1) {
       const id = pageTabId;
-      if (layoutState.pageTab.current.id === id) {
+      if (layoutContentState.pageTab.current.id === id) {
         // 현재 페이지를 삭제할 때
-        const newHistories = layoutState.pageTab.histories.filter(history => history.id !== id);
+        const newHistories = layoutContentState.pageTab.histories.filter(history => history.id !== id);
         const currentPage = newHistories.slice(-1)[0];
         navigate(currentPage.link);
-        layoutDispatch({
-          type: 'REMOVE_TAB_PAGE', id, currentPage
+        layoutContentDispatch({
+          type: 'REMOVE_TAB', id, currentPage
         });
       } else {
         // 다른 페이지를 삭제할 때
-        layoutDispatch({
-          type: 'REMOVE_TAB_PAGE', id
+        layoutContentDispatch({
+          type: 'REMOVE_TAB', id
         });
       }
+      tabRemoved.current = true;
     }
   }
 
+  const generateTabs = () => {
+    const tabs = [];
+    if (layoutContentState.pageTab.histories) {
+      for (const page of layoutContentState.pageTab.histories) {
+        let TabIcon = null;
+        if (page.icon && page.icon.length > 0) {
+          TabIcon = NavigationIcon(page.icon);
+        }
+        const tab = {
+          label: <>{TabIcon && <TabIcon/>}&nbsp;{page.title}</>,
+          key: page.id,
+        }
+
+        if (layoutContentState.pageTab.current.id === page.id) {
+          tab.children = <>
+            <div className="site-breadcrumb">
+              <Breadcrumb>
+                {layoutContentState.pageTab.current.breadcrumbItems && layoutContentState.pageTab.current.breadcrumbItems.map((item, index) => (
+                  <Breadcrumb.Item key={index}>{item}</Breadcrumb.Item>
+                ))}
+              </Breadcrumb>
+              <div className="page-title">
+                {page.title}
+              </div>
+            </div>
+            <div className={classNames('site-layout-page', {dark: themeConfig.dark})}>
+              <PageRouter/>
+            </div>
+          </>;
+        }
+        tabs.push(tab)
+      }
+    }
+
+    return tabs;
+  }
+
+  renderingCompleted.current = false;
   return (
-    <Layout.Content className={classNames('site-layout-content', {dark: themeConfig.dark})}>
-      <Tabs hideAdd type="editable-card" activeKey={layoutState.pageTab.current.id}
-            onTabClick={handlePageHistoryTabClick} onEdit={handlePageHistoryTabEdit}>
-        {layoutState.pageTab.histories && layoutState.pageTab.histories.map(page => {
-            let TabIcon = null;
-            if (page.icon && page.icon.length > 0) {
-              TabIcon = NavigationIcon(page.icon);
-            }
-            return (
-              <TabPane tab={<>{TabIcon && <TabIcon/>}&nbsp;{page.title}</>} key={page.id}>
-                {layoutState.pageTab.current.id === page.id &&
-                <>
-                  <div className="site-breadcrumb">
-                    <Breadcrumb>
-                      {layoutState.breadcrumbItems.map((item, index) => (
-                        <Breadcrumb.Item key={index}>{item}</Breadcrumb.Item>
-                      ))}
-                    </Breadcrumb>
-                    <div className="page-title">
-                      {page.title}
-                    </div>
-                  </div>
-                  <div className={classNames('site-layout-page', {dark: themeConfig.dark})}>
-                    <Spin spinning={layoutState.loading}>
-                      <PageRouter/>
-                    </Spin>
-                  </div>
-                </>}
-              </TabPane>
-            )
-          }
-        )}
-      </Tabs>
-    </Layout.Content>
+    <>
+      <Layout.Content className={classNames('site-layout-content', {dark: themeConfig.dark})}>
+        { /* 탭 변경에 따른 Page Router에 선언된 컴포넌트의 useEffect가 중복 호출 되는 것을 방지 처리 */
+          (renderingCompleted.current || useEffected.current || tabRemoved.current) &&
+          <div className="card-container">
+            <Tabs
+              hideAdd type="editable-card" activeKey={layoutContentState.pageTab.current.id}
+              onTabClick={handlePageHistoryTabClick} onEdit={handlePageHistoryTabEdit}
+              items={generateTabs()}
+            />
+          </div>
+        }
+      </Layout.Content>
+      {renderingCompleted.current = true}
+      {useEffected.current = false}
+      {tabRemoved.current = false}
+    </>
   )
 }
 
