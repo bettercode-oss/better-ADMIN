@@ -1,41 +1,35 @@
 import React from "react";
-import Tooltip from 'antd/lib/tooltip';
-import Popconfirm from 'antd/lib/popconfirm';
+import { Button as AntButton } from 'antd';
 import PropTypes from "prop-types";
 
-import AntButton from 'antd/lib/button/index';
-import "./style.less";
-
-export const Button = ({ classname, tooltip, popconfirm, icon, ...props }) => {
-  const confirm = () =>
-    new Promise((resolve) => {
-      setTimeout(() => resolve(null), 3000);
-    });
-  const button = (
-    <AntButton {...props} className={'csms ' + classname} icon={icon}>
-      {props.label}
-    </AntButton>
-  );
-  if (tooltip) {
-    return <Tooltip title={tooltip}>{button}</Tooltip>;
-  }
-  if (popconfirm) {
-    return <Popconfirm title={popconfirm}>{button}</Popconfirm>;
-  }
-  return button;
+export const Button = ({label, type, htmlType, loading, danger, size, icon, block, onClick}) => {
+  return <AntButton type={type} htmlType={htmlType} loading={loading} block={block} danger={danger} size={size} icon={icon}
+                    onClick={onClick}>
+    {label}
+  </AntButton>
 };
-
 
 Button.propTypes = {
   label: PropTypes.string.isRequired,
   type: PropTypes.string,
-  size: PropTypes.string,
+  htmlType: PropTypes.string,
   loading: PropTypes.bool,
-  tooltip: PropTypes.string,
-  popconfirm: PropTypes.string,
-  className: PropTypes.string,
-  onClick: PropTypes.func,
+  danger: PropTypes.bool,
+  size: PropTypes.number,
+  icon: PropTypes.any,
+  block: PropTypes.bool,
+  onClick: PropTypes.func
 };
+
+Button.defaultProps = {
+  type: 'default',
+  size: 'middle',
+  loading: false,
+  danger: false,
+  block: false
+};
+
+
 
 
 

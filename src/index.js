@@ -4,8 +4,6 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import {AxiosConfigur} from "./config/axios.configur";
-import './styles/antd/index.less';
-import './styles/index.less';
 
 AxiosConfigur.configAuthInterceptor();
 AxiosConfigur.configServerNetworkErrorInterceptor();
