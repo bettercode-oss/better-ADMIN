@@ -1,5 +1,4 @@
 import 'antd/dist/antd.less';
-import '../src/styles/main.less';
 import { GlobalStyle } from '../src/shared/global';
 import { addDecorator } from "@storybook/react";
 import { themes } from '@storybook/theming';

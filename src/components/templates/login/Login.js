@@ -1,15 +1,35 @@
 import React, {useEffect, useState} from "react";
-import {Button, Form, Input, message} from 'antd';
+import {message} from 'antd';
 import {LockOutlined, UserOutlined} from '@ant-design/icons';
-import "./Login.css";
-import Title from "antd/es/typography/Title";
-import {adminConfig} from "../../config/admin.config";
-import SiteService from "../settings/site.service";
-import DoorayLogin from "./DoorayLogin";
-import {AuthService} from "../../auth/auth.service";
-import MemberSignUp from "./MemberSignUp";
-import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "../../event/event.broadcaster";
 import {useNavigate, useSearchParams} from "react-router-dom";
+import SiteService from "../../settings/site.service";
+import {AuthService} from "../../../auth/auth.service";
+import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "../../../event/event.broadcaster";
+import {adminConfig} from "../../../config/admin.config";
+import {Title} from "../../atoms/typography/title";
+import DoorayLogin from "../../login/DoorayLogin";
+import MemberSignUp from "../../login/MemberSignUp";
+import {TextInput} from "../../atoms/text-input";
+import {Button} from "../../atoms/button";
+import {Text} from "../../atoms/typography/text";
+import {Card} from "../../atoms/card";
+import {Image} from "../../atoms/image";
+import {Form} from "../../atoms/form";
+import {FormItem} from "../../atoms/form/form-item";
+import styled from "styled-components";
+
+const LoginWrapper = styled.div`
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  display: inline-block;
+`
+const SiteLogo = styled.span`
+  margin-right: 10px;
+`;
 
 const Login = () => {
   const [siteSettings, setSiteSettings] = useState({});
@@ -70,21 +90,15 @@ const Login = () => {
   }
 
   return (
-    <div className="login">
+    <LoginWrapper>
       <Title level={2}>
-        <img className="logo" src={adminConfig.logo} alt="logo"/>
+        <SiteLogo>
+          <Image src={adminConfig.logo} alt="site-logo" width={30} borderRadius="20%"/>
+        </SiteLogo>
         {adminConfig.siteName}
       </Title>
-
-      <Form
-        name="normal_login"
-        className="login-form"
-        initialValues={{
-          remember: true,
-        }}
-        onFinish={onFinish}
-      >
-        <Form.Item
+      <Form onFinish={onFinish}>
+        <FormItem
           name="id"
           rules={[
             {
@@ -93,9 +107,9 @@ const Login = () => {
             },
           ]}
         >
-          <Input prefix={<UserOutlined className="site-form-item-icon"/>} placeholder="아이디"/>
-        </Form.Item>
-        <Form.Item
+          <TextInput prefix={<UserOutlined/>} placeholder="아이디"/>
+        </FormItem>
+        <FormItem
           name="password"
           rules={[
             {
@@ -104,40 +118,29 @@ const Login = () => {
             },
           ]}
         >
-          <Input
-            prefix={<LockOutlined className="site-form-item-icon"/>}
+          <TextInput
+            prefix={<LockOutlined/>}
             type="password"
             placeholder="비밀번호"
           />
-        </Form.Item>
-        <Form.Item>
-          <a className="login-form-forgot" href="/#/forgot-password">
-            Forgot password
-          </a>
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit" className="login-form-button" loading={loading}>
-            로그인
-          </Button>
-          아직 계정이 없으신가요? <Button type="link" onClick={() => {
-          setShowMemberSignUp(true)
-        }}>신청하기</Button>
-        </Form.Item>
+        </FormItem>
+        <FormItem>
+          <Button label="로그인" type="primary" htmlType="submit" block={true} loading={loading}/>
+          <Text>아직 계정이 없으신가요?</Text>
+          <Button label="신청하기" type="link" onClick={() => { setShowMemberSignUp(true) }}/>
+        </FormItem>
       </Form>
-      {(siteSettings.doorayLoginUsed || siteSettings.googleWorkspaceLoginUsed) &&
-      <div style={{padding: "15px", border: "1px solid #bcbcbc", borderRadius: "5px"}}>
-        <Title level={5}>다른 수단으로 로그인하기</Title>
-        {siteSettings.doorayLoginUsed &&
-        <img src="/dooray-logo.svg" alt="dooray logo" width={100}
-             style={{padding: "10px", borderRadius: "2px", cursor: "pointer", boxShadow: "1px 1px 1px 2px #E1E1E1"}}
-             onClick={() => {
-               setShowDoorayLogin(true)
-             }}/>}
-        {siteSettings.googleWorkspaceLoginUsed &&
-        <img src="/google-workspace-logo.png" alt="google logo" width={150}
-             style={{marginLeft: "10px", padding: "10px", borderRadius: "2px", cursor: "pointer", boxShadow: "1px 1px 1px 2px #E1E1E1"}}
-             onClick={handleGoogleLoginClick}/>}
-      </div>
+      {(siteSettings && (siteSettings.doorayLoginUsed || siteSettings.googleWorkspaceLoginUsed)) &&
+        <Card>
+          <Title level={5}>다른 수단으로 로그인하기</Title>
+          {siteSettings.doorayLoginUsed &&
+            <Image alt="dooray logo" src='/dooray-logo.svg' width={100} onClick={() => {
+              setShowDoorayLogin(true)
+            }}/>}
+          {siteSettings.googleWorkspaceLoginUsed &&
+            <Image src="/google-workspace-logo.png" alt="google logo" width={150} onClick={handleGoogleLoginClick}/>
+          }
+        </Card>
       }
       <DoorayLogin show={showDoorayLogin} onLoginSuccess={handleDoorayLoginSuccess} onClose={() => {
         setShowDoorayLogin(false)
@@ -145,7 +148,7 @@ const Login = () => {
       <MemberSignUp show={showMemberSignUp} onClose={() => {
         setShowMemberSignUp(false)
       }}/>
-    </div>
+    </LoginWrapper>
   );
 };
 
