@@ -107,7 +107,11 @@ const MemberList = () => {
   }
 
   const handleEditMemberRoles = (record) => {
-    navigate(`/members/${record.id}`);
+    navigate(`/members/${record.id}?backUrl=${makeBackUrl()}`);
+  }
+
+  const makeBackUrl = () => {
+    return encodeURIComponent(`${location.pathname}${location.search}`);
   }
 
   return (

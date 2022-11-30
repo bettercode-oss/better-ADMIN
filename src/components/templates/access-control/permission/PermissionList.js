@@ -88,11 +88,15 @@ const PermissionList = () => {
   }
 
   const handleCreatePermission = () => {
-    navigate(`/access-control/permissions/new`);
+    navigate(`/access-control/permissions/new?backUrl=${makeBackUrl()}`);
   }
 
   const handleEditPermission = (record) => {
-    navigate(`/access-control/permissions/${record.id}`);
+    navigate(`/access-control/permissions/${record.id}?backUrl=${makeBackUrl()}`);
+  }
+
+  const makeBackUrl = () => {
+    return encodeURIComponent(`${location.pathname}${location.search}`);
   }
 
   const onFinish = (values) => {
@@ -169,7 +173,7 @@ const PermissionList = () => {
             <Column title="권한 이름" dataIndex="name" key="name"
                     render={(text, record) => {
                       return record.type === 'user-define' ?
-                        <Link to={`/access-control/permissions/${record.id}`}>{text}</Link> :
+                        <Link to={`/access-control/permissions/${record.id}?backUrl=${makeBackUrl()}`}>{text}</Link> :
                         <span>{text}</span>;
                     }}/>
             <Column title="설명" dataIndex="description" key="description"/>

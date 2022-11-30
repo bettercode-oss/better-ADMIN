@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Button, Form, PageHeader, Select, message} from 'antd';
-import {useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams, useSearchParams} from "react-router-dom";
 import {FormItemLayout, FormTailItemLayout} from "../../modules/layout/from-item";
 import {AccessControlService} from "../access-control/access.control.service";
 import {MemberService} from "./member.service";
@@ -10,6 +10,7 @@ const {Option} = Select;
 const MemberRoleChange = () => {
   const navigate = useNavigate();
   let params = useParams();
+  const [searchParams] = useSearchParams();
 
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
@@ -41,7 +42,11 @@ const MemberRoleChange = () => {
   }
 
   const handleBack = () => {
-    navigate(-1);
+    if(searchParams.get('backUrl')) {
+      navigate(searchParams.get('backUrl'));
+    } else {
+      navigate(-1);
+    }
   }
 
   return (

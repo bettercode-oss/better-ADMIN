@@ -3,13 +3,14 @@ import {Button, Form, Input, message, PageHeader} from 'antd';
 import {AccessControlService} from "../access.control.service";
 import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "../../../../event/event.broadcaster";
 import {adminConfig} from "../../../../config/admin.config";
-import {useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams, useSearchParams} from "react-router-dom";
 import {FormItemLayout, FormTailItemLayout} from "../../../modules/layout/from-item";
 
 let editPermissionId = null;
 const PermissionForm = () => {
   const navigate = useNavigate();
   let params = useParams();
+  const [searchParams] = useSearchParams();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -61,7 +62,11 @@ const PermissionForm = () => {
   }
 
   const handleBack = () => {
-    navigate(-1);
+    if(searchParams.get('backUrl')) {
+      navigate(searchParams.get('backUrl'));
+    } else {
+      navigate(-1);
+    }
   }
 
   return (

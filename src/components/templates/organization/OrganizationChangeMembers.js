@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Button, Descriptions, Form, message, PageHeader, Select} from 'antd';
 import {OrganizationService} from "./organization.service";
 import {MemberService} from "../../templates/member/member.service";
-import {useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams, useSearchParams} from "react-router-dom";
 import {FormItemLayout, FormTailItemLayout} from "../../modules/layout/from-item";
 
 const {Option} = Select;
@@ -11,6 +11,7 @@ const OrganizationChangeMembers = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
   let params = useParams();
+  const [searchParams] = useSearchParams();
 
   const [loading, setLoading] = useState(false);
   const [allMembers, setAllMembers] = useState([]);
@@ -43,9 +44,12 @@ const OrganizationChangeMembers = () => {
   }
 
   const handleBack = () => {
-    navigate(-1);
+    if(searchParams.get('backUrl')) {
+      navigate(searchParams.get('backUrl'));
+    } else {
+      navigate(-1);
+    }
   }
-
 
   return (
     <>

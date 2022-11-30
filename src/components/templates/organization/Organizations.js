@@ -2,9 +2,10 @@ import React, {useEffect, useState} from "react";
 import {Button, Col, Descriptions, Dropdown, message, PageHeader, Popconfirm, Row, Tag, Tree} from "antd";
 import {ApartmentOutlined, DeleteOutlined, DownOutlined, EditOutlined, SettingOutlined} from "@ant-design/icons";
 import {OrganizationService} from "./organization.service";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 
 const Organizations = () => {
+  let location = useLocation();
   const navigate = useNavigate();
 
   const [treeData, setTreeData] = useState([]);
@@ -147,24 +148,29 @@ const Organizations = () => {
   }
 
   const handleCreateOrganization = () => {
-    navigate(`/organization/new`);
+    navigate(`/organization/new?backUrl=${makeBackUrl()}`);
   }
 
   const handleCreateDepartment = (parentOrganization) => {
-    navigate(`/organization/new?parentId=${parentOrganization.id}`);
+    navigate(`/organization/new?parentId=${parentOrganization.id}&backUrl=${makeBackUrl()}`);
   }
 
   const handleChangeOrganizationName = (organization) => {
-    navigate(`/organization/${organization.id}`);
+    navigate(`/organization/${organization.id}?backUrl=${makeBackUrl()}`);
   }
 
   const handleChangeRoles = (organization) => {
-    navigate(`/organization/${organization.id}/change-roles`);
+    navigate(`/organization/${organization.id}/change-roles?backUrl=${makeBackUrl()}`);
   }
 
   const handleChangeMembers = (organization) => {
-    navigate(`/organization/${organization.id}/change-members`);
+    navigate(`/organization/${organization.id}/change-members?backUrl=${makeBackUrl()}`);
   }
+
+  const makeBackUrl = () => {
+    return encodeURIComponent(`${location.pathname}${location.search}`);
+  }
+
 
   const generateActionMenus = (organization) => {
     const actionMenusItems = [

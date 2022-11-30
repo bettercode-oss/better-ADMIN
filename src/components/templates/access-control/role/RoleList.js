@@ -89,12 +89,17 @@ const RoleList = () => {
   }
 
   const handleCreateRole = () => {
-    navigate(`/access-control/roles/new`);
+    navigate(`/access-control/roles/new?backUrl=${makeBackUrl()}`);
   }
 
   const handleEditRole = (record) => {
-    navigate(`/access-control/roles/${record.id}`);
+    navigate(`/access-control/roles/${record.id}?backUrl=${makeBackUrl()}`);
   }
+
+  const makeBackUrl = () => {
+    return encodeURIComponent(`${location.pathname}${location.search}`);
+  }
+
 
   const onFinish = (values) => {
     const baseUrl = location.pathname;
@@ -170,7 +175,7 @@ const RoleList = () => {
             <Column title="역할 이름" dataIndex="name" key="name"
                     render={(text, record) => {
                       return record.type === 'user-define' ?
-                        <Link to={`/access-control/roles/${record.id}`}>{text}</Link> :
+                        <Link to={`/access-control/roles/${record.id}?backUrl=${makeBackUrl()}`}>{text}</Link> :
                         <span>{text}</span>;
                     }}/>
             <Column title="할당 권한" width="200px"
