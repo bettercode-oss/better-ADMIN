@@ -10,16 +10,6 @@ import {adminConfig} from "../../config/admin.config";
 import {LayoutContentProvider} from "./AppLayoutContentContext";
 
 const AppLayout = () => {
-  // const [showLoading, setShowLoading] = useState(false)
-
-  // useEffect(() => {
-  //   EventBroadcaster.on(SHOW_LOADING_EVENT_TOPIC, (data) => {
-  //     console.log('SHOW_LOADING_EVENT_TOPIC', data.show);
-  //     // const show = data.show;
-  //     setShowLoading(data.show);
-  //   });
-  // }, []);
-
   return (
     <>
       <AppVersionChecker versionApiEndPoint={`${adminConfig.authentication.authAPI()}/site/settings/app-version`}
@@ -30,14 +20,14 @@ const AppLayout = () => {
           minHeight: "100%"
         }}
       >
-        <Sider/>
-        <Layout className="site-layout">
-          <Header/>
-          <LayoutContentProvider>
+        <LayoutContentProvider>
+          <Sider/>
+          <Layout className="site-layout">
+            <Header/>
             <Content/>
-          </LayoutContentProvider>
-          <Footer/>
-        </Layout>
+            <Footer/>
+          </Layout>
+        </LayoutContentProvider>
       </Layout>
     </>
   );
