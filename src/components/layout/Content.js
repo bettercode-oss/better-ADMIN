@@ -6,6 +6,7 @@ import PageRouter from "../../pages/router/PageRouter";
 import classNames from "classnames";
 import themeConfig from "../../config/theme.config.json";
 import {useLayoutContentDispatch, useLayoutContentState} from "./AppLayoutContentContext";
+import AutoBackdrop from "../modules/backdrop/AutoBackdrop";
 
 function Content() {
   const renderingCompleted = useRef(false);
@@ -30,7 +31,7 @@ function Content() {
         type: 'SETUP_PAGE_TABS', pathname
       });
     }
-  }, [location.pathname, location.search, layoutContentDispatch]);
+  }, [location, layoutContentDispatch]);
 
   const handlePageHistoryTabClick = (pageTabId) => {
     if (pageTabId !== layoutContentState.pageTab.current.id) {
@@ -103,16 +104,18 @@ function Content() {
   return (
     <>
       <Layout.Content className={classNames('site-layout-content', {dark: themeConfig.dark})}>
-        { /* 탭 변경에 따른 Page Router에 선언된 컴포넌트의 useEffect가 중복 호출 되는 것을 방지 처리 */
-          (renderingCompleted.current || useEffected.current || tabRemoved.current) &&
-          <div className="card-container">
-            <Tabs
-              hideAdd type="editable-card" activeKey={layoutContentState.pageTab.current.id}
-              onTabClick={handlePageHistoryTabClick} onEdit={handlePageHistoryTabEdit}
-              items={generateTabs()}
-            />
-          </div>
-        }
+        <AutoBackdrop>
+          { /* 탭 변경에 따른 Page Router에 선언된 컴포넌트의 useEffect가 2번 호출 되는 것을 방지 처리 */
+            (renderingCompleted.current || useEffected.current || tabRemoved.current) &&
+            <div className="card-container">
+              <Tabs
+                hideAdd type="editable-card" activeKey={layoutContentState.pageTab.current.id}
+                onTabClick={handlePageHistoryTabClick} onEdit={handlePageHistoryTabEdit}
+                items={generateTabs()}
+              />
+            </div>
+          }
+        </AutoBackdrop>
       </Layout.Content>
       {renderingCompleted.current = true}
       {useEffected.current = false}

@@ -5,7 +5,7 @@ const API_URL = adminConfig.authentication.authAPI();
 
 class AccessControlService {
   getPermissions(params) {
-    return axios.get(`${API_URL}/access-control/permissions`, { params: params });
+    return axios.get(`${API_URL}/access-control/permissions`, { params: params, loading: true });
   }
 
   getPermissionById(id) {
@@ -29,7 +29,7 @@ class AccessControlService {
   }
 
   getRoles(params) {
-    return axios.get(`${API_URL}/access-control/roles`, { params: params });
+    return axios.get(`${API_URL}/access-control/roles`, { params: params, loading: true });
   }
 
   getRoleById(id) {

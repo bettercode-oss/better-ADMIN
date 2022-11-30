@@ -6,12 +6,12 @@ const API_URL = adminConfig.authentication.authAPI();
 class MemberService {
   getMembersApproved(params) {
     params["status"] = "approved";
-    return axios.get(`${API_URL}/members`, { params: params });
+    return axios.get(`${API_URL}/members`, { params: params, loading: true });
   }
 
   getMembersApplied(params) {
     params["status"] = "applied";
-    return axios.get(`${API_URL}/members`, { params: params });
+    return axios.get(`${API_URL}/members`, { params: params, loading: true });
   }
 
   assignRoles(memberId, assignRoles) {
