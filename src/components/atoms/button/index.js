@@ -15,7 +15,7 @@ Button.propTypes = {
   htmlType: PropTypes.string,
   loading: PropTypes.bool,
   danger: PropTypes.bool,
-  size: PropTypes.number,
+  size: PropTypes.string,
   icon: PropTypes.any,
   block: PropTypes.bool,
   onClick: PropTypes.func
