@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Button, Descriptions, Form, message, PageHeader, Select} from 'antd';
 import {OrganizationService} from "./organization.service";
-import {AccessControlService} from "../../templates/settings/access-control/access.control.service";
+import {AccessControlService} from "../access-control/access.control.service";
 import {useNavigate, useParams} from "react-router-dom";
 import {FormItemLayout, FormTailItemLayout} from "../../modules/layout/from-item";
 

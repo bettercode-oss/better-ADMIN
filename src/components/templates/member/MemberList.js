@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Col, Collapse, Dropdown, Form, Input, Menu, PageHeader, Row, Select, Table, Tag} from 'antd';
+import {Button, Col, Collapse, Dropdown, Form, Input, PageHeader, Row, Select, Table, Tag} from 'antd';
 import {DownOutlined, SettingOutlined} from "@ant-design/icons";
 import moment from "moment";
 import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
@@ -107,7 +107,7 @@ const MemberList = () => {
   }
 
   const handleEditMemberRoles = (record) => {
-    navigate(`/settings/members/${record.id}`);
+    navigate(`/members/${record.id}`);
   }
 
   return (
@@ -244,15 +244,17 @@ const MemberList = () => {
                       }
                     }}/>
             <Column title="" align='right' render={(text, record) => {
+              const actionMenusItems = [{
+                label:
+                  <Button type="text" onClick={() => {
+                    handleEditMemberRoles(record)
+                  }}>멤버 역할 변경</Button>,
+                key: '0',
+              }];
               return (
-                <Dropdown overlay={
-                  <Menu>
-                    <Menu.Item key="0">
-                      <Button type="text" onClick={() => {
-                        handleEditMemberRoles(record)
-                      }}>멤버 역할 변경</Button>
-                    </Menu.Item>
-                  </Menu>} trigger={['click']}>
+                <Dropdown menu={{
+                  items: actionMenusItems
+                }} trigger={['click']}>
                   <Button style={{borderRadius: '5px'}} icon={<SettingOutlined/>}>
                     <DownOutlined/>
                   </Button>

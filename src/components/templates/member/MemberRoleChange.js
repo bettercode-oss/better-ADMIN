@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Button, Form, PageHeader, Select, message} from 'antd';
 import {useNavigate, useParams} from "react-router-dom";
 import {FormItemLayout, FormTailItemLayout} from "../../modules/layout/from-item";
-import {AccessControlService} from "../settings/access-control/access.control.service";
+import {AccessControlService} from "../access-control/access.control.service";
 import {MemberService} from "./member.service";
 
 const {Option} = Select;

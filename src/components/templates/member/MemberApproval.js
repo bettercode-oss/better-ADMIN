@@ -1,10 +1,17 @@
 import React, {useEffect, useState} from "react";
-import {Button, Dropdown, Menu, message, PageHeader, Popconfirm, Table} from 'antd';
+import {Button, Dropdown, message, Modal, PageHeader, Table} from 'antd';
 import {MemberService} from "./member.service";
-import {CheckOutlined, CloseOutlined, DownOutlined, SettingOutlined} from "@ant-design/icons";
+import {
+  CheckOutlined,
+  CloseOutlined,
+  DownOutlined,
+  ExclamationCircleOutlined,
+  SettingOutlined
+} from "@ant-design/icons";
 import moment from "moment";
 import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
 
+const {confirm} = Modal;
 const {Column} = Table;
 const DEFAULT_PAGE_SIZE = 10;
 
@@ -87,34 +94,40 @@ const MemberApproval = () => {
                   }}
           />
           <Column render={(text, record) => {
+            const actionMenusItems = [{
+              label:
+                <Button type="text" icon={<CheckOutlined/>} onClick={() => {
+                  confirm({
+                    title: `${record.signId} 를 승인 하시겠습니까?`,
+                    okText: '예',
+                    cancelText: '아니오',
+                    icon: <ExclamationCircleOutlined/>,
+                    onOk() {
+                      approveMember(record.id);
+                    },
+                  });
+                }}>승인</Button>,
+              key: '0',
+            },{
+              label:
+                <Button type="text" icon={<CloseOutlined/>} onClick={() => {
+                  confirm({
+                    title: `${record.signId} 를 거절 하시겠습니까?`,
+                    okText: '예',
+                    cancelText: '아니오',
+                    icon: <ExclamationCircleOutlined/>,
+                    onOk() {
+                      rejectMember(record.id);
+                    },
+                  });
+                }}>거절</Button>,
+              key: '1',
+            }];
+
             return (
-              <Dropdown overlay={
-                <Menu>
-                  <Menu.Item key="0">
-                    <Popconfirm
-                      title="선택한 사용자를 승인 하시겠습니까?"
-                      onConfirm={() => {
-                        approveMember(record.id);
-                      }}
-                      okText="예"
-                      cancelText="아니오"
-                    >
-                      <Button type="text" icon={<CheckOutlined/>}>승인</Button>
-                    </Popconfirm>
-                  </Menu.Item>
-                  <Menu.Item key="1">
-                    <Popconfirm
-                      title="선택한 사용자를 승인 거절 하시겠습니까?"
-                      onConfirm={() => {
-                        rejectMember(record.id);
-                      }}
-                      okText="예"
-                      cancelText="아니오"
-                    >
-                      <Button type="text" icon={<CloseOutlined/>}>거절</Button>
-                    </Popconfirm>
-                  </Menu.Item>
-                </Menu>} trigger={['click']}>
+              <Dropdown menu={{
+                items: actionMenusItems
+              }} trigger={['click']}>
                 <Button style={{borderRadius: '5px'}} icon={<SettingOutlined/>}>
                   <DownOutlined/>
                 </Button>
