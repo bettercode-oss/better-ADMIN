@@ -2,10 +2,10 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {Layout, Menu} from "antd";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import {adminConfig} from "../../config/admin.config";
-import NavigationIcon from "./NavigationIcon";
 import NavigationConfig from "../../config/navigation.config";
 import {MemberContext} from "../../auth/member.context";
 import {EventBroadcaster, SELECTED_TAB_NOT_CONTAINS_NAVIGATION_TOPIC} from "../../event/event.broadcaster";
+import {SwapRightOutlined} from "@ant-design/icons";
 
 function Sider() {
   let location = useLocation();
@@ -124,48 +124,53 @@ function Sider() {
     });
   }
 
+  const getNavigationIcon = (icon) => {
+    if(icon) {
+      return icon;
+    } else {
+      return <SwapRightOutlined/>
+    }
+  }
+
   const generateMenuItems = () => {
     const menusItems = [];
     if (menuDataSource.menuItems) {
       for (const [level1ItemIndex, level1Item] of menuDataSource.menuItems.entries()) {
-        const Level1ItemIcon = NavigationIcon(level1Item.icon);
         if (level1Item.items && level1Item.items.length > 0) {
           const level2MenuItems = [];
           for (const [level2ItemIndex, level2Item] of level1Item.items.entries()) {
-            const Level2ItemItemIcon = NavigationIcon(level2Item.icon);
             const level2ItemMenuItemKey = level1ItemIndex + "-" + level2ItemIndex;
 
             if (level2Item.items && level2Item.items.length > 0) {
               const level3MenuItems = [];
               for (const [level3ItemIndex, level3Item] of level2Item.items.entries()) {
-                const Level3ItemIcon = NavigationIcon(level3Item.icon);
                 const level3ItemMenuItemKey = level1ItemIndex + "-" + level2ItemIndex + "-" + level3ItemIndex;
                 if (level3Item.link) {
                   level3MenuItems.push(getItem(getMenuLink(level3Item.title, level3Item.link), level3ItemMenuItemKey,
-                    <Level3ItemIcon/>));
+                    getNavigationIcon(level3Item.icon)));
                 } else {
-                  level3MenuItems.push(getItem(level3Item.title, level3ItemMenuItemKey, <Level3ItemIcon/>));
+                  level3MenuItems.push(getItem(level3Item.title, level3ItemMenuItemKey, getNavigationIcon(level3Item.icon)));
                 }
               }
               level2MenuItems.push(getItem(level2Item.title, level2ItemMenuItemKey,
-                <Level2ItemItemIcon/>, level3MenuItems, handleLevel2MenuClick));
+                getNavigationIcon(level2Item.icon), level3MenuItems, handleLevel2MenuClick));
             } else {
               if (level2Item.link) {
                 level2MenuItems.push(getItem(getMenuLink(level2Item.title, level2Item.link), level2ItemMenuItemKey,
-                  <Level2ItemItemIcon/>));
+                  getNavigationIcon(level2Item.icon)));
               } else {
-                level2MenuItems.push(getItem(level2Item.title, level2ItemMenuItemKey, <Level2ItemItemIcon/>));
+                level2MenuItems.push(getItem(level2Item.title, level2ItemMenuItemKey, getNavigationIcon(level2Item.icon)));
               }
             }
           }
           menusItems.push(getItem(level1Item.title, level1ItemIndex,
-            <Level1ItemIcon/>, level2MenuItems, handleLevel1MenuClick));
+            getNavigationIcon(level1Item.icon), level2MenuItems, handleLevel1MenuClick));
         } else {
           if (level1Item.link) {
             menusItems.push(getItem(getMenuLink(level1Item.title, level1Item.link), level1ItemIndex,
-              <Level1ItemIcon/>));
+              getNavigationIcon(level1Item.icon)));
           } else {
-            menusItems.push(getItem(level1Item.title, level1ItemIndex, <Level1ItemIcon/>));
+            menusItems.push(getItem(level1Item.title, level1ItemIndex, getNavigationIcon(level1Item.icon)));
           }
         }
       }

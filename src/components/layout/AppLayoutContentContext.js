@@ -10,7 +10,6 @@ const initialState = {
     current: {
       id: '',
       title: '',
-      icon: '',
       navigationPathName: '',
       link: '',
       breadcrumbItems: [],
@@ -37,7 +36,6 @@ function layoutReducer(state, action) {
       navigationPathName: newPathName,
       name: '',
       link: newPathName,
-      icon: '',
     }
 
     return {
@@ -86,24 +84,20 @@ function layoutReducer(state, action) {
 
   const addNewTab = (pathname, currentItem) => {
     let title = '';
-    let icon = '';
     const breadcrumbItems = [];
 
     if (currentItem.level1Item) {
       title = currentItem.level1Item.title;
-      icon = currentItem.level1Item.icon;
       breadcrumbItems.push(currentItem.level1Item.title);
     }
 
     if (currentItem.level2Item) {
       title = currentItem.level2Item.title;
-      icon = currentItem.level2Item.icon;
       breadcrumbItems.push(currentItem.level2Item.title);
     }
 
     if (currentItem.level3Item) {
       title = currentItem.level3Item.title;
-      icon = currentItem.level3Item.icon;
       breadcrumbItems.push(currentItem.level3Item.title);
     }
 
@@ -112,7 +106,6 @@ function layoutReducer(state, action) {
       navigationPathName: pathname,
       title: title,
       link: pathname,
-      icon: icon,
       breadcrumbItems: breadcrumbItems,
     }
 
