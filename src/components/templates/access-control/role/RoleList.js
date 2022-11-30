@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Col, Dropdown, Form, Input, Menu, Modal, PageHeader, Row, Table, Tag} from 'antd';
+import {Button, Col, Collapse, Dropdown, Form, Input, Modal, PageHeader, Row, Table, Tag} from 'antd';
 import {
   DeleteOutlined,
   DownOutlined,
@@ -10,14 +10,15 @@ import {
 } from '@ant-design/icons';
 import {AccessControlService} from "../access.control.service";
 import {Link, useLocation, useNavigate, useSearchParams} from "react-router-dom";
-import {SearchForm, SearchResult} from "../../../../modules/search-form";
+import {SearchForm, SearchResult} from "../../../modules/search-form";
 
 const {confirm} = Modal;
+const {Panel} = Collapse;
 const {Column} = Table;
 
 const DEFAULT_PAGE_SIZE = 10;
 
-const PermissionList = () => {
+const RoleList = () => {
   let location = useLocation();
   let navigate = useNavigate();
   const [form] = Form.useForm();
@@ -27,7 +28,7 @@ const PermissionList = () => {
     pageSize: DEFAULT_PAGE_SIZE
   });
   const [tableDataSource, setTableDataSource] = useState({
-    permissions: [],
+    roles: [],
     totalCount: 0,
   });
 
@@ -51,9 +52,9 @@ const PermissionList = () => {
       });
     }
 
-    AccessControlService.getPermissions(params).then(response => {
+    AccessControlService.getRoles(params).then(response => {
       setTableDataSource({
-        permissions: response.data.result,
+        roles: response.data.result,
         totalCount: response.data.totalCount,
       })
     });
@@ -62,37 +63,37 @@ const PermissionList = () => {
   const handleTableChanged = (changedPagination) => {
     const baseUrl = location.pathname;
     let fullUrl = `${baseUrl}?page=${changedPagination.current}&pageSize=${changedPagination.pageSize}`;
-    if(searchParams.get('name')) {
+    if (searchParams.get('name')) {
       fullUrl += `&name=${searchParams.get('name')}`;
     }
 
     navigate(fullUrl);
   }
 
-  const deletePermission = (permissionId) => {
-    AccessControlService.deletePermission(permissionId).then(() => {
-      window.location.reload();
-    });
-  }
-
-  const deleteConfirm = (permissionId) => {
+  const deleteConfirm = (roleId) => {
     confirm({
-      title: '권한을 삭제하시겠습니까?',
+      title: '역할을 삭제하시겠습니까?',
       okText: '예',
       cancelText: '아니오',
       icon: <ExclamationCircleOutlined/>,
       onOk() {
-        deletePermission(permissionId);
+        deleteRole(roleId);
       },
     });
   }
 
-  const handleCreatePermission = () => {
-    navigate(`/settings/access-control/permissions/new`);
+  const deleteRole = (roleId) => {
+    AccessControlService.deleteRole(roleId).then(() => {
+      window.location.reload();
+    });
   }
 
-  const handleEditPermission = (record) => {
-    navigate(`/settings/access-control/permissions/${record.id}`);
+  const handleCreateRole = () => {
+    navigate(`/access-control/roles/new`);
+  }
+
+  const handleEditRole = (record) => {
+    navigate(`/access-control/roles/${record.id}`);
   }
 
   const onFinish = (values) => {
@@ -108,9 +109,9 @@ const PermissionList = () => {
   return (
     <>
       <PageHeader
-        subTitle="역할(Role)에 할당할 권한을 관리합니다."
+        subTitle="역할을 만들고 권한을 할당하거나 삭제 합니다."
         extra={[
-          <Button key="1" type="primary" icon={<PlusCircleOutlined/>} onClick={handleCreatePermission}>권한 생성</Button>,
+          <Button key="1" type="primary" icon={<PlusCircleOutlined/>} onClick={handleCreateRole}>역할 생성</Button>,
         ]}
       >
         <SearchForm>
@@ -122,7 +123,7 @@ const PermissionList = () => {
               <Col span={8}>
                 <Form.Item
                   name="name"
-                  label="권한 이름"
+                  label="역할 이름"
                 >
                   <Input/>
                 </Form.Item>
@@ -154,7 +155,7 @@ const PermissionList = () => {
           </Form>
         </SearchForm>
         <SearchResult>
-          <Table rowKey="id" dataSource={tableDataSource.permissions} locale={{emptyText: "데이터 없음"}} bordered
+          <Table rowKey="id" dataSource={tableDataSource.roles} locale={{emptyText: "데이터 없음"}} bordered
                  pagination={{
                    current: pagination.page,
                    pageSize: pagination.pageSize,
@@ -166,28 +167,43 @@ const PermissionList = () => {
                     render={(text, record) => {
                       return <Tag color={record.type === 'pre-define' ? 'magenta' : 'blue'}>{text}</Tag>
                     }}/>
-            <Column title="권한 이름" dataIndex="name" key="name"
+            <Column title="역할 이름" dataIndex="name" key="name"
                     render={(text, record) => {
                       return record.type === 'user-define' ?
-                        <Link to={`/settings/access-control/permissions/${record.id}`}>{text}</Link> :
+                        <Link to={`/access-control/roles/${record.id}`}>{text}</Link> :
                         <span>{text}</span>;
+                    }}/>
+            <Column title="할당 권한" width="200px"
+                    render={(text, record) => {
+                      if (record.permissions) {
+                        return (<Collapse ghost>
+                          <Panel header={<span style={{color: "#5B71F3"}}>펼쳐 보기</span>}>
+                            {record.permissions.map(permission => (
+                              <Tag key={permission.id} color="orange">{permission.name}</Tag>
+                            ))}
+                          </Panel>
+                        </Collapse>);
+                      } else {
+                        return <></>
+                      }
                     }}/>
             <Column title="설명" dataIndex="description" key="description"/>
             <Column title="Action"
                     render={(text, record) => {
                       if (record.type === 'user-define') {
+                        const actionMenusItems = [{
+                          label: <Button type="text" icon={<EditOutlined/>}
+                                         onClick={() => handleEditRole(record)}>수정</Button>,
+                          key: '0',
+                        },{
+                          label: <Button type="text" icon={<DeleteOutlined/>}
+                                         onClick={() => deleteConfirm(record.id)}>삭제</Button>,
+                          key: '1',
+                        }];
                         return (
-                          <Dropdown overlay={
-                            <Menu>
-                              <Menu.Item key={1}>
-                                <Button type="text" icon={<EditOutlined/>}
-                                        onClick={() => handleEditPermission(record)}>수정</Button>
-                              </Menu.Item>
-                              <Menu.Item key={2}>
-                                <Button type="text" icon={<DeleteOutlined/>}
-                                        onClick={() => deleteConfirm(record.id)}>삭제</Button>
-                              </Menu.Item>
-                            </Menu>} trigger={['click']}>
+                          <Dropdown menu={{
+                            items: actionMenusItems
+                          }} trigger={['click']}>
                             <Button style={{borderRadius: '5px'}} icon={<SettingOutlined/>}>
                               <DownOutlined/>
                             </Button>
@@ -200,4 +216,4 @@ const PermissionList = () => {
     </>
   )
 };
-export default PermissionList;
+export default RoleList;

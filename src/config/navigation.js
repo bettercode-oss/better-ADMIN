@@ -1,7 +1,7 @@
-import { BiBluetooth, BiBeer } from "react-icons/bi";
-import { SiAccusoft, SiAmazon, SiAmazondynamodb, SiApachenetbeanside } from "react-icons/si";
-import { GiAbstract023 } from "react-icons/gi";
-import { AiFillSetting, AiOutlineControl } from "react-icons/ai";
+import {BiBeer, BiBluetooth} from "react-icons/bi";
+import {SiAccusoft, SiAmazon, SiAmazondynamodb, SiApachenetbeanside} from "react-icons/si";
+import {GiAbstract023} from "react-icons/gi";
+import {AiFillSetting, AiOutlineControl} from "react-icons/ai";
 import {FiUsers} from "react-icons/fi";
 
 export const Navigation = {
@@ -51,11 +51,11 @@ export const Navigation = {
       items: [
         {
           title: "역할",
-          link: "/settings/access-control/roles"
+          link: "/access-control/roles"
         },
         {
           title: "권한",
-          link: "/settings/access-control/permissions"
+          link: "/access-control/permissions"
         }
       ]
     },
@@ -66,17 +66,17 @@ export const Navigation = {
       items: [
         {
           title: "멤버",
-          link: "/settings/members",
+          link: "/members",
           accessPermissions: ["MANAGE_MEMBERS"]
         },
         {
           title: "멤버 승인",
-          link: "/settings/member-approval",
+          link: "/member-approval",
           accessPermissions: ["MANAGE_MEMBERS"]
         },
         {
           title: "조직도",
-          link: "/settings/organization",
+          link: "/organization",
           accessPermissions: ["MANAGE_ORGANIZATION"]
         }
       ]
@@ -84,7 +84,6 @@ export const Navigation = {
     {
       title: "설정",
       icon: <AiFillSetting/>,
-      accessPermissions: ["MANAGE_SYSTEM_SETTINGS"],
       items: []
     }
   ]

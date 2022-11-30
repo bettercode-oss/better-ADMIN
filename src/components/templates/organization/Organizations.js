@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Col, Descriptions, Dropdown, Menu, message, PageHeader, Popconfirm, Row, Tag, Tree} from "antd";
+import {Button, Col, Descriptions, Dropdown, message, PageHeader, Popconfirm, Row, Tag, Tree} from "antd";
 import {ApartmentOutlined, DeleteOutlined, DownOutlined, EditOutlined, SettingOutlined} from "@ant-design/icons";
 import {OrganizationService} from "./organization.service";
 import {useNavigate} from "react-router-dom";
@@ -147,109 +147,121 @@ const Organizations = () => {
   }
 
   const handleCreateOrganization = () => {
-    navigate(`/settings/organization/new`);
+    navigate(`/organization/new`);
   }
 
   const handleCreateDepartment = (parentOrganization) => {
-    navigate(`/settings/organization/new?parentId=${parentOrganization.id}`);
+    navigate(`/organization/new?parentId=${parentOrganization.id}`);
   }
 
   const handleChangeOrganizationName = (organization) => {
-    navigate(`/settings/organization/${organization.id}`);
+    navigate(`/organization/${organization.id}`);
   }
 
   const handleChangeRoles = (organization) => {
-    navigate(`/settings/organization/${organization.id}/change-roles`);
+    navigate(`/organization/${organization.id}/change-roles`);
   }
 
   const handleChangeMembers = (organization) => {
-    navigate(`/settings/organization/${organization.id}/change-members`);
+    navigate(`/organization/${organization.id}/change-members`);
   }
+
+  const generateActionMenus = (organization) => {
+    const actionMenusItems = [
+      {
+        label:
+          <Button type="text" icon={<EditOutlined/>} onClick={() => {
+            handleChangeOrganizationName(organization);
+          }}>조직 이름 변경</Button>,
+        key: '0',
+      }, {
+        label:
+          <Popconfirm
+            title="하위 조직까지 함께 삭제됩니다. 선택한 조직을 삭제하시겠습니까?"
+            onConfirm={() => {
+              handleDeleteDepartment(organization);
+            }}
+            okText="예"
+            cancelText="아니오"
+          >
+            <Button type="text" icon={<DeleteOutlined/>}>조직 삭제</Button>
+          </Popconfirm>,
+        key: '1',
+      },
+      {type: 'divider'}, {
+        label:
+          <Button type="text" onClick={() => {
+            handleCreateDepartment(organization);
+          }}>하위 부서 추가</Button>,
+        key: '2',
+      }, {
+        label:
+          <Button type="text" onClick={() => {
+            handleChangeRoles(organization);
+          }}>역할 변경</Button>,
+        key: '3',
+      }, {
+        label:
+          <Button type="text" onClick={() => {
+            handleChangeMembers(organization);
+          }}>멤버 변경</Button>,
+        key: '4',
+      }
+    ];
+
+    return <Dropdown menu={{
+      items: actionMenusItems
+    }} trigger={['click']}>
+      <Button style={{borderRadius: '5px'}} icon={<SettingOutlined/>}>
+        <DownOutlined/>
+      </Button>
+    </Dropdown>;
+  };
 
   return (
     <>
       <PageHeader
         subTitle="조직을 추가하거나 삭제합니다."
         extra={[
-          <Button key="1" type="primary" icon={<ApartmentOutlined/>} onClick={handleCreateOrganization}>최상위 조직 추가</Button>,
+          <Button key="1" type="primary" icon={<ApartmentOutlined/>} onClick={handleCreateOrganization}>최상위 조직
+            추가</Button>,
         ]}
       >
         <Row>
           <Col span={12}>
             {treeData && treeData.length > 0 &&
-            <Tree
-              className="draggable-tree"
-              draggable
-              blockNode
-              onDrop={onDrop}
-              treeData={treeData}
-              onSelect={handleTreeNodeSelect}
-              defaultExpandAll={true}
-            />}
+              <Tree
+                className="draggable-tree"
+                draggable
+                blockNode
+                onDrop={onDrop}
+                treeData={treeData}
+                onSelect={handleTreeNodeSelect}
+                defaultExpandAll={true}
+              />}
           </Col>
           {selectedOrganization &&
-          <Col span={12} style={{border: "solid 1px", padding: "10px", borderRadius: "5px", borderColor: "#808080"}}>
-            <Descriptions title={selectedOrganization.name} bordered
-                          extra={
-                            <Dropdown overlay={
-                              <Menu>
-                                <Menu.Item key="0">
-                                  <Button type="text" icon={<EditOutlined/>} onClick={() => {
-                                    handleChangeOrganizationName(selectedOrganization);
-                                  }}>조직 이름 변경</Button>
-                                </Menu.Item>
-                                <Menu.Item key="1">
-                                  <Popconfirm
-                                    title="하위 조직까지 함께 삭제됩니다. 선택한 조직을 삭제하시겠습니까?"
-                                    onConfirm={() => {
-                                      handleDeleteDepartment(selectedOrganization);
-                                    }}
-                                    okText="예"
-                                    cancelText="아니오"
-                                  >
-                                    <Button type="text" icon={<DeleteOutlined/>}>조직 삭제</Button>
-                                  </Popconfirm>
-                                </Menu.Item>
-                                <Menu.Divider/>
-                                <Menu.Item key="2">
-                                  <Button type="text" onClick={() => {
-                                    handleCreateDepartment(selectedOrganization);
-                                  }}>하위 부서 추가</Button>
-                                </Menu.Item>
-                                <Menu.Item key="3">
-                                  <Button type="text" onClick={() => {
-                                    handleChangeRoles(selectedOrganization);
-                                  }}>역할 변경</Button>
-                                </Menu.Item>
-                                <Menu.Item key="4">
-                                  <Button type="text" onClick={() => {
-                                    handleChangeMembers(selectedOrganization);
-                                  }}>멤버 변경</Button>
-                                </Menu.Item>
-                              </Menu>} trigger={['click']}>
-                              <Button style={{borderRadius: '5px'}} icon={<SettingOutlined/>}>
-                                <DownOutlined/>
-                              </Button>
-                            </Dropdown>
-                          }>
-              <Descriptions.Item label="역할" span={3}>
-                {selectedOrganization.roles && selectedOrganization.roles.map(role =>
-                  <Tag key={role.id} color="orange">{role.name}</Tag>
-                )}
-                {(selectedOrganization.roles === null || selectedOrganization.roles === undefined) &&
-                <Tag color="gray">없음</Tag>
-                }
-              </Descriptions.Item>
-              <Descriptions.Item label="구성원" span={3}>
-                {selectedOrganization.members && selectedOrganization.members.map(member =>
-                  <Tag key={member.id} color="purple">{member.name}</Tag>
-                )}
-                {(selectedOrganization.members === null || selectedOrganization.members === undefined) &&
-                <Tag color="gray">없음</Tag>
-                }
-              </Descriptions.Item>
-            </Descriptions>
-          </Col>}
+            <Col span={12} style={{border: "solid 1px", padding: "10px", borderRadius: "5px", borderColor: "#808080"}}>
+              <Descriptions title={selectedOrganization.name} bordered
+                            extra={generateActionMenus(selectedOrganization)}>
+                <Descriptions.Item label="역할" span={3}>
+                  {selectedOrganization.roles && selectedOrganization.roles.map(role =>
+                    <Tag key={role.id} color="orange">{role.name}</Tag>
+                  )}
+                  {(selectedOrganization.roles === null || selectedOrganization.roles === undefined) &&
+                    <Tag color="gray">없음</Tag>
+                  }
+                </Descriptions.Item>
+                <Descriptions.Item label="구성원" span={3}>
+                  {selectedOrganization.members && selectedOrganization.members.map(member =>
+                    <Tag key={member.id} color="purple">{member.name}</Tag>
+                  )}
+                  {(selectedOrganization.members === null || selectedOrganization.members === undefined) &&
+                    <Tag color="gray">없음</Tag>
+                  }
+                </Descriptions.Item>
+              </Descriptions>
+            </Col>}
         </Row>
       </PageHeader>
     </>
