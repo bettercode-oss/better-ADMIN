@@ -51,7 +51,11 @@ const OrganizationForm = () => {
   }
 
   const handleBack = () => {
-    navigate(-1);
+    if(searchParams.get('backUrl')) {
+      navigate(searchParams.get('backUrl'));
+    } else {
+      navigate(-1);
+    }
   }
 
   return (

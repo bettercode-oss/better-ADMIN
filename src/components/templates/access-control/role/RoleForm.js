@@ -4,7 +4,7 @@ import {AccessControlService} from "../access.control.service";
 import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "../../../../event/event.broadcaster";
 import {adminConfig} from "../../../../config/admin.config";
 import {FormItemLayout, FormTailItemLayout} from "../../../modules/layout/from-item";
-import {useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams, useSearchParams} from "react-router-dom";
 
 const {Option} = Select;
 
@@ -13,6 +13,7 @@ let editRoleId = null;
 const RoleForm = () => {
   const navigate = useNavigate();
   let params = useParams();
+  const [searchParams] = useSearchParams();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [allPermissions, setAllPermissions] = useState([]);
@@ -70,7 +71,11 @@ const RoleForm = () => {
   }
 
   const handleBack = () => {
-    navigate(-1);
+    if(searchParams.get('backUrl')) {
+      navigate(searchParams.get('backUrl'));
+    } else {
+      navigate(-1);
+    }
   }
 
   return (
