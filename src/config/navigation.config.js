@@ -1,5 +1,5 @@
-import navigationInfo from "./navigation.json";
 import {MemberContext} from "../auth/member.context";
+import {Navigation} from "./navigation";
 
 export default class NavigationConfig {
   static hasPermissions(memberPermissions, navigationPermissions) {
@@ -19,8 +19,8 @@ export default class NavigationConfig {
   static getItemsByMemberPermission = () => {
     const memberPermissions = new Set(MemberContext.memberInformation.permissions ? MemberContext.memberInformation.permissions : []);
     const accessibleLevel1Items = [];
-    if (navigationInfo.items) {
-      const level1Items = navigationInfo.items;
+    if (Navigation.items) {
+      const level1Items = Navigation.items;
       level1Items.forEach(level1Item => {
         if (!level1Item.accessPermissions || this.hasPermissions(memberPermissions, level1Item.accessPermissions)) {
           if (level1Item.items) {
@@ -75,8 +75,8 @@ export default class NavigationConfig {
 
   static getItemsWithoutMemberPermission = () => {
     const accessibleItems = [];
-    if (navigationInfo.items) {
-      const level1Items = navigationInfo.items;
+    if (Navigation.items) {
+      const level1Items = Navigation.items;
       level1Items.forEach(level1Item => {
         if (level1Item.items) {
           const accessibleLevel2Items = [];

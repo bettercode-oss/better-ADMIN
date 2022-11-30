@@ -1,7 +1,6 @@
 import React, {useEffect, useRef} from 'react';
 import {Breadcrumb, Layout, Tabs} from "antd";
 import {useLocation, useNavigate} from "react-router-dom";
-import NavigationIcon from "./NavigationIcon";
 import PageRouter from "../../pages/router/PageRouter";
 import classNames from "classnames";
 import themeConfig from "../../config/theme.config.json";
@@ -67,12 +66,12 @@ function Content() {
     const tabs = [];
     if (layoutContentState.pageTab.histories) {
       for (const page of layoutContentState.pageTab.histories) {
-        let TabIcon = null;
-        if (page.icon && page.icon.length > 0) {
-          TabIcon = NavigationIcon(page.icon);
-        }
+        // let TabIcon = null;
+        // if (page.icon && page.icon.length > 0) {
+        //   TabIcon = NavigationIcon(page.icon);
+        // }
         const tab = {
-          label: <>{TabIcon && <TabIcon/>}&nbsp;{page.title}</>,
+          label: page.title,
           key: page.id,
         }
 
