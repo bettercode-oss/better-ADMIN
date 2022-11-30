@@ -27,7 +27,7 @@ const DoorayLogin = ({show, onLoginSuccess, onClose}) => {
 
   return (
     <>
-      <Modal title={[<div key={1}><img src="/dooray-logo.svg" alt="dooray logo" width={100}/></div>]} visible={show}
+      <Modal title={[<div key={1}><img src="/dooray-logo.svg" alt="dooray logo" width={100}/></div>]} open={show}
              onCancel={onClose} footer={null} width={400}>
         <Form
           onFinish={loginWithDooray}

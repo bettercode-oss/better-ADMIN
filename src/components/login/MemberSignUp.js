@@ -32,7 +32,7 @@ const MemberSignUp = ({show, onClose}) => {
 
   return (
     <>
-      <Modal title={[<div key={1}>계정 신청</div>]} visible={show} onCancel={onClose} footer={null} width={400}>
+      <Modal title={[<div key={1}>계정 신청</div>]} open={show} onCancel={onClose} footer={null} width={400}>
         <Form
           onFinish={signUp}
         >
