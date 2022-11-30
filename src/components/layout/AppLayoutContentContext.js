@@ -141,6 +141,7 @@ function layoutReducer(state, action) {
       } else {
         const foundTab = findTabByNavigationPathName(pathname);
         if (foundTab) {
+          foundTab.link = pathname;
           return setCurrentTab(foundTab);
         } else {
           return addNewTab(pathname, currentItem);
