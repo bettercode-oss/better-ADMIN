@@ -5,7 +5,7 @@ const API_URL = adminConfig.authentication.authAPI();
 
 class OrganizationService {
   getOrganizations() {
-    return axios.get(`${API_URL}/organizations`);
+    return axios.get(`${API_URL}/organizations`, {loading: true});
   }
 
   getOrganizationById(id) {

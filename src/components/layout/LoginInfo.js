@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Avatar, Dropdown, Menu} from "antd";
+import {Avatar, Dropdown} from "antd";
 import {LogoutOutlined, MonitorOutlined, SettingOutlined, UserOutlined} from "@ant-design/icons";
 import {useNavigate} from "react-router-dom";
 import {adminConfig} from "../../config/admin.config";
@@ -67,31 +67,69 @@ const LoginInfo = () => {
     return monitoringable;
   }
 
+  const generateMenuItems = () => {
+    const menusItems = [];
+    if (settingAble()) {
+      menusItems.push({
+        label: '사이트 설정',
+        key: '0',
+        icon: <SettingOutlined/>,
+      });
+    }
+
+    if (monitoringAble()) {
+      menusItems.push({
+        label: '모니터링',
+        key: '1',
+        icon: <MonitorOutlined/>,
+      });
+    }
+
+    menusItems.push({
+      label: '로그아웃',
+      key: '2',
+      icon: <LogoutOutlined/>,
+    });
+    return menusItems;
+  }
+
+  const handleMenuClick = (e) => {
+    switch (e.key) {
+      case '0':
+        setShowSettings(true);
+        break;
+      case '1':
+        setShowMonitoring(true)
+        break;
+      case '2':
+        logout();
+        break;
+      default:
+        console.log('unknown menu item');
+    }
+  }
+
   return (
     <>
-      <Dropdown overlay={() =>
-        <Menu>
-          {settingAble() &&
-            <Menu.Item key="0" onClick={() => setShowSettings(true)}>
-              <SettingOutlined/>&nbsp;사이트 설정
-            </Menu.Item>}
-          {monitoringAble() &&
-            <Menu.Item key="1" onClick={() => setShowMonitoring(true)}>
-              <MonitorOutlined/>&nbsp;모니터링
-            </Menu.Item>}
-          {(settingAble() || monitoringAble()) && <Menu.Divider/>}
-          <Menu.Item key="2" onClick={logout}><LogoutOutlined/>&nbsp;로그아웃</Menu.Item>
-        </Menu>}>
-      <span style={{paddingBottom: "20px", cursor: "pointer"}}>
-        <Avatar icon={<UserOutlined/>} src={MemberContext.memberInformation.picture}/>
-        <span
-          style={{marginLeft: "5px"}}>{MemberContext.memberInformation && MemberContext.memberInformation.name}</span>
-      </span>
+      <Dropdown
+        menu={{
+          items: generateMenuItems(),
+          onClick: handleMenuClick,
+        }}
+      >
+        <span style={{paddingBottom: "20px", cursor: "pointer"}}>
+          <Avatar icon={<UserOutlined/>} src={MemberContext.memberInformation.picture}/>
+          <span style={{marginLeft: "5px"}}>{MemberContext.memberInformation && MemberContext.memberInformation.name}</span>
+        </span>
       </Dropdown>
       {showSettings &&
-        <AppSettings onClose={() => {setShowSettings(false)}}/>}
+        <AppSettings onClose={() => {
+          setShowSettings(false)
+        }}/>}
       {showMonitoring &&
-        <Monitoring onClose={() => {setShowMonitoring(false)}}/>}
+        <Monitoring onClose={() => {
+          setShowMonitoring(false)
+        }}/>}
     </>
   )
 };
