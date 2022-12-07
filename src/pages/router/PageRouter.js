@@ -19,6 +19,10 @@ import OrganizationChangeRoles from "../../components/templates/organization/Org
 import OrganizationChangeMembers from "../../components/templates/organization/OrganizationChangeMembers";
 import GoogleWorkspaceLoginSetting from "../../components/templates/settings/google/GoogleWorkspaceLoginSetting";
 import DoorayLoginSetting from "../../components/templates/settings/dooray/DoorayLoginSetting";
+import NotificationWebHookList from "../../components/templates/webhook/notification-web-hooks/NotificationWebHookList";
+import NotificationWebHookForm from "../../components/templates/webhook/notification-web-hooks/NotificationWebHookForm";
+import NotificationWebHookCallSampleDetails
+  from "../../components/templates/webhook/notification-web-hooks/NotificationWebHookCallSampleDetails";
 
 const PageRouter = () => (
   <>
@@ -49,6 +53,12 @@ const PageRouter = () => (
         <Route path=":organizationId" element={<OrganizationForm />} />
         <Route path=":organizationId/change-roles" element={<OrganizationChangeRoles />} />
         <Route path=":organizationId/change-members" element={<OrganizationChangeMembers />} />
+      </Route>
+      <Route path="/web-hooks/notifications">
+        <Route index={true} element={<NotificationWebHookList />}/>
+        <Route path="new" element={<NotificationWebHookForm />} />
+        <Route path=":webhookId" element={<NotificationWebHookForm />} />
+        <Route path=":webhookId/call-sample-details" element={<NotificationWebHookCallSampleDetails />} />
       </Route>
       <Route path="/settings/login">
         <Route path="dooray" element={<DoorayLoginSetting />} />
