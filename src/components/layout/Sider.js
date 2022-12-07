@@ -184,7 +184,7 @@ function Sider() {
       collapsed={collapsed}
       onCollapse={toggleCollapsed}
       breakpoint="lg"
-      collapsedWidth="80"
+      width={220}
     >
       <Link to="/">
         <div className="site-logo">

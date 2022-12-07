@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Button, Form, Input, message, PageHeader} from 'antd';
-import {OrganizationService} from "./organization.service";
+import {OrganizationService} from "../../services/organization.service";
 import {useNavigate, useParams, useSearchParams} from "react-router-dom";
 import {FormItemLayout, FormTailItemLayout} from "../../modules/layout/from-item";
 

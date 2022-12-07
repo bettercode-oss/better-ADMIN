@@ -84,7 +84,22 @@ export const Navigation = {
     {
       title: "설정",
       icon: <AiFillSetting/>,
-      items: []
+      accessPermissions: ["MANAGE_SYSTEM_SETTINGS"],
+      items: [
+        {
+          title: "로그인",
+          items: [
+            {
+              title: "두레이",
+              link: "/settings/login/dooray"
+            },
+            {
+              title: "구글 워크스페이스",
+              link: "/settings/login/google-workspace"
+            }
+          ]
+        }
+      ]
     }
   ]
 };

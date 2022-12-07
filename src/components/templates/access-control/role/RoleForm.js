@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Button, Form, Input, message, PageHeader, Select} from 'antd';
-import {AccessControlService} from "../access.control.service";
+import {AccessControlService} from "../../../services/access.control.service";
 import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "../../../../event/event.broadcaster";
 import {adminConfig} from "../../../../config/admin.config";
 import {FormItemLayout, FormTailItemLayout} from "../../../modules/layout/from-item";

@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from "react";
 import {Button, Form, Input, message, PageHeader, Radio} from "antd";
-import SiteService from "../site.service";
-import {FormItemLayout, FormTailItemLayout} from "../AppSettings";
+import {FormItemLayout, FormTailItemLayout} from "../../../modules/layout/from-item";
+import SiteService from "../../../services/site.service";
 
-const SETTING_KEY = "google-workspace-login";
+const SETTING_KEY = "dooray-login";
 
-const GoogleWorkspaceSetting = () => {
+const DoorayLoginSetting = () => {
   const [form] = Form.useForm();
   const [setting, setSetting] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -16,9 +16,7 @@ const GoogleWorkspaceSetting = () => {
       form.setFieldsValue({
         used: response.data.used ? true : false,
         domain: response.data.domain,
-        clientId: response.data.clientId,
-        clientSecret: response.data.clientSecret,
-        redirectUri: response.data.redirectUri,
+        authorizationToken: response.data.authorizationToken,
       });
     });
   }, [form]);
@@ -26,10 +24,8 @@ const GoogleWorkspaceSetting = () => {
   const saveSetting = (values) => {
     const newSetting = {
       used: values.used,
-      domain: values.domain,
-      clientId: values.clientId,
-      clientSecret: values.clientSecret,
-      redirectUri: values.redirectUri,
+      domain: values.domain ? values.domain : "",
+      authorizationToken: values.authorizationToken ? values.authorizationToken : ""
     }
 
     setLoading(true);
@@ -47,12 +43,11 @@ const GoogleWorkspaceSetting = () => {
   return (
     <>
       <PageHeader
-        title="구글 워크스페이스(Workspace) 로그인"
-        subTitle="구글 워크스페이스 계정으로 로그인할 수 있도록 설정합니다."
+        subTitle="두레이 아이디/비밀번호로 사이트에 로그인할 수 있도록 설정합니다."
       >
         {setting &&
         <Form {...FormItemLayout} form={form} onFinish={saveSetting}>
-          <Form.Item colon={false} label="구글 워크스페이스 로그인" name="used">
+          <Form.Item colon={false} label="Dooray 로그인" name="used">
             <Radio.Group onChange={handleChangeUsed}>
               <Radio value={true}>사용함</Radio>
               <Radio value={false}>사용 안 함</Radio>
@@ -63,11 +58,11 @@ const GoogleWorkspaceSetting = () => {
             <Form.Item
               colon={false}
               name="domain"
-              label="구글 워크스페이스 도메인"
+              label="Dooray 도메인"
               rules={[
                 {
                   required: true,
-                  message: '구글 워크스페이스 도메인을 입력해 주세요.',
+                  message: '두레이 도메인을 입력해 주세요.',
                 },
               ]}
             >
@@ -75,38 +70,12 @@ const GoogleWorkspaceSetting = () => {
             </Form.Item>
             <Form.Item
               colon={false}
-              name="clientId"
-              label="client_id"
+              name="authorizationToken"
+              label="Dooray API 인증 토큰"
               rules={[
                 {
                   required: true,
-                  message: 'client_id 를 입력해 주세요.',
-                },
-              ]}
-            >
-              <Input/>
-            </Form.Item>
-            <Form.Item
-              colon={false}
-              name="clientSecret"
-              label="client_secret"
-              rules={[
-                {
-                  required: true,
-                  message: 'client_secret 를 입력해 주세요.',
-                },
-              ]}
-            >
-              <Input/>
-            </Form.Item>
-            <Form.Item
-              colon={false}
-              name="redirectUri"
-              label="redirect_uri"
-              rules={[
-                {
-                  required: true,
-                  message: 'redirect_uri 을 입력해 주세요.',
+                  message: '두레이 API 토큰을 입력해 주세요.',
                 },
               ]}
             >
@@ -123,4 +92,4 @@ const GoogleWorkspaceSetting = () => {
     </>
   )
 };
-export default GoogleWorkspaceSetting;
+export default DoorayLoginSetting;
