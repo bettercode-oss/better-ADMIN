@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import {message} from 'antd';
 import {LockOutlined, UserOutlined} from '@ant-design/icons';
 import {useNavigate, useSearchParams} from "react-router-dom";
-import SiteService from "../../settings/site.service";
 import {AuthService} from "../../../auth/auth.service";
 import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "../../../event/event.broadcaster";
 import {adminConfig} from "../../../config/admin.config";
@@ -17,6 +16,7 @@ import {Image} from "../../atoms/image";
 import {Form} from "../../atoms/form";
 import {FormItem} from "../../atoms/form/form-item";
 import styled from "styled-components";
+import SiteService from "../../services/site.service";
 
 const LoginWrapper = styled.div`
   margin: 0;

@@ -3,7 +3,6 @@ import {adminConfig} from "./admin.config";
 import {AuthService} from "../auth/auth.service";
 import {EventBroadcaster, INVALID_ACCESS_TOKEN_TOPIC, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "../event/event.broadcaster";
 import {hideLoading, showLoading} from "../helper/loading.helper";
-import {MemberAccessLogger} from "../logger/member.access.logger";
 
 const DEFAULT_PERMISSION_DENIED_ERROR_MESSAGE = "권한이 없습니다. 관리자에게 문의하세요.";
 
@@ -126,34 +125,5 @@ export class AxiosConfigur {
         }
         return Promise.reject(error);
       });
-  }
-
-  static configLoggingInterceptor() {
-    axios.interceptors.response.use(
-      function (response) {
-        const config = response.config;
-        AxiosConfigur.loggingWithAxiosConfig(config, response.status);
-
-        return response;
-      },
-      function (error) {
-        // 오류 요청을 보내기전 수행할 일
-        const config = error.config;
-        if(error && error.response && error.response.status) {
-          AxiosConfigur.loggingWithAxiosConfig(config, error.response.status);
-        }
-
-        return Promise.reject(error);
-      });
-  }
-
-  static loggingWithAxiosConfig(config, statusCode) {
-    if(AxiosConfigur.isLoggingTarget(config)) {
-      MemberAccessLogger.logServerAPIAccess(config.url, config.method, config.params, config.data, statusCode);
-    }
-  }
-
-  static isLoggingTarget(config) {
-    return (config.headers['Authorization'] && !config.url.endsWith("/auth/check") && !config.url.endsWith("/api/member-access-logs"));
   }
 }

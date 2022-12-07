@@ -3,6 +3,8 @@ import {SiAccusoft, SiAmazon, SiAmazondynamodb, SiApachenetbeanside} from "react
 import {GiAbstract023} from "react-icons/gi";
 import {AiFillSetting, AiOutlineControl} from "react-icons/ai";
 import {FiUsers} from "react-icons/fi";
+import {TbWebhook} from "react-icons/tb";
+import {MdLogin} from "react-icons/md";
 
 export const Navigation = {
   items: [
@@ -38,13 +40,11 @@ export const Navigation = {
           link: "/sample-list"
         }
       ]
-    },
-    {
+    }, {
       title: "GNB2",
       icon: <GiAbstract023/>,
       link: "/gnb2"
-    },
-    {
+    }, {
       title: "접근 제어",
       accessPermissions: ["MANAGE_ACCESS_CONTROL"],
       icon: <AiOutlineControl/>,
@@ -58,8 +58,7 @@ export const Navigation = {
           link: "/access-control/permissions"
         }
       ]
-    },
-    {
+    }, {
       title: "사용자/조직도",
       icon: <FiUsers/>,
       accessPermissions: ["MANAGE_MEMBERS", "MANAGE_ORGANIZATION"],
@@ -80,14 +79,14 @@ export const Navigation = {
           accessPermissions: ["MANAGE_ORGANIZATION"]
         }
       ]
-    },
-    {
+    }, {
       title: "설정",
       icon: <AiFillSetting/>,
       accessPermissions: ["MANAGE_SYSTEM_SETTINGS"],
       items: [
         {
           title: "로그인",
+          icon: <MdLogin/>,
           items: [
             {
               title: "두레이",
@@ -96,6 +95,15 @@ export const Navigation = {
             {
               title: "구글 워크스페이스",
               link: "/settings/login/google-workspace"
+            }
+          ]
+        }, {
+          title: "웹훅(Webhooks)",
+          icon: <TbWebhook/>,
+          items: [
+            {
+              title: "알림 웹훅",
+              link: "/web-hooks/notifications",
             }
           ]
         }
