@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from "react";
 import {Button, Form, Input, message, PageHeader, Radio} from "antd";
-import SiteService from "../site.service";
-import {FormItemLayout, FormTailItemLayout} from "../AppSettings";
+import SiteService from "../../../services/site.service";
+import {FormItemLayout, FormTailItemLayout} from "../../../modules/layout/from-item";
 
-const SETTING_KEY = "dooray-login";
+const SETTING_KEY = "google-workspace-login";
 
-const DooraySetting = () => {
+const GoogleWorkspaceLoginSetting = () => {
   const [form] = Form.useForm();
   const [setting, setSetting] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -16,7 +16,9 @@ const DooraySetting = () => {
       form.setFieldsValue({
         used: response.data.used ? true : false,
         domain: response.data.domain,
-        authorizationToken: response.data.authorizationToken,
+        clientId: response.data.clientId,
+        clientSecret: response.data.clientSecret,
+        redirectUri: response.data.redirectUri,
       });
     });
   }, [form]);
@@ -24,8 +26,10 @@ const DooraySetting = () => {
   const saveSetting = (values) => {
     const newSetting = {
       used: values.used,
-      domain: values.domain ? values.domain : "",
-      authorizationToken: values.authorizationToken ? values.authorizationToken : ""
+      domain: values.domain,
+      clientId: values.clientId,
+      clientSecret: values.clientSecret,
+      redirectUri: values.redirectUri,
     }
 
     setLoading(true);
@@ -43,12 +47,11 @@ const DooraySetting = () => {
   return (
     <>
       <PageHeader
-        title="두레이(Dooray) 로그인"
-        subTitle="두레이 아이디/비밀번호로 사이트에 로그인할 수 있도록 설정합니다."
+        subTitle="구글 워크스페이스 계정으로 로그인할 수 있도록 설정합니다."
       >
         {setting &&
         <Form {...FormItemLayout} form={form} onFinish={saveSetting}>
-          <Form.Item colon={false} label="Dooray 로그인" name="used">
+          <Form.Item colon={false} label="구글 워크스페이스 로그인" name="used">
             <Radio.Group onChange={handleChangeUsed}>
               <Radio value={true}>사용함</Radio>
               <Radio value={false}>사용 안 함</Radio>
@@ -59,11 +62,11 @@ const DooraySetting = () => {
             <Form.Item
               colon={false}
               name="domain"
-              label="Dooray 도메인"
+              label="구글 워크스페이스 도메인"
               rules={[
                 {
                   required: true,
-                  message: '두레이 도메인을 입력해 주세요.',
+                  message: '구글 워크스페이스 도메인을 입력해 주세요.',
                 },
               ]}
             >
@@ -71,12 +74,38 @@ const DooraySetting = () => {
             </Form.Item>
             <Form.Item
               colon={false}
-              name="authorizationToken"
-              label="Dooray API 인증 토큰"
+              name="clientId"
+              label="client_id"
               rules={[
                 {
                   required: true,
-                  message: '두레이 API 토큰을 입력해 주세요.',
+                  message: 'client_id 를 입력해 주세요.',
+                },
+              ]}
+            >
+              <Input/>
+            </Form.Item>
+            <Form.Item
+              colon={false}
+              name="clientSecret"
+              label="client_secret"
+              rules={[
+                {
+                  required: true,
+                  message: 'client_secret 를 입력해 주세요.',
+                },
+              ]}
+            >
+              <Input/>
+            </Form.Item>
+            <Form.Item
+              colon={false}
+              name="redirectUri"
+              label="redirect_uri"
+              rules={[
+                {
+                  required: true,
+                  message: 'redirect_uri 을 입력해 주세요.',
                 },
               ]}
             >
@@ -93,4 +122,4 @@ const DooraySetting = () => {
     </>
   )
 };
-export default DooraySetting;
+export default GoogleWorkspaceLoginSetting;

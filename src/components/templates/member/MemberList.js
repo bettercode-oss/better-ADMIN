@@ -3,7 +3,7 @@ import {Button, Col, Collapse, Dropdown, Form, Input, PageHeader, Row, Select, T
 import {DownOutlined, SettingOutlined} from "@ant-design/icons";
 import moment from "moment";
 import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
-import {MemberService} from "./member.service";
+import {MemberService} from "../../services/member.service";
 import {SearchForm, SearchResult} from "../../modules/search-form";
 
 const {Panel} = Collapse;

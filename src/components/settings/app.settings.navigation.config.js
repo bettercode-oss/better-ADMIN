@@ -1,24 +1,9 @@
 import React from "react";
-import DooraySetting from "./dooray/DooraySetting";
 import {MemberContext} from "../../auth/member.context";
-import GoogleWorkspaceSetting from "./google-workspace/GoogleWorkspaceSetting";
 import WebHooksSetting from "./notification-web-hooks/WebHooksSetting";
 import MemberAccessLogSetting from "./member-access-logs/MemberAccessLogSetting";
 
 const settingsSideMenuItems = [{
-    title: "로그인",
-    accessPermission: "MANAGE_SYSTEM_SETTINGS",
-    items: [
-      {
-        title: "두레이 로그인",
-        component: <DooraySetting/>,
-      },
-      {
-        title: "구글 로그인",
-        component: <GoogleWorkspaceSetting/>,
-      }
-    ]
-  }, {
     title: "알림 웹훅(WebHooks)",
     accessPermission: "MANAGE_SYSTEM_SETTINGS",
     component: <WebHooksSetting/>

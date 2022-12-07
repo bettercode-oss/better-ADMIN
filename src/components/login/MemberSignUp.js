@@ -3,7 +3,7 @@ import {Button, Form, Input, Modal, message} from "antd";
 import {LockOutlined, UserOutlined, FormOutlined} from "@ant-design/icons";
 import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "../../event/event.broadcaster";
 import {adminConfig} from "../../config/admin.config";
-import {MemberService} from "../templates/member/member.service";
+import {MemberService} from "../services/member.service";
 
 const MemberSignUp = ({show, onClose}) => {
   const [loading, setLoading] = useState(false);

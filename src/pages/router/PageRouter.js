@@ -17,6 +17,8 @@ import Organizations from "../../components/templates/organization/Organizations
 import OrganizationForm from "../../components/templates/organization/OrganizationForm";
 import OrganizationChangeRoles from "../../components/templates/organization/OrganizationChangeRoles";
 import OrganizationChangeMembers from "../../components/templates/organization/OrganizationChangeMembers";
+import GoogleWorkspaceLoginSetting from "../../components/templates/settings/google/GoogleWorkspaceLoginSetting";
+import DoorayLoginSetting from "../../components/templates/settings/dooray/DoorayLoginSetting";
 
 const PageRouter = () => (
   <>
@@ -47,6 +49,10 @@ const PageRouter = () => (
         <Route path=":organizationId" element={<OrganizationForm />} />
         <Route path=":organizationId/change-roles" element={<OrganizationChangeRoles />} />
         <Route path=":organizationId/change-members" element={<OrganizationChangeMembers />} />
+      </Route>
+      <Route path="/settings/login">
+        <Route path="dooray" element={<DoorayLoginSetting />} />
+        <Route path="google-workspace" element={<GoogleWorkspaceLoginSetting />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
