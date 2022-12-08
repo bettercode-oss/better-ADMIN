@@ -7,7 +7,6 @@ import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "../../../event/e
 import {adminConfig} from "../../../config/admin.config";
 import {Title} from "../../atoms/typography/title";
 import DoorayLogin from "../../login/DoorayLogin";
-import MemberSignUp from "../../login/MemberSignUp";
 import {TextInput} from "../../atoms/text-input";
 import {Button} from "../../atoms/button";
 import {Text} from "../../atoms/typography/text";
@@ -17,6 +16,7 @@ import {Form} from "../../atoms/form";
 import {FormItem} from "../../atoms/form/form-item";
 import styled from "styled-components";
 import SiteService from "../../services/site.service";
+import MemberSignUp from "./MemberSignUp";
 
 const LoginWrapper = styled.div`
   margin: 0;

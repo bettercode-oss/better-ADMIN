@@ -8,7 +8,7 @@ export const TextInput = ({ type, placeholder, prefix, suffix, maxLength, defaul
 };
 
 TextInput.propTypes = {
-  type: PropTypes.string,
+  type: PropTypes.oneOf(["text", "password"]),
   placeholder: PropTypes.string,
   defaultValue: PropTypes.string,
   maxLength: PropTypes.number,
@@ -20,8 +20,3 @@ TextInput.propTypes = {
 TextInput.defaultProps = {
   type: 'text'
 };
-
-
-
-
-
