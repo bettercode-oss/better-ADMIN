@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Button, Form, Input, message, PageHeader, Radio} from "antd";
 import {FormItemLayout, FormTailItemLayout} from "../../../modules/layout/from-item";
-import SiteService from "../../../services/site.service";
+import SiteService from "../../../../services/site.service";
 
 const SETTING_KEY = "dooray-login";
 

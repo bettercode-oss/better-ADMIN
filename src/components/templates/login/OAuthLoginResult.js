@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import {Navigate, useLocation, useSearchParams} from "react-router-dom";
-import {adminConfig} from "../../config/admin.config";
+import {adminConfig} from "../../../config/admin.config";
 import {message} from "antd";
 
 const OAuthLoginResult = () => {

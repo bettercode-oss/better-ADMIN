@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Button, Form, Input, message, PageHeader, Radio} from "antd";
-import SiteService from "../../../services/site.service";
+import SiteService from "../../../../services/site.service";
 import {FormItemLayout, FormTailItemLayout} from "../../../modules/layout/from-item";
 
 const SETTING_KEY = "google-workspace-login";

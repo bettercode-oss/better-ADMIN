@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Button, Col, Descriptions, Dropdown, message, PageHeader, Popconfirm, Row, Tag, Tree} from "antd";
 import {ApartmentOutlined, DeleteOutlined, DownOutlined, EditOutlined, SettingOutlined} from "@ant-design/icons";
-import {OrganizationService} from "../../services/organization.service";
+import {OrganizationService} from "../../../services/organization.service";
 import {useLocation, useNavigate} from "react-router-dom";
 
 const Organizations = () => {
