@@ -10,7 +10,7 @@ import {
   SHOW_WEB_HOOK_MESSAGE_EVENT_TOPIC
 } from "./event/event.broadcaster";
 import {ExclamationCircleOutlined, NotificationTwoTone} from "@ant-design/icons";
-import OAuthLoginResult from "./components/login/OAuthLoginResult";
+import OAuthLoginResult from "./components/templates/login/OAuthLoginResult";
 import ProtectedRoute from "./components/router/ProtectedRoute";
 import {AuthService} from "./auth/auth.service";
 import Login from "./components/templates/login/Login";

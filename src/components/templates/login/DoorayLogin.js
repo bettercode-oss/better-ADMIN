@@ -1,9 +1,14 @@
 import React, {useState} from "react";
-import {Button, Form, Input, message, Modal} from "antd";
 import {LockOutlined, UserOutlined} from "@ant-design/icons";
-import {AuthService} from "../../auth/auth.service";
-import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "../../event/event.broadcaster";
-import {adminConfig} from "../../config/admin.config";
+import {AuthService} from "../../../auth/auth.service";
+import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "../../../event/event.broadcaster";
+import {adminConfig} from "../../../config/admin.config";
+import {SimpleModal} from "../../atoms/modal";
+import {Form} from "../../atoms/form";
+import {FormItem} from "../../atoms/form/form-item";
+import {TextInput} from "../../atoms/text-input";
+import {Button} from "../../atoms/button";
+import {message} from "antd";
 
 const DoorayLogin = ({show, onLoginSuccess, onClose}) => {
   const [loading, setLoading] = useState(false);
@@ -27,12 +32,11 @@ const DoorayLogin = ({show, onLoginSuccess, onClose}) => {
 
   return (
     <>
-      <Modal title={[<div key={1}><img src="/dooray-logo.svg" alt="dooray logo" width={100}/></div>]} open={show}
-             onCancel={onClose} footer={null} width={400}>
+      <SimpleModal title="두레이 로그인" footer={null} open={show} onCancel={onClose} width={400}>
         <Form
           onFinish={loginWithDooray}
         >
-          <Form.Item
+          <FormItem
             name="id"
             rules={[
               {
@@ -41,9 +45,9 @@ const DoorayLogin = ({show, onLoginSuccess, onClose}) => {
               },
             ]}
           >
-            <Input prefix={<UserOutlined className="site-form-item-icon"/>} placeholder="ID"/>
-          </Form.Item>
-          <Form.Item
+            <TextInput prefix={<UserOutlined className="site-form-item-icon"/>} placeholder="아이디"/>
+          </FormItem>
+          <FormItem
             name="password"
             rules={[
               {
@@ -52,19 +56,17 @@ const DoorayLogin = ({show, onLoginSuccess, onClose}) => {
               },
             ]}
           >
-            <Input
+            <TextInput
               prefix={<LockOutlined className="site-form-item-icon"/>}
               type="password"
-              placeholder="Password"
+              placeholder="비밀번호"
             />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" className="login-form-button" loading={loading}>
-              Dooray Log in
-            </Button>
-          </Form.Item>
+          </FormItem>
+          <FormItem>
+            <Button label="로그인" type="primary" htmlType="submit" loading={loading}/>
+          </FormItem>
         </Form>
-      </Modal>
+      </SimpleModal>
     </>
   )
 }

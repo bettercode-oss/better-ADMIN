@@ -1,15 +1,14 @@
 import React, {useState} from "react";
-import {message} from "antd";
+import {Form as AntForm, message} from "antd";
 import {FormOutlined, LockOutlined, UserOutlined} from "@ant-design/icons";
-import {MemberService} from "../../services/member.service";
+import {MemberService} from "../../../services/member.service";
 import {adminConfig} from "../../../config/admin.config";
 import {Form} from "../../atoms/form";
-import {Form as AntForm} from "antd";
 import {FormItem} from "../../atoms/form/form-item";
 import {TextInput} from "../../atoms/text-input";
 import {Button} from "../../atoms/button";
 import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "../../../event/event.broadcaster";
-import {Modal} from "../../atoms/modal";
+import {SimpleModal} from "../../atoms/modal";
 
 const MemberSignUp = ({show, onClose}) => {
   const [form] = AntForm.useForm()
@@ -42,7 +41,7 @@ const MemberSignUp = ({show, onClose}) => {
   }
 
   return (
-    <Modal title="계정 신청" open={show} onCancel={onClose} footer={null} width={400} onAfterClose={handleAfterClose}>
+    <SimpleModal title="계정 신청" open={show} onCancel={onClose} width={400} onAfterClose={handleAfterClose}>
       <Form
         form={form}
         onFinish={signUp}
@@ -106,7 +105,7 @@ const MemberSignUp = ({show, onClose}) => {
           <Button label="계정 신청" type="primary" htmlType="submit" loading={loading}/>
         </FormItem>
       </Form>
-    </Modal>
+    </SimpleModal>
   )
 }
 export default MemberSignUp;

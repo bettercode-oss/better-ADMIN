@@ -8,7 +8,7 @@ import {
   PlusCircleOutlined,
   SettingOutlined
 } from "@ant-design/icons";
-import {WebHookService} from "../../../services/webhook.service";
+import {WebHookService} from "../../../../services/webhook.service";
 import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
 import {CgDetailsMore} from "react-icons/cg";
 

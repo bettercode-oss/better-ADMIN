@@ -1,5 +1,5 @@
 import axios from "axios";
-import {adminConfig} from "../../config/admin.config";
+import {adminConfig} from "../config/admin.config";
 
 const API_URL = adminConfig.authentication.authAPI();
 
