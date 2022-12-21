@@ -1,7 +1,7 @@
 import React, {useEffect, useRef} from 'react';
 import {Breadcrumb, Layout, Tabs} from "antd";
 import {useLocation, useNavigate} from "react-router-dom";
-import PageRouter from "../../pages/router/PageRouter";
+import PageRouter from "../router/PageRouter";
 import classNames from "classnames";
 import themeConfig from "../../config/theme.config.json";
 import {useLayoutContentDispatch, useLayoutContentState} from "./AppLayoutContentContext";
