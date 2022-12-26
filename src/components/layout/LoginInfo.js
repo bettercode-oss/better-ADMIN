@@ -1,12 +1,13 @@
 import React, {useEffect} from "react";
-import {Avatar, Dropdown} from "antd";
-import {LogoutOutlined, UserOutlined} from "@ant-design/icons";
+import {LogoutOutlined} from "@ant-design/icons";
 import {useNavigate} from "react-router-dom";
 import {adminConfig} from "../../config/admin.config";
 import {MemberContext} from "../../auth/member.context";
 import {AuthService} from "../../auth/auth.service";
 import {EventBroadcaster, INVALID_ACCESS_TOKEN_TOPIC} from "../../event/event.broadcaster";
 import {PageTabStorage} from "./page.tab.storage";
+import {Avatar} from "../atoms/avatar";
+import {Dropdown} from "../atoms/dropdown";
 
 const LoginInfo = () => {
   const navigate = useNavigate();
@@ -48,15 +49,11 @@ const LoginInfo = () => {
   return (
     <>
       <Dropdown
-        menu={{
-          items: generateMenuItems(),
-          onClick: handleMenuClick,
-        }}
+        items={generateMenuItems()}
+        onClick={handleMenuClick}
       >
-        <span style={{paddingBottom: "20px", cursor: "pointer"}}>
-          <Avatar icon={<UserOutlined/>} src={MemberContext.memberInformation.picture}/>
-          <span style={{marginLeft: "5px"}}>{MemberContext.memberInformation && MemberContext.memberInformation.name}</span>
-        </span>
+        <Avatar ssrc={MemberContext.memberInformation.picture}
+                suffix={MemberContext.memberInformation && MemberContext.memberInformation.name}/>
       </Dropdown>
     </>
   )
