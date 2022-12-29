@@ -49,7 +49,7 @@ function Sider() {
           ...menuDataSource,
           menuItems: menuItems,
           navigationState: {
-            menuOpenKeys: menuOpenKeys,
+            menuOpenKeys: [...new Set([...menuDataSource.navigationState.menuOpenKeys, ...menuOpenKeys])],
             menuSelectedKeys: [menuSelectedKey],
           }
         }
@@ -85,7 +85,8 @@ function Sider() {
         navigate(firstNavigationItemLink);
       }
     }
-  }, [location.pathname, menuDataSource, navigate]);
+
+  }, [location.pathname, navigate]);
 
   const getItem = (label, key, icon, children, onTitleClick, type) => {
     return {
@@ -102,30 +103,22 @@ function Sider() {
     return <Link to={url}>{label}</Link>;
   }
 
-  const handleLevel1MenuClick = ({key}) => {
-    const menuIndex = key;
+  const handleSubMenuClick = ({key}) => {
     setMenuDataSource({
       ...menuDataSource,
       navigationState: {
-        menuOpenKeys: [menuIndex],
-        menuSelectedKeys: [menuIndex],
-      }
-    });
-  }
-
-  const handleLevel2MenuClick = ({key}) => {
-    const selectedMenuIndices = key.split('-');
-    setMenuDataSource({
-      ...menuDataSource,
-      navigationState: {
-        menuOpenKeys: [selectedMenuIndices[0], key],
-        menuSelectedKeys: [key],
+        menuOpenKeys: menuDataSource.navigationState.menuOpenKeys.find(openKey => openKey === key) ?
+          menuDataSource.navigationState.menuOpenKeys.filter(openKey => openKey !== key) :
+          menuDataSource.navigationState.menuOpenKeys.concat([key]),
+        menuSelectedKeys: menuDataSource.navigationState.menuSelectedKeys.find(selectedKey => selectedKey === key) ?
+          menuDataSource.navigationState.menuSelectedKeys.filter(selectedKey => selectedKey !== key) :
+          menuDataSource.navigationState.menuSelectedKeys.concat([key]),
       }
     });
   }
 
   const getNavigationIcon = (icon) => {
-    if(icon) {
+    if (icon) {
       return icon;
     } else {
       return <SwapRightOutlined/>
@@ -153,7 +146,7 @@ function Sider() {
                 }
               }
               level2MenuItems.push(getItem(level2Item.title, level2ItemMenuItemKey,
-                getNavigationIcon(level2Item.icon), level3MenuItems, handleLevel2MenuClick));
+                getNavigationIcon(level2Item.icon), level3MenuItems, handleSubMenuClick));
             } else {
               if (level2Item.link) {
                 level2MenuItems.push(getItem(getMenuLink(level2Item.title, level2Item.link), level2ItemMenuItemKey,
@@ -164,7 +157,7 @@ function Sider() {
             }
           }
           menusItems.push(getItem(level1Item.title, level1ItemIndex,
-            getNavigationIcon(level1Item.icon), level2MenuItems, handleLevel1MenuClick));
+            getNavigationIcon(level1Item.icon), level2MenuItems, handleSubMenuClick));
         } else {
           if (level1Item.link) {
             menusItems.push(getItem(getMenuLink(level1Item.title, level1Item.link), level1ItemIndex,
