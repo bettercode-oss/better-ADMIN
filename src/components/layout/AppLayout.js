@@ -3,13 +3,13 @@ import {Layout} from "antd";
 import "./AppLayout.css";
 import Sider from "./Sider";
 import Content from "./Content";
-import Footer from "./Footer";
 import {AppVersionChecker} from "@bettercode/react-app-version-checker";
 import {adminConfig} from "../../config/admin.config";
 import {LayoutContentProvider} from "./AppLayoutContentContext";
 import {Header} from "../atoms/layout/header";
 import LoginInfo from "./LoginInfo";
 import styled from "styled-components";
+import {Footer} from "../atoms/layout/footer";
 
 const HeaderLoginInfo = styled.div`
   font-size: 1.5rem;
@@ -36,7 +36,9 @@ const AppLayout = () => {
               </HeaderLoginInfo>
             </Header>
             <Content/>
-            <Footer/>
+            <Footer>
+              better ADMIN ©2023 Created by bettercode
+            </Footer>
           </Layout>
         </LayoutContentProvider>
       </Layout>

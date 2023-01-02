@@ -12,8 +12,8 @@ BasicHeader.args = {
   children: '헤더 영역입니다.'
 };
 
-export const HeaderBackgroundColor = Template.bind({});
-HeaderBackgroundColor.args = {
+export const BackgroundColorHeader = Template.bind({});
+BackgroundColorHeader.args = {
   backgroundColor: "#f90909",
   children: '헤더 영역입니다.'
 };
