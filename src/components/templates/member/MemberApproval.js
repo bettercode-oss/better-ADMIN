@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
-import {Button, Dropdown, message, Modal, PageHeader, Table} from 'antd';
+import {Button, Dropdown, message, Modal, Table} from 'antd';
+import {PageHeader} from '@ant-design/pro-layout';
 import {MemberService} from "../../../services/member.service";
 import {
   CheckOutlined,

@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
-import {Button, Dropdown, Modal, PageHeader, Table} from 'antd';
+import {Button, Dropdown, Modal, Table} from 'antd';
+import {PageHeader} from '@ant-design/pro-layout';
 import {
   DeleteOutlined,
   DownOutlined,

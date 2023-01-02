@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
-import {Button, Descriptions, Form, message, PageHeader, Select} from 'antd';
+import {Button, Descriptions, Form, message, Select} from 'antd';
+import {PageHeader} from '@ant-design/pro-layout';
 import {OrganizationService} from "../../../services/organization.service";
 import {MemberService} from "../../../services/member.service";
 import {useNavigate, useParams, useSearchParams} from "react-router-dom";
