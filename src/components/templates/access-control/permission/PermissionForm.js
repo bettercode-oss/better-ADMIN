@@ -56,7 +56,7 @@ const PermissionForm = () => {
 
   const handleFailure = (err) => {
     if (err.response.status === 400 && err.response.data && err.response.data.message && err.response.data.message === "duplicated") {
-      message.warn("이미 존재하는 권한입니다.");
+      message.warning("이미 존재하는 권한입니다.");
     } else {
       EventBroadcaster.broadcast(SHOW_ERROR_MESSAGE_EVENT_TOPIC, adminConfig.errorMessage.serverInternalError);
     }

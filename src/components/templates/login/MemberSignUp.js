@@ -27,7 +27,7 @@ const MemberSignUp = ({show, onClose}) => {
       message.success("신청되었습니다.");
     }).catch(error => {
       if (error.response && error.response.status === 400 && error.response.data === "duplicated") {
-        message.warn("이미 존재하는 아이디입니다.")
+        message.warning("이미 존재하는 아이디입니다.")
       } else {
         EventBroadcaster.broadcast(SHOW_ERROR_MESSAGE_EVENT_TOPIC, adminConfig.errorMessage.serverInternalError);
       }

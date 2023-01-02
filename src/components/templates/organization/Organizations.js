@@ -144,7 +144,7 @@ const Organizations = () => {
         setSelectedOrganization(null);
       });
     } else {
-      message.warn("조직도에서 삭제할 조직을 선택해 주세요.")
+      message.warning("조직도에서 삭제할 조직을 선택해 주세요.")
     }
   }
 

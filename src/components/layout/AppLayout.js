@@ -2,12 +2,19 @@ import React from "react";
 import {Layout} from "antd";
 import "./AppLayout.css";
 import Sider from "./Sider";
-import Header from "./Header";
 import Content from "./Content";
 import Footer from "./Footer";
 import {AppVersionChecker} from "@bettercode/react-app-version-checker";
 import {adminConfig} from "../../config/admin.config";
 import {LayoutContentProvider} from "./AppLayoutContentContext";
+import {Header} from "../atoms/layout/header";
+import LoginInfo from "./LoginInfo";
+import styled from "styled-components";
+
+const HeaderLoginInfo = styled.div`
+  font-size: 1.5rem;
+  float: right;
+`
 
 const AppLayout = () => {
   return (
@@ -23,7 +30,11 @@ const AppLayout = () => {
         <LayoutContentProvider>
           <Sider/>
           <Layout className="site-layout">
-            <Header/>
+            <Header>
+              <HeaderLoginInfo>
+                <LoginInfo/>
+              </HeaderLoginInfo>
+            </Header>
             <Content/>
             <Footer/>
           </Layout>
