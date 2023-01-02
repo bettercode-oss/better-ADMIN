@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
-import {Button, Col, Collapse, Dropdown, Form, Input, PageHeader, Row, Select, Table, Tag} from 'antd';
+import {Button, Col, Collapse, Dropdown, Form, Input, Row, Select, Table, Tag} from 'antd';
+import {PageHeader} from '@ant-design/pro-layout';
 import {DownOutlined, SettingOutlined} from "@ant-design/icons";
 import moment from "moment";
 import {useLocation, useNavigate, useSearchParams} from "react-router-dom";

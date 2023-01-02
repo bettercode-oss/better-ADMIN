@@ -17,7 +17,7 @@ const AppLayout = () => {
                          okText='확인'/>
       <Layout
         style={{
-          minHeight: "100%"
+          minHeight: '100vh'
         }}
       >
         <LayoutContentProvider>

@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Layout, Menu} from "antd";
+import {Layout, Menu, Space} from "antd";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import {adminConfig} from "../../config/admin.config";
 import NavigationConfig from "../../config/navigation.config";
@@ -88,14 +88,18 @@ function Sider() {
 
   }, [location.pathname, navigate]);
 
-  const getItem = (label, key, icon, children, onTitleClick, type) => {
-    return {
+  const getItem = (label, key, icon, children, onTitleClick) => {
+    return onTitleClick ? {
       key,
       icon,
       children,
       label,
-      onTitleClick,
-      type,
+      onTitleClick
+    } : {
+      key,
+      icon,
+      children,
+      label
     };
   }
 
@@ -181,8 +185,10 @@ function Sider() {
     >
       <Link to="/">
         <div className="site-logo">
-          <img className="logo-image" alt="logo" src={adminConfig.logo}/>
-          {collapsed === false && <strong>&nbsp; {adminConfig.siteName}</strong>}
+          <Space>
+            <img className="logo-image" alt="logo" src={adminConfig.logo}/>
+            {collapsed === false && <strong>&nbsp; {adminConfig.siteName}</strong>}
+          </Space>
         </div>
       </Link>
       <Menu theme="dark" mode="inline"

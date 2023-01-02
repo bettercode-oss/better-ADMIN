@@ -2,8 +2,6 @@ import React, {useEffect, useRef} from 'react';
 import {Breadcrumb, Layout, Tabs} from "antd";
 import {useLocation, useNavigate} from "react-router-dom";
 import PageRouter from "../router/PageRouter";
-import classNames from "classnames";
-import themeConfig from "../../config/theme.config.json";
 import {useLayoutContentDispatch, useLayoutContentState} from "./AppLayoutContentContext";
 import AutoBackdrop from "../modules/backdrop/AutoBackdrop";
 
@@ -87,7 +85,7 @@ function Content() {
                 {page.title}
               </div>
             </div>
-            <div className={classNames('site-layout-page', {dark: themeConfig.dark})}>
+            <div className="site-layout-page">
               <PageRouter/>
             </div>
           </>;
@@ -102,7 +100,7 @@ function Content() {
   renderingCompleted.current = false;
   return (
     <>
-      <Layout.Content className={classNames('site-layout-content', {dark: themeConfig.dark})}>
+      <Layout.Content className="site-layout-content">
         <AutoBackdrop>
           { /* 탭 변경에 따른 Page Router에 선언된 컴포넌트의 useEffect가 2번 호출 되는 것을 방지 처리 */
             (renderingCompleted.current || useEffected.current || tabRemoved.current) &&
