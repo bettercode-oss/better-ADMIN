@@ -23,7 +23,7 @@ function Sider() {
   const toggleCollapsed = () => setCollapsed(!collapsed);
 
   const loadMenuItems = useCallback((pathname) => {
-    const menuItems = NavigationConfig.getItemsByMemberPermission();
+    const menuItems = NavigationConfig.getItemsByMemberPermission(MemberContext.memberInformation.permissions);
     let currentNavigationItem = NavigationConfig.getItemByLink(pathname, menuItems);
 
     if (currentNavigationItem.level1Item) {
@@ -80,7 +80,7 @@ function Sider() {
 
     if (pathname === "/" && MemberContext.available) {
       // PATH 가 루트(/) 인 경우 네비게이션 메뉴 중 가장 첫 번째 메뉴의 화면으로 이동 시킨다.
-      const firstNavigationItemLink = NavigationConfig.getFirstItemLink();
+      const firstNavigationItemLink = NavigationConfig.getFirstItemLink(MemberContext.memberInformation.permissions);
       if (firstNavigationItemLink) {
         navigate(firstNavigationItemLink);
       }
