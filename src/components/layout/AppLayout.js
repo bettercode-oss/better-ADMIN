@@ -10,6 +10,7 @@ import {Header} from "../atoms/layout/header";
 import LoginInfo from "./LoginInfo";
 import styled from "styled-components";
 import {Footer} from "../atoms/layout/footer";
+import {Copyright} from "../atoms/copyright";
 
 const HeaderLoginInfo = styled.div`
   font-size: 1.5rem;
@@ -37,7 +38,7 @@ const AppLayout = () => {
             </Header>
             <Content/>
             <Footer>
-              better ADMIN ©2023 Created by bettercode
+              <Copyright/>
             </Footer>
           </Layout>
         </LayoutContentProvider>

@@ -2,10 +2,12 @@ import React, {useEffect, useState} from "react";
 import {Button, Col, Collapse, Dropdown, Form, Input, Row, Select, Table, Tag} from 'antd';
 import {PageHeader} from '@ant-design/pro-layout';
 import {DownOutlined, SettingOutlined} from "@ant-design/icons";
-import moment from "moment";
 import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
 import {MemberService} from "../../../services/member.service";
 import {SearchForm, SearchResult} from "../../modules/search-form";
+import dayjs from "dayjs";
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc)
 
 const {Panel} = Collapse;
 const {Column} = Table;
@@ -242,7 +244,7 @@ const MemberList = () => {
             <Column title="최근 접속 시간" dataIndex="lastAccessAt" key="lastAccessAt"
                     render={(text, record) => {
                       if (text) {
-                        const localDateTime = moment.utc(text).local().format('YYYY-MM-DD HH:mm');
+                        const localDateTime = dayjs.utc(text).local().format('YYYY-MM-DD HH:mm');
                         return (<span>{localDateTime}</span>)
                       } else {
                         return (<span>접속 이력 없음</span>)
