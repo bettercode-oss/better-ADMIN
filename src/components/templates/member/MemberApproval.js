@@ -9,8 +9,10 @@ import {
   ExclamationCircleOutlined,
   SettingOutlined
 } from "@ant-design/icons";
-import moment from "moment";
 import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
+import dayjs from "dayjs";
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc)
 
 const {confirm} = Modal;
 const {Column} = Table;
@@ -90,7 +92,7 @@ const MemberApproval = () => {
           <Column title="이름" dataIndex="name" key="name"/>
           <Column title="신청 일시" dataIndex="createdAt" key="createdAt"
                   render={(text, record) => {
-                    const localDateTime = moment.utc(text).local().format('YYYY-MM-DD HH:mm');
+                    const localDateTime = dayjs.utc(text).local().format('YYYY-MM-DD HH:mm');
                     return (<span>{localDateTime}</span>)
                   }}
           />
