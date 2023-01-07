@@ -1,9 +1,8 @@
-import {MemberContext} from "../auth/member.context";
-import {Navigation} from "./navigation";
+import Navigation from "./navigation";
 
 export default class NavigationConfig {
   static hasPermissions(memberPermissions, navigationPermissions) {
-    if(navigationPermissions) {
+    if(Array.isArray(navigationPermissions) && navigationPermissions.length) {
       for(const permission of navigationPermissions) {
         if (memberPermissions.has(permission)) {
           return true;
@@ -16,10 +15,10 @@ export default class NavigationConfig {
     return true;
   }
 
-  static getItemsByMemberPermission = () => {
-    const memberPermissions = new Set(MemberContext.memberInformation.permissions ? MemberContext.memberInformation.permissions : []);
+  static getItemsByMemberPermission = (allowedPermissions) => {
+    const memberPermissions = new Set(allowedPermissions ? allowedPermissions : []);
     const accessibleLevel1Items = [];
-    if (Navigation.items) {
+    if (Navigation?.items) {
       const level1Items = Navigation.items;
       level1Items.forEach(level1Item => {
         if (!level1Item.accessPermissions || this.hasPermissions(memberPermissions, level1Item.accessPermissions)) {
@@ -51,8 +50,8 @@ export default class NavigationConfig {
     return accessibleLevel1Items;
   }
 
-  static getFirstItemLink = () => {
-    const items = this.getItemsByMemberPermission();
+  static getFirstItemLink = (allowedPermissions) => {
+    const items = this.getItemsByMemberPermission(allowedPermissions);
     if (items && items.length > 0) {
       const firstLevel1Item = items[0];
       if(firstLevel1Item.link) {
@@ -75,7 +74,7 @@ export default class NavigationConfig {
 
   static getItemsWithoutMemberPermission = () => {
     const accessibleItems = [];
-    if (Navigation.items) {
+    if (Navigation?.items) {
       const level1Items = Navigation.items;
       level1Items.forEach(level1Item => {
         if (level1Item.items) {
@@ -108,7 +107,7 @@ export default class NavigationConfig {
       level3Item: null
     }
 
-    if (navigationItems) {
+    if (navigationItems && Array.isArray(navigationItems)) {
       for(const [i, level1Item] of navigationItems.entries()) {
         const currentLevel1Item = {
           title: level1Item.title,
@@ -162,6 +161,6 @@ export default class NavigationConfig {
   }
 
   static isEmptyItem = (item) => {
-    return !item.level1Item;
+    return !(item?.level1Item && Object.keys(item.level1Item).length !== 0);
   }
 }

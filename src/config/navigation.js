@@ -3,7 +3,7 @@ import {FiUsers} from "react-icons/fi";
 import {TbWebhook} from "react-icons/tb";
 import {MdLogin} from "react-icons/md";
 
-export const Navigation = {
+const Navigation = {
   items: [
     {
       title: "홈",
@@ -77,3 +77,4 @@ export const Navigation = {
   ]
 };
 
+export default Navigation;
