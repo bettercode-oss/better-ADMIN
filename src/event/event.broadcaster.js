@@ -26,5 +26,10 @@ export class EventBroadcaster {
       delete topics[topic][id];
     }
   }
+
+  /* 테스트 코드를 위한 함수 */
+  static topics = () => {
+    return topics;
+  }
 }
 
