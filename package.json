@@ -22,9 +22,9 @@
     "uuid": "^8.3.2"
   },
   "scripts": {
-    "start": "DISABLE_ESLINT_PLUGIN=true craco start",
-    "build": "DISABLE_ESLINT_PLUGIN=true craco build",
-    "test": "DISABLE_ESLINT_PLUGIN=true craco test"
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test"
   },
   "eslintConfig": {
     "extends": [
