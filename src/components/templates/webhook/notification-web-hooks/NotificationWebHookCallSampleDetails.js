@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Descriptions, Divider} from 'antd';
 import {PageHeader} from '@ant-design/pro-layout';
-import {WebHookService} from "../../../../services/webhook.service";
+import WebHookService from "../../../../services/webhook.service";
 import {useNavigate, useParams, useSearchParams} from "react-router-dom";
 
 const NotificationWebHookCallSampleDetails = () => {

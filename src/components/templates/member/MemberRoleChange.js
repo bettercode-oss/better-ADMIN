@@ -3,8 +3,8 @@ import {Button, Form, Select, message} from 'antd';
 import {PageHeader} from '@ant-design/pro-layout';
 import {useNavigate, useParams, useSearchParams} from "react-router-dom";
 import {FormItemLayout, FormTailItemLayout} from "../../modules/layout/from-item";
-import {AccessControlService} from "../../../services/access.control.service";
-import {MemberService} from "../../../services/member.service";
+import AccessControlService from "../../../services/access.control.service";
+import MemberService from "../../../services/member.service";
 
 const {Option} = Select;
 

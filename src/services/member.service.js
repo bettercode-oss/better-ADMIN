@@ -1,43 +1,42 @@
-import axios from "axios";
-import {adminConfig} from "../config/admin.config";
+import axios from 'axios';
+import { adminConfig } from '../config/admin.config';
 
 const API_URL = adminConfig.authentication.authAPI();
 
 class MemberService {
-  getMembersApproved(params) {
-    params["status"] = "approved";
-    return axios.get(`${API_URL}/members`, { params: params, loading: true });
+  static getMembersApproved(params) {
+    const newParams = { ...params, status: 'approved' };
+    return axios.get(`${API_URL}/members`, { params: newParams, loading: true });
   }
 
-  getMembersApplied(params) {
-    params["status"] = "applied";
-    return axios.get(`${API_URL}/members`, { params: params, loading: true });
+  static getMembersApplied(params) {
+    const newParams = { ...params, status: 'applied' };
+    return axios.get(`${API_URL}/members`, { newParams, loading: true });
   }
 
-  assignRoles(memberId, assignRoles) {
-    return axios.put(API_URL + `/members/${memberId}/assign-roles`, assignRoles);
+  static assignRoles(memberId, assignRoles) {
+    return axios.put(`${API_URL}/members/${memberId}/assign-roles`, assignRoles);
   }
 
-  getMember(memberId) {
-    return axios.get(API_URL + `/members/${memberId}`);
+  static getMember(memberId) {
+    return axios.get(`${API_URL}/members/${memberId}`);
   }
 
-  signUpMember(signUp) {
-    return axios.post(API_URL + `/members`, signUp, {autoErrorHandling: false});
+  static signUpMember(signUp) {
+    return axios.post(`${API_URL}/members`, signUp, { autoErrorHandling: false });
   }
 
-  approveMember(memberId) {
-    return axios.put(API_URL + `/members/${memberId}/approved`);
+  static approveMember(memberId) {
+    return axios.put(`${API_URL}/members/${memberId}/approved`);
   }
 
-  rejectMember(memberId) {
-    return axios.put(API_URL + `/members/${memberId}/rejected`);
+  static rejectMember(memberId) {
+    return axios.put(`${API_URL}/members/${memberId}/rejected`);
   }
 
-  getSearchFilters() {
+  static getSearchFilters() {
     return axios.get(`${API_URL}/members/search-filters`);
   }
 }
 
-const instance = new MemberService()
-export {instance as MemberService}
+export default MemberService;
