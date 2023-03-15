@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Button, Form, Input, message} from 'antd';
 import {PageHeader} from '@ant-design/pro-layout';
-import {AccessControlService} from "../../../../services/access.control.service";
+import AccessControlService from "../../../../services/access.control.service";
 import {EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC} from "../../../../event/event.broadcaster";
 import {adminConfig} from "../../../../config/admin.config";
 import {useNavigate, useParams, useSearchParams} from "react-router-dom";

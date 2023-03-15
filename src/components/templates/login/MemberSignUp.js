@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {Form as AntForm, message} from "antd";
 import {FormOutlined, LockOutlined, UserOutlined} from "@ant-design/icons";
-import {MemberService} from "../../../services/member.service";
+import MemberService from "../../../services/member.service";
 import {adminConfig} from "../../../config/admin.config";
 import {Form} from "../../atoms/form";
 import {FormItem} from "../../atoms/form/form-item";

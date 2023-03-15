@@ -3,7 +3,7 @@ import {Button, Col, Collapse, Dropdown, Form, Input, Row, Select, Table, Tag} f
 import {PageHeader} from '@ant-design/pro-layout';
 import {DownOutlined, SettingOutlined} from "@ant-design/icons";
 import {useLocation, useNavigate, useSearchParams} from "react-router-dom";
-import {MemberService} from "../../../services/member.service";
+import MemberService from "../../../services/member.service";
 import {SearchForm, SearchResult} from "../../modules/search-form";
 import dayjs from "dayjs";
 import utc from 'dayjs/plugin/utc';

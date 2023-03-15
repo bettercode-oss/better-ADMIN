@@ -9,7 +9,7 @@ import {
   PlusCircleOutlined,
   SettingOutlined
 } from '@ant-design/icons';
-import {AccessControlService} from "../../../../services/access.control.service";
+import AccessControlService from "../../../../services/access.control.service";
 import {Link, useLocation, useNavigate, useSearchParams} from "react-router-dom";
 import {SearchForm, SearchResult} from "../../../modules/search-form";
 

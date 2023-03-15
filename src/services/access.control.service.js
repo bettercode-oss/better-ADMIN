@@ -1,49 +1,48 @@
-import axios from "axios";
-import {adminConfig} from "../config/admin.config";
+import axios from 'axios';
+import { adminConfig } from '../config/admin.config';
 
 const API_URL = adminConfig.authentication.authAPI();
 
 class AccessControlService {
-  getPermissions(params) {
-    return axios.get(`${API_URL}/access-control/permissions`, { params: params, loading: true });
+  static getPermissions(params) {
+    return axios.get(`${API_URL}/access-control/permissions`, { params, loading: true });
   }
 
-  getPermissionById(id) {
+  static getPermissionById(id) {
     return axios.get(`${API_URL}/access-control/permissions/${id}`);
   }
 
-  createPermission(permission) {
-    return axios.post(`${API_URL}/access-control/permissions`, permission, {autoErrorHandling: false})
+  static createPermission(permission) {
+    return axios.post(`${API_URL}/access-control/permissions`, permission, { autoErrorHandling: false });
   }
 
-  deletePermission(permissionId) {
-    return axios.delete(`${API_URL}/access-control/permissions/${permissionId}`)
+  static deletePermission(permissionId) {
+    return axios.delete(`${API_URL}/access-control/permissions/${permissionId}`);
   }
 
-  updatePermission(permissionId, permission) {
-    return axios.put(`${API_URL}/access-control/permissions/${permissionId}`, permission, {autoErrorHandling: false})
+  static updatePermission(permissionId, permission) {
+    return axios.put(`${API_URL}/access-control/permissions/${permissionId}`, permission, { autoErrorHandling: false });
   }
 
-  createRole(role) {
-    return axios.post(`${API_URL}/access-control/roles`, role, {autoErrorHandling: false})
+  static createRole(role) {
+    return axios.post(`${API_URL}/access-control/roles`, role, { autoErrorHandling: false });
   }
 
-  getRoles(params) {
-    return axios.get(`${API_URL}/access-control/roles`, { params: params, loading: true });
+  static getRoles(params) {
+    return axios.get(`${API_URL}/access-control/roles`, { params, loading: true });
   }
 
-  getRoleById(id) {
+  static getRoleById(id) {
     return axios.get(`${API_URL}/access-control/roles/${id}`);
   }
 
-  deleteRole(roleId) {
-    return axios.delete(`${API_URL}/access-control/roles/${roleId}`)
+  static deleteRole(roleId) {
+    return axios.delete(`${API_URL}/access-control/roles/${roleId}`);
   }
 
-  updateRole(roleId, role) {
-    return axios.put(`${API_URL}/access-control/roles/${roleId}`, role, {autoErrorHandling: false})
+  static updateRole(roleId, role) {
+    return axios.put(`${API_URL}/access-control/roles/${roleId}`, role, { autoErrorHandling: false });
   }
 }
 
-const instance = new AccessControlService()
-export {instance as AccessControlService}
+export default AccessControlService;
