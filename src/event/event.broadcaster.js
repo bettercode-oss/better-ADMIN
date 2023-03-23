@@ -28,8 +28,5 @@ export class EventBroadcaster {
   };
 
   /* 테스트 코드를 위한 함수 */
-  // eslint-disable-next-line arrow-body-style
-  static topics = () => {
-    return topics;
-  };
+  static topics = () => topics;
 }
