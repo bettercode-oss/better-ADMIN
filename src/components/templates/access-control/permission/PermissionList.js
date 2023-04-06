@@ -159,7 +159,7 @@ const PermissionList = () => {
           </Form>
         </SearchForm>
         <SearchResult>
-          <Table rowKey="id" dataSource={tableDataSource.permissions} locale={{emptyText: "데이터 없음"}} bordered
+          <Table data-testid="permission-table" rowKey="id" dataSource={tableDataSource.permissions} locale={{emptyText: "데이터 없음"}} bordered
                  pagination={{
                    current: pagination.page,
                    pageSize: pagination.pageSize,
