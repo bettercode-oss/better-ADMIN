@@ -6,7 +6,7 @@ import AccessControlService from '../../../../services/access.control.service';
 
 jest.mock('../../../../services/access.control.service');
 
-test('테이블 렌더링', async () => {
+test('테이블 렌더링 테스트', async () => {
   // given
   const resp = {
     data: {
