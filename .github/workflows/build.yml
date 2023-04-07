@@ -29,6 +29,3 @@ jobs:
     - run: yarn install
     - run: yarn build
     - run: yarn test
-    - name: Jest coverage report
-      uses: ArtiomTr/jest-coverage-report-action@v2.2.2
-
