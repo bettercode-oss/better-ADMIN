@@ -1,3 +1,5 @@
+![Build Status](https://github.com/bettercode-oss/better-ADMIN/actions/workflows/build.yml/badge.svg)
+
 # better ADMIN ✨
 
 Admin 사이트를 만들다 보면 정작 중요한 업무 페이지를 만드는 것 보다
