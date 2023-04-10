@@ -19,5 +19,6 @@ module.exports = {
   rules: {
     'no-underscore-dangle': 'off',
     'max-len': ['error', { code: 120 }],
+    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
   },
 };
