@@ -1,7 +1,7 @@
-/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import { Form as AntForm, message } from 'antd';
 import {FormOutlined, LockOutlined, UserOutlined} from '@ant-design/icons';
+import PropTypes from 'prop-types';
 import MemberService from '../../../services/member.service';
 import { adminConfig } from '../../../config/admin.config';
 import { Form } from '../../atoms/form';
@@ -110,3 +110,8 @@ export default function MemberSignUp({ show, onClose }) {
     </SimpleModal>
   );
 }
+
+MemberSignUp.propTypes = {
+  show: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+};

@@ -1,6 +1,6 @@
-/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import PropTypes from 'prop-types';
 import { message } from 'antd';
 import { AuthService } from '../../../auth/auth.service';
 import { EventBroadcaster, SHOW_ERROR_MESSAGE_EVENT_TOPIC } from '../../../event/event.broadcaster';
@@ -70,3 +70,9 @@ export default function DoorayLogin({ show, onLoginSuccess, onClose }) {
     </SimpleModal>
   );
 }
+
+DoorayLogin.propTypes = {
+  show: PropTypes.bool.isRequired,
+  onLoginSuccess: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+};
