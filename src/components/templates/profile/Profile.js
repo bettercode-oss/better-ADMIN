@@ -43,6 +43,7 @@ export default function Profile({ show, onClose }) {
             layout="horizontal"
             column={1}
             labelStyle={{ fontWeight: 'bold', width: '100px', textAlign: 'center' }}
+            data-testid="profile-data"
             >
             <Descriptions.Item label="유형">{typeName}</Descriptions.Item>
             <Descriptions.Item label="이름">{name}</Descriptions.Item>
