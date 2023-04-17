@@ -20,21 +20,22 @@ export default function Profile({ show, onClose }) {
   const member = MemberContext.memberInformation;
   const name = member?.name;
   const typeName = member?.typeName;
-  const roles = member?.roles.map((tag) => (
+  const roles = (member?.roles && Array.isArray(member.roles) ? member.roles : []).map((tag) => (
     <Tag color="orange" key={tag}>{tag}</Tag>
   ));
-  const permission = member?.permissions.map((tag) => (
-    <Tag color="blue" key={tag}>{tag}</Tag>
-  ));
-
+  const permissions = (member?.permissions && Array.isArray(member.permissions) ? member.permissions : []).map(
+    (tag) => (
+      <Tag color="blue" key={tag}>{tag}</Tag>
+    ),
+  );
   return (
     <SimpleModal title="프로필" open={show} onCancel={onClose}>
       <ModalContentCenter>
-        <ProfileImage>
+        <ProfileImage data-testid="profile-image">
           <Avatar
-            ssrc={member.picture}
+            src={member?.picture}
             size={128}
-            />
+          />
         </ProfileImage>
         <div>
           <Descriptions
@@ -43,11 +44,12 @@ export default function Profile({ show, onClose }) {
             layout="horizontal"
             column={1}
             labelStyle={{ fontWeight: 'bold', width: '100px', textAlign: 'center' }}
-            >
+            data-testid="profile-data"
+          >
             <Descriptions.Item label="유형">{typeName}</Descriptions.Item>
             <Descriptions.Item label="이름">{name}</Descriptions.Item>
             <Descriptions.Item label="역할">{roles}</Descriptions.Item>
-            <Descriptions.Item label="권한">{permission}</Descriptions.Item>
+            <Descriptions.Item label="권한">{permissions}</Descriptions.Item>
           </Descriptions>
         </div>
       </ModalContentCenter>
