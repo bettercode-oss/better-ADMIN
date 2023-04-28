@@ -26,8 +26,9 @@ describe('hasPermissions', () => {
     const navigationPermissions = null;
 
     // when
-    const actual = NavigationConfig.hasPermissions(memberPermissions, navigationPermissions)
 
+    const actual = NavigationConfig.hasPermissions(memberPermissions, navigationPermissions)
+    console.log("aaaa");
     // then
     const expected = true;
     expect(actual).toEqual(expected);
