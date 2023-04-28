@@ -76,6 +76,7 @@ function LoginInfo() {
       <Profile
         show={showProfileModal}
         onClose={closeProfile}
+        data-testid="profile-modal"
       />
     </>
   );

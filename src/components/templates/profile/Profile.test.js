@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import Profile from './Profile';
 import '@testing-library/jest-dom';
 
@@ -192,14 +192,18 @@ describe('프로필 사용자 정보 렌더링', () => {
     expect(memberInfoBoday[3]).toHaveTextContent('MANAGE_MEMBERS');
   });
 });
-// describe('onClose 함수 호출', () => {
-//   test('member context에 picture가 빈 값이면 디폴트 이미지가 나온다.', async () => {
-//     // given
 
-//     // when
-
-//     // then
-
-//   });
-
-// });
+describe('modal 컴포넌트의 이벤트 작동을 확인한다', () => {
+  test('Profile Modal 컴포넌트의 X 버튼을 누르면 컴포넌트 프로퍼티로 전달된 onClose 함수가 호출된다',
+    async () => {
+    // given
+      const closeProfile = jest.fn();
+      // when
+      render(<Profile show onClose={closeProfile} />);
+      const closeButton = screen.getByLabelText('Close');
+      fireEvent.click(closeButton);
+      // then
+      expect(closeProfile).toHaveBeenCalledTimes(1);
+      expect(screen.queryByTestId('profile-modal')).not.toBeInTheDocument();
+    });
+});
