@@ -1,4 +1,5 @@
 ![Build Status](https://github.com/bettercode-oss/better-ADMIN/actions/workflows/build.yml/badge.svg)
+![Last Commit](https://img.shields.io/github/last-commit/bettercode-oss/better-ADMIN)
 
 # better ADMIN ✨
 
