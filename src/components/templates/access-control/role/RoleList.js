@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, {useEffect, useState} from "react";
 import {Button, Col, Collapse, Dropdown, Form, Input, Modal, Row, Table, Tag} from 'antd';
 import {PageHeader} from '@ant-design/pro-layout';
@@ -81,7 +82,7 @@ const RoleList = () => {
         deleteRole(roleId);
       },
     });
-  }
+  }  
 
   const deleteRole = (roleId) => {
     AccessControlService.deleteRole(roleId).then(() => {
@@ -120,8 +121,9 @@ const RoleList = () => {
           <Button key="1" type="primary" icon={<PlusCircleOutlined/>} onClick={handleCreateRole}>역할 생성</Button>,
         ]}
       >
-        <SearchForm>
+        <SearchForm >
           <Form
+            data-testid="role-search"
             form={form}
             onFinish={onFinish}
           >
@@ -161,7 +163,7 @@ const RoleList = () => {
           </Form>
         </SearchForm>
         <SearchResult>
-          <Table rowKey="id" dataSource={tableDataSource.roles} locale={{emptyText: "데이터 없음"}} bordered
+          <Table data-testid="role-table" rowKey="id" dataSource={tableDataSource.roles} locale={{emptyText: "데이터 없음"}} bordered
                  pagination={{
                    current: pagination.page,
                    pageSize: pagination.pageSize,
