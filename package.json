@@ -7,9 +7,6 @@
     "@ant-design/pro-layout": "^7.5.1",
     "@bettercode/react-app-version-checker": "^2.2.2",
     "@craco/craco": "^7.0.0",
-    "@testing-library/jest-dom": "^5.9.0",
-    "@testing-library/react": "^11.0.0",
-    "@testing-library/user-event": "^11.1.0",
     "antd": "^5.1.1",
     "axios": "^0.21.1",
     "dayjs": "^1.11.7",
@@ -52,6 +49,9 @@
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
+    "@testing-library/jest-dom": "^5.9.0",
+    "@testing-library/react": "^11.0.0",
+    "@testing-library/user-event": "^11.1.0",
     "jest-when": "^3.5.2"
   },
   "resolutions": {
