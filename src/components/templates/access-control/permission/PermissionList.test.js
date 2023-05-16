@@ -437,3 +437,287 @@ describe('pagination에 따라 테이블 렌더링', () => {
     });
   });
 });
+
+describe('검색 영역에 대한 검색 및 결과 확인', () => {
+  test('권한이 총 3개로 최초에는 3개를 노출하고 권한 이름을 검색하면 해당하는 1개의 권한을 노출한다.', async () => {
+    // given
+    // 첫 페이지 mocking
+    when(AccessControlService.getPermissions).mockResolvedValue({
+      data: {
+        result: [
+          {
+            id: 0,
+            type: 'pre-define',
+            typeName: '사전정의',
+            name: 'MANAGE_SYSTEM_SETTINGS',
+            description: '시스템 설정 권한',
+          },
+          {
+            id: 1,
+            type: 'pre-define',
+            typeName: '사전정의',
+            name: 'ACCESS_MEMBERS',
+            description: '멤버 접근 권한',
+          },
+          {
+            id: 2,
+            type: 'pre-define',
+            typeName: '사전정의',
+            name: 'MAKE_MEMBERS',
+            description: '멤버 생성 권한',
+          },
+        ],
+        totalCount: 3,
+      },
+    });
+    // 검색 결과 mocking
+    when(AccessControlService.getPermissions).calledWith({
+      page: 1,
+      pageSize: 10,
+      name: 'MAKE_MEMBERS',
+    }).mockResolvedValue({
+      data: {
+        result: [
+          {
+            id: 2,
+            type: 'pre-define',
+            typeName: '사전정의',
+            name: 'MAKE_MEMBERS',
+            description: '멤버 생성 권한',
+          },
+        ],
+        totalCount: 1,
+      },
+    });
+
+    const routes = [
+      {
+        path: '/access-control/permissions',
+        element: <PermissionList />,
+      },
+    ];
+    const router = createMemoryRouter(routes, {
+      initialEntries: ['/', '/access-control/permissions'],
+      initialIndex: 1,
+    });
+
+    render(<RouterProvider router={router} />);
+    await waitFor(() => screen.getByTestId('permission-table'));
+
+    const permissionTable = screen.getByTestId('permission-table');
+    expect(permissionTable).toBeInTheDocument();
+
+    // 최초 테이블 바디 검증
+    let bodyRows = permissionTable.querySelectorAll('tbody > tr');
+    expect(bodyRows).toHaveLength(3);
+    expect(bodyRows[0].querySelectorAll('td')[2].textContent).toEqual('시스템 설정 권한');
+    expect(bodyRows[1].querySelectorAll('td')[2].textContent).toEqual('멤버 접근 권한');
+    expect(bodyRows[2].querySelectorAll('td')[2].textContent).toEqual('멤버 생성 권한');
+
+    // when
+    // 권한 이름에 MAKE_MEMBERS를 입력 후, 조회 버튼 클릭
+    fireEvent.change(screen.getByLabelText('권한 이름'), { target: { value: 'MAKE_MEMBERS' } });
+    const input = screen.getByDisplayValue('MAKE_MEMBERS');
+    expect(input.value).toEqual('MAKE_MEMBERS');
+    const searchBtn = screen.getByText('조회');
+    fireEvent.click(searchBtn);
+
+    // then
+    await waitFor(() => {
+      // 검색 결과 바디 검증
+      bodyRows = permissionTable.querySelectorAll('tbody > tr');
+      expect(bodyRows).toHaveLength(1);
+      expect(bodyRows[0].querySelectorAll('td')[2].textContent).toEqual('멤버 생성 권한');
+    });
+  });
+
+  test('권한이 총 3개로 최초에는 3개를 노출하고 특정 문구를 검색하면 권한 이름에 특정 문구가 포함된 권한을 모두 노출한다.', async () => {
+    // given
+    // 첫 페이지 mocking
+    when(AccessControlService.getPermissions).mockResolvedValue({
+      data: {
+        result: [
+          {
+            id: 0,
+            type: 'pre-define',
+            typeName: '사전정의',
+            name: 'MANAGE_SYSTEM_SETTINGS',
+            description: '시스템 설정 권한',
+          },
+          {
+            id: 1,
+            type: 'pre-define',
+            typeName: '사전정의',
+            name: 'ACCESS_MEMBERS',
+            description: '멤버 접근 권한',
+          },
+          {
+            id: 2,
+            type: 'pre-define',
+            typeName: '사전정의',
+            name: 'MAKE_MEMBERS',
+            description: '멤버 생성 권한',
+          },
+        ],
+        totalCount: 3,
+      },
+    });
+    // 검색 결과 mocking
+    when(AccessControlService.getPermissions).calledWith({
+      page: 1,
+      pageSize: 10,
+      name: 'MEMBERS',
+    }).mockResolvedValue({
+      data: {
+        result: [
+          {
+            id: 1,
+            type: 'pre-define',
+            typeName: '사전정의',
+            name: 'ACCESS_MEMBERS',
+            description: '멤버 접근 권한',
+          },
+          {
+            id: 2,
+            type: 'pre-define',
+            typeName: '사전정의',
+            name: 'MAKE_MEMBERS',
+            description: '멤버 생성 권한',
+          },
+        ],
+        totalCount: 2,
+      },
+    });
+
+    const routes = [
+      {
+        path: '/access-control/permissions',
+        element: <PermissionList />,
+      },
+    ];
+    const router = createMemoryRouter(routes, {
+      initialEntries: ['/', '/access-control/permissions'],
+      initialIndex: 1,
+    });
+
+    render(<RouterProvider router={router} />);
+    await waitFor(() => screen.getByTestId('permission-table'));
+
+    const permissionTable = screen.getByTestId('permission-table');
+    expect(permissionTable).toBeInTheDocument();
+
+    // 최초 테이블 바디 검증
+    let bodyRows = permissionTable.querySelectorAll('tbody > tr');
+    expect(bodyRows).toHaveLength(3);
+    expect(bodyRows[0].querySelectorAll('td')[2].textContent).toEqual('시스템 설정 권한');
+    expect(bodyRows[1].querySelectorAll('td')[2].textContent).toEqual('멤버 접근 권한');
+    expect(bodyRows[2].querySelectorAll('td')[2].textContent).toEqual('멤버 생성 권한');
+
+    // when
+    // 권한 이름에 MEMBERS를 입력 후, 조회 버튼 클릭
+    fireEvent.change(screen.getByLabelText('권한 이름'), { target: { value: 'MEMBERS' } });
+    const input = screen.getByDisplayValue('MEMBERS');
+    expect(input.value).toEqual('MEMBERS');
+    const searchBtn = screen.getByText('조회');
+    fireEvent.click(searchBtn);
+
+    // then
+    await waitFor(() => {
+      // 검색 결과 바디 검증
+      bodyRows = permissionTable.querySelectorAll('tbody > tr');
+      expect(bodyRows).toHaveLength(2);
+      expect(bodyRows[0].querySelectorAll('td')[2].textContent).toEqual('멤버 접근 권한');
+      expect(bodyRows[1].querySelectorAll('td')[2].textContent).toEqual('멤버 생성 권한');
+    });
+  });
+
+  test('3개의 권한 중, 최초에는 1개의 특정 권한을 검색하고 초기화 버튼을 누르면 권한 3개를 노출한다.',async () => {
+    // given
+    // 최초 검색 결과 mocking
+    when(AccessControlService.getPermissions).calledWith({
+      page: 1,
+      pageSize: 10,
+      name: 'MAKE_MEMBERS',
+    }).mockResolvedValue({
+      data: {
+        result: [
+          {
+            id: 2,
+            type: 'pre-define',
+            typeName: '사전정의',
+            name: 'MAKE_MEMBERS',
+            description: '멤버 생성 권한',
+          },
+        ],
+        totalCount: 1,
+      },
+    });
+    // 초기화 결과 mocking
+    when(AccessControlService.getPermissions).mockResolvedValue({
+      data: {
+        result: [
+          {
+            id: 0,
+            type: 'pre-define',
+            typeName: '사전정의',
+            name: 'MANAGE_SYSTEM_SETTINGS',
+            description: '시스템 설정 권한',
+          },
+          {
+            id: 1,
+            type: 'pre-define',
+            typeName: '사전정의',
+            name: 'ACCESS_MEMBERS',
+            description: '멤버 접근 권한',
+          },
+          {
+            id: 2,
+            type: 'pre-define',
+            typeName: '사전정의',
+            name: 'MAKE_MEMBERS',
+            description: '멤버 생성 권한',
+          },
+        ],
+        totalCount: 3,
+      },
+    });
+
+    const routes = [
+      {
+        path: '/access-control/permissions',
+        element: <PermissionList />,
+      },
+    ];
+    const router = createMemoryRouter(routes, {
+      initialEntries: ['/', '/access-control/permissions?name=MAKE_MEMBERS'],
+      initialIndex: 1,
+    });
+
+    render(<RouterProvider router={router} />);
+    await waitFor(() => screen.getByTestId('permission-table'));
+
+    const permissionTable = screen.getByTestId('permission-table');
+    expect(permissionTable).toBeInTheDocument();
+
+    // 최초 테이블 바디 검증
+    let bodyRows = permissionTable.querySelectorAll('tbody > tr');
+    bodyRows = permissionTable.querySelectorAll('tbody > tr');
+    expect(bodyRows).toHaveLength(1);
+    expect(bodyRows[0].querySelectorAll('td')[2].textContent).toEqual('멤버 생성 권한');
+
+    // when
+    // 초기화 버튼 클릭
+    const searchBtn = screen.getByText('초기화');
+    fireEvent.click(searchBtn);
+
+    // then
+    await waitFor(() => {
+      // 검색 결과 바디 검증
+      bodyRows = permissionTable.querySelectorAll('tbody > tr');
+      expect(bodyRows).toHaveLength(3);
+      expect(bodyRows[0].querySelectorAll('td')[2].textContent).toEqual('시스템 설정 권한');
+      expect(bodyRows[1].querySelectorAll('td')[2].textContent).toEqual('멤버 접근 권한');
+      expect(bodyRows[2].querySelectorAll('td')[2].textContent).toEqual('멤버 생성 권한');
+    });
+  });
+});
