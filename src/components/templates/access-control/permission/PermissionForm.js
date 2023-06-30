@@ -77,7 +77,7 @@ const PermissionForm = () => {
         subTitle={editMode ? "권한을 수정합니다." : "권한을 생성합니다."}
         onBack={handleBack}
       >
-        <Form {...FormItemLayout} form={form} onFinish={save}>
+        <Form data-testid="form" {...FormItemLayout} form={form} onFinish={save}>
           <Form.Item
             name="name"
             label="권한 이름"

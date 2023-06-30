@@ -5,6 +5,7 @@ import {
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { when } from 'jest-when';
 import PermissionList from './PermissionList';
+import PermissionForm from './PermissionForm';
 import AccessControlService from '../../../../services/access.control.service';
 
 jest.mock('../../../../services/access.control.service');
@@ -631,7 +632,7 @@ describe('검색 영역에 대한 검색 및 결과 확인', () => {
     });
   });
 
-  test('3개의 권한 중, 최초에는 1개의 특정 권한을 검색하고 초기화 버튼을 누르면 권한 3개를 노출한다.',async () => {
+  test('3개의 권한 중, 최초에는 1개의 특정 권한을 검색하고 초기화 버튼을 누르면 권한 3개를 노출한다.', async () => {
     // given
     // 최초 검색 결과 mocking
     when(AccessControlService.getPermissions).calledWith({
@@ -719,5 +720,154 @@ describe('검색 영역에 대한 검색 및 결과 확인', () => {
       expect(bodyRows[1].querySelectorAll('td')[2].textContent).toEqual('멤버 접근 권한');
       expect(bodyRows[2].querySelectorAll('td')[2].textContent).toEqual('멤버 생성 권한');
     });
+  });
+});
+
+describe('각 버튼 별 페이지 이동 확인', () => {
+  test('권한 생성 버튼을 누르면 권한 생성 페이지로 이동한다.', async () => {
+    // given
+    const testData = {
+      data: {
+        result: [
+          {
+            id: 0,
+            type: 'pre-define',
+            typeName: '사전정의',
+            name: 'MANAGE_SYSTEM_SETTINGS',
+            description: '시스템 설정 권한',
+          },
+        ],
+        totalCount: 1,
+      },
+    };
+    AccessControlService.getPermissions.mockResolvedValue(testData);
+
+    const routes = [
+      {
+        path: '/access-control/permissions',
+        element: <PermissionList />,
+      },
+      {
+        path: '/access-control/permissions/new',
+        element: <PermissionForm />,
+      },
+    ];
+    const router = createMemoryRouter(routes, {
+      initialEntries: ['/', '/access-control/permissions', '/access-control/permissions/new?backUrl=%2Faccess-control%2Fpermissions'],
+      initialIndex: 1,
+    });
+
+    render(<RouterProvider router={router} />);
+    await waitFor(() => screen.getByTestId('permission-table'));
+
+    // when
+    // 권한 생성 버튼 클릭
+    const createBtn = screen.getByText('권한 생성');
+    fireEvent.click(createBtn);
+    await waitFor(() => screen.getByTestId('form'));
+
+    // then
+    const form = screen.getByTestId('form');
+    expect(form).toBeInTheDocument();
+  });
+
+  test('테이블에 권한 수정 버튼을 누르면 수정 페이지로 이동한다.', async () => {
+    // given
+    const testData = {
+      data: {
+        result: [
+          {
+            id: 3,
+            type: 'user-define',
+            typeName: '사용자정의',
+            name: 'ACCESS_STOCK',
+            description: '재고 접근 권한',
+          },
+        ],
+        totalCount: 1,
+      },
+    };
+    AccessControlService.getPermissions.mockResolvedValue(testData);
+
+    const routes = [
+      {
+        path: '/access-control/permissions',
+        element: <PermissionList />,
+      },
+      {
+        path: '/access-control/permissions/:id',
+        element: <PermissionForm />,
+      },
+    ];
+    const router = createMemoryRouter(routes, {
+      initialEntries: ['/', '/access-control/permissions', '/access-control/permissions/3?backUrl=%2Faccess-control%2Fpermissions'],
+      initialIndex: 1,
+    });
+
+    render(<RouterProvider router={router} />);
+    await waitFor(() => screen.getByTestId('permission-table'));
+
+    const permissionTable = screen.getByTestId('permission-table');
+    const bodyRow = permissionTable.querySelectorAll('tbody > tr');
+    const bodyRowColumns = bodyRow[0].querySelectorAll('td');
+    const dropDownButton = bodyRowColumns[3].querySelector('button');
+
+    // when
+    // dropdown 버튼을 누르고, 수정 버튼을 누른다.
+    fireEvent.click(dropDownButton);
+    const modifyBtn = screen.getByText('수정');
+    fireEvent.click(modifyBtn);
+    await waitFor(() => screen.getByTestId('form'));
+
+    // then
+    const form = screen.getByTestId('form');
+    expect(form).toBeInTheDocument();
+  });
+
+  test('테이블에 권한 이름 버튼을 누르면 수정 페이지로 이동한다.', async () => {
+    // given
+    const testData = {
+      data: {
+        result: [
+          {
+            id: 3,
+            type: 'user-define',
+            typeName: '사용자정의',
+            name: 'ACCESS_STOCK',
+            description: '재고 접근 권한',
+          },
+        ],
+        totalCount: 1,
+      },
+    };
+    AccessControlService.getPermissions.mockResolvedValue(testData);
+
+    const routes = [
+      {
+        path: '/access-control/permissions',
+        element: <PermissionList />,
+      },
+      {
+        path: '/access-control/permissions/:id',
+        element: <PermissionForm />,
+      },
+    ];
+    const router = createMemoryRouter(routes, {
+      initialEntries: ['/', '/access-control/permissions', '/access-control/permissions/3?backUrl=%2Faccess-control%2Fpermissions'],
+      initialIndex: 1,
+    });
+
+    render(<RouterProvider router={router} />);
+    await waitFor(() => screen.getByTestId('permission-table'));
+
+    // when
+    // 버튼을 누른다.
+    const nameButton = screen.getByText('ACCESS_STOCK');
+    fireEvent.click(nameButton);
+    await waitFor(() => screen.getByTestId('form'));
+
+    // then
+    const form = screen.getByTestId('form');
+    expect(form).toBeInTheDocument();
   });
 });
