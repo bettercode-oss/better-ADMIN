@@ -32,12 +32,12 @@ const PermissionSearch: React.FC = () => {
       <FormSearch>
         <FieldInline>
           <Form.Item label="권한 이름" name="name">
-            <Input placeholder="권한 이름을 입력해주세요"/>
+            <Input placeholder="권한 이름을 입력해주세요" data-testid="search-name-input" />
           </Form.Item>
         </FieldInline>
       </FormSearch>
       <div className="flex justify-center gap-2">
-        <Button htmlType="submit" className="btn-with-icon" icon={<Search/>}>
+        <Button htmlType="submit" className="btn-with-icon" icon={<Search/>} data-testid="search-btn">
           검색
         </Button>
         <Button htmlType="submit" className="btn-with-icon" onClick={() => form.resetFields()}>
