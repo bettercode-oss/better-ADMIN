@@ -70,6 +70,7 @@ const PermissionList: React.FC = () => {
     },
     {
       key: "action",
+      title: "Action",
       width: 120,
       align: "center",
       render: (_value: unknown, permission: IPermission) => {
@@ -106,13 +107,14 @@ const PermissionList: React.FC = () => {
           <Button className="btn-with-icon" icon={<Download/>}>
             엑셀 다운로드
           </Button>
-          <Button type="primary" onClick={() => router.push("/access-control/permission/new")}>
+          <Button data-testid="create-permission-btn" type="primary" onClick={() => router.push("/access-control/permission/new")}>
             권한 생성
           </Button>
         </div>
       </DefaultTableBtn>
 
       <DefaultTable<IPermission>
+        data-testid="permission-table"
         columns={columns}
         dataSource={data?.result || []}
         loading={isLoading}
